@@ -5,11 +5,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:src="@drawable/image_14" />
+    <!--<ImageView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:scaleType="centerCrop"-->
+        <!--android:src="@drawable/image_14" />-->
 
     <View
         android:layout_width="match_parent"
@@ -35,9 +35,12 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="330dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:padding="15dp">
 
             <android.support.design.widget.FloatingActionButton
                 android:layout_width="wrap_content"
@@ -50,6 +53,7 @@
                 app:srcCompat="@drawable/ic_photo"/>
 
             <View
+                android:layout_marginTop="50dp"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_weight="1" />
@@ -127,6 +131,21 @@
                 android:singleLine="true"
                 android:textColor="@color/blue_grey_300"
                 android:theme="@style/EditText.Grey" />
+            <View
+                android:layout_marginTop="50dp"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/spacing_large" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_marginLeft="-4dp"
+                android:layout_marginRight="-4dp"
+                android:background="@drawable/btn_purple_a400"
+                android:text="Signup"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white"
+                android:textStyle="bold" />
 
 
         </LinearLayout>
