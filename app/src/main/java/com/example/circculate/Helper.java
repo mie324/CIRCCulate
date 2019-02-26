@@ -1,7 +1,7 @@
 package com.example.circculate;
 
 public class Helper {
-    public static String transformDate(int year, int monthOfYear, int datOfMonth){
+    public static String transformDate(int year, int monthOfYear, int dayOfMonth){
         String month;
         switch (monthOfYear){
             case 1: month = "January"; break;
@@ -32,13 +32,32 @@ public class Helper {
 
         }
 
-        String result = month + " " + datOfMonth + ", " + year;
+        String day;
+        if(dayOfMonth < 10){
+            day = "0" + dayOfMonth;
+        }else{
+            day = Integer.toString(dayOfMonth);
+        }
+        String result = month + " " + day + ", " + year;
 
         return result;
     }
 
 
-    public static String transformTime(int hourOfDate, int minute){
-        return hourOfDate + ": " + minute;
+    public static String transformTime(int hourOfDay, int minuteOfHour){
+        String hour;
+        String minute;
+        if(hourOfDay < 10){
+            hour = "0" + Integer.toString(hourOfDay);
+        }else{
+            hour = Integer.toString(hourOfDay);
+        }
+
+        if(minuteOfHour < 10){
+            minute = "0" + minuteOfHour;
+        }else{
+            minute = Integer.toString(minuteOfHour);
+        }
+        return hour + ": " + minute;
     }
 }
