@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.Toast;
 
@@ -21,6 +22,7 @@ public class FavoritesFragment extends Fragment {
     private CalendarView eventCalendar;
     private String date;
     private static final String TAG = "select";
+    private Button detailBtn;
 
     public FavoritesFragment() {
         // Required empty public constructor
@@ -67,6 +69,15 @@ public class FavoritesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_favorites, container, false);
+        detailBtn = (Button)root.findViewById(R.id.detail_button);
+        detailBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), DetailPage.class);
+                startActivity(intent);
+
+            }
+        });
         // Inflate the layout for this fragment
         return root;
     }
@@ -75,4 +86,5 @@ public class FavoritesFragment extends Fragment {
     private void showToast(String message){
         Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
     }
+
 }

@@ -81,6 +81,7 @@
                             android:orientation="horizontal">
 
                             <Button
+                                android:id="@+id/detail_button"
                                 style="@style/Button.Accent.Borderless"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -159,7 +160,8 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
-                                android:text="Detail" />
+                                android:text="Detail"
+                                android:onClick="GoToDetailPage"/>
 
                             <Button
                                 style="@style/Button.Accent.Borderless"

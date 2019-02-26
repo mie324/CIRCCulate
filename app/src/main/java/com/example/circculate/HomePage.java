@@ -1,5 +1,6 @@
 package com.example.circculate;
 
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -138,5 +139,11 @@ public class HomePage extends AppCompatActivity {
         getSupportActionBar().setTitle("ACP");
         FragmentManager manager = getSupportFragmentManager();
         manager.beginTransaction().replace(R.id.fragment_container, new NearbyFragment()).commit();
+    }
+
+    public void GoToDetailPage(View view) {
+        Intent intent = new Intent(this, DetailPage.class);
+        startActivity(intent);
+
     }
 }
