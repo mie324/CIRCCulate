@@ -27,6 +27,8 @@ public class AddEvent extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_event);
+        appointTime = findViewById(R.id.time_pick_result);
+        appointDate = findViewById(R.id.date_pick_result);
         initToolbar();
         addPickerListener();
     }

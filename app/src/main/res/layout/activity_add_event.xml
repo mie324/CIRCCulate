@@ -42,7 +42,7 @@
                 <android.support.v7.widget.AppCompatEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Patient Name" />
+                    android:hint="Appointment Info" />
 
             </android.support.design.widget.TextInputLayout>
 
