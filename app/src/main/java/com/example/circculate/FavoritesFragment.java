@@ -1,8 +1,10 @@
 package com.example.circculate;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,6 +25,8 @@ public class FavoritesFragment extends Fragment {
     public FavoritesFragment() {
         // Required empty public constructor
     }
+
+
 
     @Override
     public void onStart() {
@@ -47,14 +51,24 @@ public class FavoritesFragment extends Fragment {
                 }
             }
         });
+
+        FloatingActionButton addEventButton = getView().findViewById(R.id.fab_add_event);
+        addEventButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), AddEvent.class);
+                startActivity(intent);
+                showToast("Click button");
+            }
+        });
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        View root = inflater.inflate(R.layout.fragment_favorites, container, false);
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_favorites, container, false);
+        return root;
     }
 
 

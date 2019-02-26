@@ -1,5 +1,6 @@
 package com.example.circculate;
 
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -8,11 +9,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+//import com.material.components.utils.Tools;
 
 //import com.material.components.utils.Tools;
 
@@ -29,8 +32,21 @@ public class HomePage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
 
+        initToolbar();
         initComponent();
         switchToFavorites();
+    }
+
+
+    private void initToolbar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        toolbar.setNavigationIcon(R.drawable.ic_menu);
+//        toolbar.getNavigationIcon().setColorFilter(getResources().getColor(R.color.grey_60), PorterDuff.Mode.SRC_ATOP);
+        setSupportActionBar(toolbar);
+//        getSupportActionBar().setTitle("Home Care");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+//        Tools.setSystemBarColor(this, R.color.grey_5);
+//        Tools.setSystemBarLight(this);
     }
 
     private void initComponent() {
@@ -107,16 +123,19 @@ public class HomePage extends AppCompatActivity {
     }
 
     public void switchToRecent(){
+        getSupportActionBar().setTitle("Recent");
         FragmentManager manager = getSupportFragmentManager();
         manager.beginTransaction().replace(R.id.fragment_container, new RecentFragment()).commit();
     }
 
     public void switchToFavorites(){
+        getSupportActionBar().setTitle("Home Care");
         FragmentManager manager = getSupportFragmentManager();
         manager.beginTransaction().replace(R.id.fragment_container, new FavoritesFragment()).commit();
     }
 
     public void switchToNearby(){
+        getSupportActionBar().setTitle("ACP");
         FragmentManager manager = getSupportFragmentManager();
         manager.beginTransaction().replace(R.id.fragment_container, new NearbyFragment()).commit();
     }
