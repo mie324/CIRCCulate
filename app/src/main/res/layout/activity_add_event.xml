@@ -79,6 +79,7 @@
                     android:textColorHint="@color/grey_40">
 
                     <android.support.v7.widget.AppCompatEditText
+                        android:id="@+id/date_pick_result"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Appointment Date" />
@@ -86,6 +87,7 @@
                 </android.support.design.widget.TextInputLayout>
 
                 <Button
+                    android:id="@+id/date_picker"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -111,6 +113,7 @@
                     android:textColorHint="@color/grey_40">
 
                     <android.support.v7.widget.AppCompatEditText
+                        android:id="@+id/time_pick_result"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Appointment Time" />
@@ -119,6 +122,7 @@
 
                 <Button
                     android:layout_width="0dp"
+                    android:id="@+id/time_picker"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Pick "
