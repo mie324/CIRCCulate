@@ -3,7 +3,8 @@
     <!--<color name="colorPrimary">#008577</color>-->
     <!--<color name="colorPrimaryDark">#00574B</color>-->
     <!--<color name="colorAccent">#D81B60</color>-->
-    <color name="colorPrimary">#9e9e9e</color>
+
+    <color name="colorPrimary">#1976D2</color>
     <color name="colorPrimaryDark">#1565C0</color>
     <color name="colorPrimaryLight">#1E88E5</color>
     <color name="colorAccent">#FF4081</color>
@@ -40,6 +41,7 @@
     <color name="grey_90">#263238</color>
     <color name="grey_95">#1a1a1a</color>
     <color name="grey_100_">#0d0d0d</color>
+
 
 
     <!--Material color list from https://material.io/guidelines/style/color.html-->
