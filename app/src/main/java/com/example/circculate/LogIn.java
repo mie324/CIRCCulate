@@ -35,9 +35,17 @@ public class LogIn extends AppCompatActivity {
         //     }
         // });
 
-        // Intent intent = new Intent(this, HomePage.class);
-        // startActivity(intent);
+
 
     }
 
+    public void GoToHome(View view) {
+         Intent intent = new Intent(this, HomePage.class);
+         startActivity(intent);
+    }
+
+    public void GoToSignup(View view) {
+        Intent intent = new Intent(this, SignUp.class);
+        startActivity(intent);
+    }
 }
