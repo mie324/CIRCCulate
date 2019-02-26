@@ -32,7 +32,7 @@ public class Helper {
 
         }
 
-        String result = month + " " + datOfMonth + ", " + year + ".";
+        String result = month + " " + datOfMonth + ", " + year;
 
         return result;
     }

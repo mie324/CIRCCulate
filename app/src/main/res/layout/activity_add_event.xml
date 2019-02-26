@@ -82,6 +82,7 @@
                         android:id="@+id/date_pick_result"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:focusableInTouchMode="false"
                         android:hint="Appointment Date" />
 
                 </android.support.design.widget.TextInputLayout>
@@ -116,6 +117,7 @@
                         android:id="@+id/time_pick_result"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:focusableInTouchMode="false"
                         android:hint="Appointment Time" />
 
                 </android.support.design.widget.TextInputLayout>
