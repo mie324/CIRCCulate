@@ -1,5 +1,6 @@
 package com.example.circculate;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -24,6 +25,7 @@ public class SignUp extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private String emailText, passwordText, usernameText;
     private static final int MIN_PASSWORD_LENGTH = 6;
+    private ProgressDialog progressDialog;
 
 
     @Override
@@ -47,10 +49,14 @@ public class SignUp extends AppCompatActivity {
 
     private void addButtonLisner(){
         Button signupButton = findViewById(R.id.signup_bt);
+        progressDialog = new ProgressDialog(this);
         signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(verifyInputs()){
+                    progressDialog.setMessage("signing up...");
+                    progressDialog.show();
+
                     //sign up user
                     mAuth.createUserWithEmailAndPassword(emailText, passwordText)
                             .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -64,6 +70,8 @@ public class SignUp extends AppCompatActivity {
                                     }
                                 }
                             });
+                    progressDialog.hide();
+
                 }
             }
         });

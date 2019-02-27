@@ -8,6 +8,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -78,8 +81,30 @@ public class FavoritesFragment extends Fragment {
 
             }
         });
+        setHasOptionsMenu(true);
         // Inflate the layout for this fragment
         return root;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
+        inflater.inflate(R.menu.menu_favorite, menu);
+        super.onCreateOptionsMenu(menu,inflater);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch(item.getItemId()){
+            case R.id.logout:
+                Logout();
+                return true;
+            default:
+                return true;
+        }
+    }
+
+    private void Logout() {
     }
 
 
