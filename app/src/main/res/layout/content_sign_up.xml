@@ -145,7 +145,8 @@
                 android:text="Signup"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:onClick="GoToHomePage"/>
 
             <View
                 android:layout_width="0dp"
@@ -173,7 +174,8 @@
                     android:text="Sign In"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
                     android:textColor="@color/purple_A400"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:onClick="GoToSignIn"/>
 
             </LinearLayout>
 
