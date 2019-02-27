@@ -57,24 +57,26 @@ public class FavoritesFragment extends Fragment {
             }
         });
 
-        FloatingActionButton addEventButton = getView().findViewById(R.id.fab_add_event);
-        addEventButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), AddEvent.class);
-                startActivity(intent);
-                showToast("Click button");
-            }
-        });
-        detailBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), DetailPage.class);
-                startActivity(intent);
-
-            }
-        });
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_add, menu);
+    }
+
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        switch (item.getItemId()){
+//            case R.id.action_addevent:{
+//                Log.d(TAG, "onOptionsItemSelected: click add event.");
+//                Intent intent = new Intent(getActivity(), AddEvent.class);
+//                startActivity(intent);
+//                return true;
+//            }
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -93,18 +95,6 @@ public class FavoritesFragment extends Fragment {
         // Inflate the layout for this fragment
         return root;
     }
-
-
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item){
-//        switch(item.getItemId()){
-//            case R.id.logout:
-//                Logout();
-//                return true;
-//            default:
-//                return true;
-//        }
-//    }
 
 
 
