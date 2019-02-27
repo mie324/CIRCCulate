@@ -118,7 +118,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="?attr/actionBarSize"
                         android:gravity="center_vertical"
-                        android:text="Information"
+                        android:text="Title"
                         android:textAppearance="@style/TextAppearance.AppCompat.Title"
                         android:textColor="@color/grey_80" />
 
@@ -189,49 +189,66 @@
                             android:layout_height="@dimen/spacing_xmlarge"
                             android:background="@android:color/transparent"
                             android:tint="@color/grey_40"
-                            app:srcCompat="@drawable/phone_icon" />
+                            app:srcCompat="@drawable/person_icon" />
 
                         <View
                             android:layout_width="@dimen/spacing_middle"
                             android:layout_height="0dp" />
 
-                        <TextView
-                            android:id="@+id/textView10"
+                        <RelativeLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:minHeight="@dimen/spacing_xmlarge"
-                            android:text="88888888"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                            android:textColor="@color/grey_40" />
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:id="@+id/textView10"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:minHeight="@dimen/spacing_xmlarge"
+                                android:text="Vivian Zhang"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                                android:textColor="@color/grey_40" />
+
+                            <Switch
+                                android:id="@+id/switch1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_alignParentBottom="true"
+                                android:layout_marginEnd="2dp"
+                                android:layout_marginBottom="6dp"
+                                android:thumbTint="@color/colorAccent"/>
+
+                        </RelativeLayout>
+
 
                     </LinearLayout>
 
                     <!--<LinearLayout-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:minHeight="@dimen/spacing_xmlarge"-->
-                        <!--android:orientation="horizontal">-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:minHeight="@dimen/spacing_xmlarge"-->
+                    <!--android:orientation="horizontal">-->
 
-                        <!--<ImageButton-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="@dimen/spacing_xmlarge"-->
-                            <!--android:background="@android:color/transparent"-->
-                            <!--android:tint="@color/grey_40"-->
-                            <!--app:srcCompat="@drawable/note_icon" />-->
+                    <!--<ImageButton-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="@dimen/spacing_xmlarge"-->
+                    <!--android:background="@android:color/transparent"-->
+                    <!--android:tint="@color/grey_40"-->
+                    <!--app:srcCompat="@drawable/note_icon" />-->
 
-                        <!--<View-->
-                            <!--android:layout_width="@dimen/spacing_middle"-->
-                            <!--android:layout_height="0dp" />-->
+                    <!--<View-->
+                    <!--android:layout_width="@dimen/spacing_middle"-->
+                    <!--android:layout_height="0dp" />-->
 
-                        <!--<TextView-->
-                            <!--android:layout_width="match_parent"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:gravity="center_vertical"-->
-                            <!--android:minHeight="@dimen/spacing_xmlarge"-->
-                            <!--android:text="Cozy Canopy"-->
-                            <!--android:textAppearance="@style/TextAppearance.AppCompat.Subhead"-->
-                            <!--android:textColor="@color/grey_40" />-->
+                    <!--<TextView-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:gravity="center_vertical"-->
+                    <!--android:minHeight="@dimen/spacing_xmlarge"-->
+                    <!--android:text="Cozy Canopy"-->
+                    <!--android:textAppearance="@style/TextAppearance.AppCompat.Subhead"-->
+                    <!--android:textColor="@color/grey_40" />-->
 
                     <!--</LinearLayout>-->
 
@@ -253,31 +270,31 @@
                 app:cardCornerRadius="2dp"
                 app:cardElevation="2dp">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingLeft="@dimen/spacing_large"
-                    android:paddingRight="@dimen/spacing_large"
-                    android:paddingBottom="@dimen/spacing_large">
+                <!--<LinearLayout-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:orientation="vertical"-->
+                    <!--android:paddingLeft="@dimen/spacing_large"-->
+                    <!--android:paddingRight="@dimen/spacing_large"-->
+                    <!--android:paddingBottom="@dimen/spacing_large">-->
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="?attr/actionBarSize"
-                        android:gravity="center_vertical"
-                        android:text="Sign up"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                        android:textColor="@color/grey_80" />
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                        <TextView
-                            android:layout_width="250dp"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:text="14321 Saddle Wood Dr, North Little Rock \nAR, 72117"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                            android:textColor="@color/grey_40" />
+                    <!--<TextView-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="?attr/actionBarSize"-->
+                        <!--android:gravity="center_vertical"-->
+                        <!--android:text="Sign up"-->
+                        <!--android:textAppearance="@style/TextAppearance.AppCompat.Title"-->
+                        <!--android:textColor="@color/grey_80" />-->
+                    <!--<RelativeLayout-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content">-->
+                        <!--<TextView-->
+                            <!--android:layout_width="250dp"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:gravity="center_vertical"-->
+                            <!--android:text="14321 Saddle Wood Dr, North Little Rock \nAR, 72117"-->
+                            <!--android:textAppearance="@style/TextAppearance.AppCompat.Subhead"-->
+                            <!--android:textColor="@color/grey_40" />-->
 
                         <!--<ImageView-->
                             <!--android:id="@+id/imageView2"-->
@@ -287,23 +304,23 @@
                             <!--android:layout_alignParentEnd="true"-->
                             <!--android:layout_marginEnd="27dp"-->
                             <!--app:srcCompat="@drawable/ic_add" />-->
-                        <android.support.design.widget.FloatingActionButton
-                            android:id="@+id/sign_up_event"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:layout_alignParentTop="true"
-                            android:layout_marginEnd="10dp"
-                            app:srcCompat="@drawable/ic_add"
-                            >
+                        <!--<android.support.design.widget.FloatingActionButton-->
+                            <!--android:id="@+id/sign_up_event"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_alignParentEnd="true"-->
+                            <!--android:layout_alignParentTop="true"-->
+                            <!--android:layout_marginEnd="10dp"-->
+                            <!--app:srcCompat="@drawable/ic_add"-->
+                            <!--&gt;-->
 
-                        </android.support.design.widget.FloatingActionButton>
+                        <!--</android.support.design.widget.FloatingActionButton>-->
 
-                    </RelativeLayout>
+                    <!--</RelativeLayout>-->
 
 
 
-                </LinearLayout>
+                <!--</LinearLayout>-->
 
             </android.support.v7.widget.CardView>
 

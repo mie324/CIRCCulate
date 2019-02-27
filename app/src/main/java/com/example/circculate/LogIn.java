@@ -1,5 +1,6 @@
 package com.example.circculate;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -21,6 +22,7 @@ import com.google.firebase.auth.FirebaseAuth;
 public class LogIn extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private TextInputEditText email, password;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +44,9 @@ public class LogIn extends AppCompatActivity {
         if(verifyEmailPassword()){
             //start log in process
             if(email != null && password != null){
+                progressDialog = new ProgressDialog(this);
+                progressDialog.setMessage("Logging in...");
+                progressDialog.show();
                 mAuth.signInWithEmailAndPassword(email.getText().toString(), password.getText().toString())
                         .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                             @Override
