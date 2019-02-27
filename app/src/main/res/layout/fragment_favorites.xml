@@ -47,7 +47,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="@dimen/spacing_large"
-                            android:text="An Appointment"
+                            android:text="15:00 - An Appointment"
                             android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
 
                         <LinearLayout
@@ -93,7 +93,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
-                                android:text="Sign Up Event" />
+                                android:text="Sign Up For Event" />
 
                         </LinearLayout>
 
@@ -122,7 +122,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="@dimen/spacing_large"
-                            android:text="An Appointment"
+                            android:text="19:00 - An Appointment"
                             android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
 
                         <LinearLayout
@@ -161,14 +161,14 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
                                 android:text="Detail"
-                                android:onClick="GoToDetailPage"/>
+/>
 
                             <Button
                                 style="@style/Button.Accent.Borderless"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
-                                android:text="Sign Up Event" />
+                                android:text="Sign Up For Event" />
 
                         </LinearLayout>
 
@@ -179,17 +179,5 @@
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_add_event"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/spacing_smlarge"
-        android:clickable="true"
-        android:tint="@android:color/white"
-        app:fabSize="normal"
-        app:layout_anchor="@id/events"
-        app:layout_anchorGravity="top|right|end"
-        app:rippleColor="@android:color/white"
-        app:srcCompat="@drawable/ic_add" />
 
 </android.support.design.widget.CoordinatorLayout>

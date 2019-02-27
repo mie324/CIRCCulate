@@ -10,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -57,6 +58,12 @@ public class HomePage extends AppCompatActivity {
             case R.id.action_logout:
                 Logout();
                 return true;
+            case R.id.action_addevent: {
+                Log.d("select", "onOptionsItemSelected: click add event.");
+                Intent intent = new Intent(this, AddEvent.class);
+                startActivity(intent);
+                return true;
+            }
             default:
                 return true;
         }
