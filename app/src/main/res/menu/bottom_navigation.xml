@@ -5,18 +5,18 @@
     <item
         android:id="@+id/navigation_favorites"
         android:icon="@drawable/ic_favorites"
-        android:title="Home Care" />
+        android:title="Calendar" />
 
     <item
         android:id="@+id/navigation_recent"
         android:icon="@drawable/ic_recent"
 
-        android:title="Recents" />
+        android:title="Record" />
 
 
     <item
         android:id="@+id/navigation_nearby"
         android:icon="@drawable/ic_nearby"
-        android:title="PAC" />
+        android:title="Timeline" />
 
 </menu>
