@@ -92,10 +92,11 @@ public class SignUp extends AppCompatActivity {
     }
 
     private boolean verifyInputs(){
-        TextInputEditText email, password, username;
+        TextInputEditText email, password, username, confirmPsd;
         email = findViewById(R.id.email_text);
         password = findViewById(R.id.password_text);
         username = findViewById(R.id.username_text);
+        confirmPsd = findViewById(R.id.confirm_text);
 
         if(TextUtils.isEmpty(email.getText().toString())){
             email.setError("Required");
@@ -110,7 +111,12 @@ public class SignUp extends AppCompatActivity {
         } else if (password.getText().toString().length() < MIN_PASSWORD_LENGTH) {
             password.setError("Password too short.");
             return false;
-        }else{
+        } else if(!password.getText().toString().equals(confirmPsd.getText().toString())){
+            confirmPsd.setError("Password mush match!");
+            return false;
+
+        }
+        else{
             passwordText = password.getText().toString();
         }
 
