@@ -1,25 +1,31 @@
 package com.example.circculate;
 
 public class EventModel {
-    private String title, timestamp, location, userId, note, date;
+    private String title, timestamp, location, userId, note;
     EventModel(){}
 
-    public EventModel(String title, String timestamp, String location, String note, String date) {
+    public EventModel(String title, String timestamp, String location, String note) {
         this.title = title;
         this.timestamp = timestamp;
         this.location = location;
         this.note = note;
-        this.date = date;
         userId = null;
     }
 
-    public EventModel(String title, String timestamp, String location, String date) {
+    public EventModel(String title, String timestamp, String location) {
         this.title = title;
         this.timestamp = timestamp;
         this.location = location;
-        this.date = date;
         note = null;
         userId = null;
+    }
+
+    public EventModel(String title, String timestamp, String location, String userId, String note) {
+        this.title = title;
+        this.timestamp = timestamp;
+        this.location = location;
+        this.userId = userId;
+        this.note = note;
     }
 
     public String getTitle() {
@@ -52,14 +58,6 @@ public class EventModel {
 
     public void setNote(String note) {
         this.note = note;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
     }
 
     public String getUserId() {
