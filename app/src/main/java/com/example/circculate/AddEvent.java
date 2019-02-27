@@ -6,12 +6,14 @@ import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +24,7 @@ import java.util.Calendar;
 public class AddEvent extends AppCompatActivity {
     AppCompatEditText appointDate;
     AppCompatEditText appointTime;
+    AppCompatCheckBox checkmark;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,8 +32,19 @@ public class AddEvent extends AppCompatActivity {
         setContentView(R.layout.activity_add_event);
         appointTime = findViewById(R.id.time_pick_result);
         appointDate = findViewById(R.id.date_pick_result);
+        checkmark = findViewById(R.id.check_box);
         initToolbar();
         addPickerListener();
+        addCheckmarkListner();
+    }
+
+    private void addCheckmarkListner() {
+        checkmark.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                
+            }
+        });
     }
 
     @Override
@@ -43,14 +57,27 @@ public class AddEvent extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_done) {
             //submit the event and return
-            Intent intent = new Intent(this, HomePage.class);
-            showToast("Done");
-            startActivity(intent);
+            if(isValidInput()){
+                //do something
+                addEventToDb();
+                //to homepage
+                Intent intent = new Intent(this, HomePage.class);
+                showToast("Done");
+                startActivity(intent);
+            };
+            
         } else {
             Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
     }
+
+    private void addEventToDb() {
+    }
+
+    private boolean isValidInput() {
+    }
+    
 
     private void initToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
