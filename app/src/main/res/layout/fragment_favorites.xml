@@ -64,14 +64,14 @@
                                 android:layout_height="wrap_content"
                                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                                 android:textColor="@color/grey_60"
-                                android:text="Time: 11p.m."
+                                android:text="Location: Some Hospital"
                                 />
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                                 android:textColor="@color/grey_60"
-                                android:text="Location: Some Hospital"
+                                android:text="Person: Ashe"
                                 />
                         </LinearLayout>
 
@@ -83,17 +83,24 @@
                             <Button
                                 android:id="@+id/detail_button"
                                 style="@style/Button.Accent.Borderless"
-                                android:layout_width="wrap_content"
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
                                 android:text="Detail" />
+                            <Button
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:visibility="invisible"
+                                android:layout_weight="1"/>
 
                             <Button
-                                style="@style/Button.Accent.Borderless"
-                                android:layout_width="wrap_content"
+                                style="@style/Button.Accent"
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
-                                android:text="Sign Up For Event" />
+                                android:text="Sign Up" />
 
                         </LinearLayout>
 
@@ -139,14 +146,14 @@
                                 android:layout_height="wrap_content"
                                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                                 android:textColor="@color/grey_60"
-                                android:text="Time: 11p.m."
+                                android:text="Location: Some Hospital"
                                 />
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                                 android:textColor="@color/grey_60"
-                                android:text="Location: Some Hospital"
+                                android:text="Person: Ashe"
                                 />
                         </LinearLayout>
 
@@ -158,18 +165,26 @@
                             <Button
                                 android:id="@+id/detailBtn"
                                 style="@style/Button.Accent.Borderless"
-                                android:layout_width="wrap_content"
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
                                 android:text="Detail"
                                 />
 
                             <Button
-                                style="@style/Button.Accent.Borderless"
-                                android:layout_width="wrap_content"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
+                                android:visibility="invisible"
+                                android:layout_weight="1"/>
+                            <Button
+                                style="@style/Button.Accent"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
                                 android:gravity="center"
-                                android:text="Sign Up For Event" />
+                                android:text="Sign Up" />
 
                         </LinearLayout>
 
