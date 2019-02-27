@@ -2,6 +2,7 @@ package com.example.circculate;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -49,7 +50,7 @@ public class SignUp extends AppCompatActivity {
 
     private void addButtonLisner(){
         Button signupButton = findViewById(R.id.signup_bt);
-        progressDialog = new ProgressDialog(this);
+        progressDialog = new ProgressDialog(SignUp.this);
         signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -70,11 +71,11 @@ public class SignUp extends AppCompatActivity {
                                     }
                                 }
                             });
-                    progressDialog.hide();
 
                 }
             }
         });
+        progressDialog.dismiss();
     }
 
     private void addUserToDB(final FirebaseUser currentUser){
