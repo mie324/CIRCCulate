@@ -159,19 +159,19 @@ public class HomePage extends AppCompatActivity {
     }
 
     public void switchToRecent(){
-        getSupportActionBar().setTitle("Recent");
+        getSupportActionBar().setTitle("Recordings");
         FragmentManager manager = getSupportFragmentManager();
         manager.beginTransaction().replace(R.id.fragment_container, new RecentFragment()).commit();
     }
 
     public void switchToFavorites(){
-        getSupportActionBar().setTitle("Home Care");
+        getSupportActionBar().setTitle("Calendar");
         FragmentManager manager = getSupportFragmentManager();
         manager.beginTransaction().replace(R.id.fragment_container, new FavoritesFragment()).commit();
     }
 
     public void switchToNearby(){
-        getSupportActionBar().setTitle("ACP");
+        getSupportActionBar().setTitle("Timeline");
         FragmentManager manager = getSupportFragmentManager();
         manager.beginTransaction().replace(R.id.fragment_container, new NearbyFragment()).commit();
     }
