@@ -86,26 +86,18 @@ public class FavoritesFragment extends Fragment {
         return root;
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
-        inflater.inflate(R.menu.menu_favorite, menu);
-        super.onCreateOptionsMenu(menu,inflater);
 
-    }
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item){
+//        switch(item.getItemId()){
+//            case R.id.logout:
+//                Logout();
+//                return true;
+//            default:
+//                return true;
+//        }
+//    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        switch(item.getItemId()){
-            case R.id.logout:
-                Logout();
-                return true;
-            default:
-                return true;
-        }
-    }
-
-    private void Logout() {
-    }
 
 
     private void showToast(String message){
