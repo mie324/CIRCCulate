@@ -45,17 +45,17 @@
             <android.support.design.widget.FloatingActionButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:fabCustomSize="80dp"
-                app:backgroundTint="@android:color/white"
                 android:layout_gravity="center"
-                app:elevation="2dp"
                 android:clickable="true"
+                app:backgroundTint="@android:color/white"
+                app:elevation="2dp"
+                app:fabCustomSize="80dp"
                 app:srcCompat="@drawable/ic_photo"/>
 
             <View
-                android:layout_marginTop="50dp"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:layout_marginTop="50dp"
                 android:layout_weight="1" />
 
             <!--<TextView-->
@@ -70,13 +70,14 @@
             <android.support.design.widget.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/email_text"
                 android:layout_marginLeft="-4dp"
                 android:layout_marginRight="-4dp"
+                android:hint="Enter your email"
                 android:inputType="textEmailAddress"
                 android:maxLength="50"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:hint="Enter your email"
                 android:textColor="@color/blue_grey_300"
                 android:theme="@style/EditText.Grey" />
 
@@ -96,13 +97,14 @@
             <android.support.design.widget.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/password_text"
                 android:layout_marginLeft="-4dp"
                 android:layout_marginRight="-4dp"
+                android:hint="Enter your password"
                 android:inputType="textPassword"
                 android:maxLength="50"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:hint="Enter your password"
                 android:textColor="@color/blue_grey_300"
                 android:theme="@style/EditText.Grey.Hint" />
 
@@ -122,25 +124,27 @@
             <android.support.design.widget.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/username_text"
                 android:layout_marginLeft="-4dp"
                 android:layout_marginRight="-4dp"
-                android:inputType="textPassword"
+                android:hint="Enter your username"
+                android:inputType="text"
                 android:maxLength="50"
                 android:maxLines="1"
-                android:hint="Enter your username"
                 android:singleLine="true"
                 android:textColor="@color/blue_grey_300"
                 android:theme="@style/EditText.Grey.Hint" />
             <View
-                android:layout_marginTop="50dp"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/spacing_large" />
+                android:layout_height="@dimen/spacing_large"
+                android:layout_marginTop="50dp" />
 
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:layout_marginLeft="-4dp"
                 android:layout_marginRight="-4dp"
+                android:id="@+id/signup_bt"
                 android:background="@drawable/btn_purple_a400"
                 android:text="Signup"
                 android:textAllCaps="false"
