@@ -176,9 +176,5 @@ public class HomePage extends AppCompatActivity {
         manager.beginTransaction().replace(R.id.fragment_container, new NearbyFragment()).commit();
     }
 
-    public void GoToDetailPage(View view) {
-        Intent intent = new Intent(this, DetailPage.class);
-        startActivity(intent);
 
-    }
 }

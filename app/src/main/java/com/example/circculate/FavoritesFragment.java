@@ -66,6 +66,14 @@ public class FavoritesFragment extends Fragment {
                 showToast("Click button");
             }
         });
+        detailBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), DetailPage.class);
+                startActivity(intent);
+
+            }
+        });
     }
 
     @Override
