@@ -1,7 +1,6 @@
 package com.example.circculate;
 
 import android.content.Intent;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -15,9 +14,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+//import com.material.components.utils.Tools;
 
 import com.google.firebase.auth.FirebaseAuth;
 //import com.material.components.utils.Tools;
@@ -43,16 +42,19 @@ public class HomePage extends AppCompatActivity {
         switchToFavorites();
     }
 
-//    public boolean onCreateOptionMenu(Menu menu){
-//        MenuInflater inflater = getMenuInflater();
-//        inflater.inflate(R.menu.menu_favorite, menu);
-//        return true;
-//
-//    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_logout, menu);
+//        Tools.changeMenuIconColor(menu, getResources().getColor(R.color.grey_60));
+        return super.onCreateOptionsMenu(menu);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         switch(item.getItemId()){
-            case R.id.logout:
+            case R.id.action_logout:
                 Logout();
                 return true;
             default:
@@ -62,10 +64,10 @@ public class HomePage extends AppCompatActivity {
 
     private void Logout() {
         mAuth.signOut();
-        GotoLogIn();
+        toLogIn();
     }
 
-    private void GotoLogIn() {
+    private void toLogIn() {
         Intent intent = new Intent(this, LogIn.class);
         startActivity(intent);
     }
@@ -81,6 +83,7 @@ public class HomePage extends AppCompatActivity {
 //        Tools.setSystemBarColor(this, R.color.grey_5);
 //        Tools.setSystemBarLight(this);
     }
+
 
     private void initComponent() {
 
