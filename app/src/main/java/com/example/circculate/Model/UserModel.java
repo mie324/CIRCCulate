@@ -1,4 +1,4 @@
-package com.example.circculate;
+package com.example.circculate.Model;
 
 public class UserModel {
     private String username;

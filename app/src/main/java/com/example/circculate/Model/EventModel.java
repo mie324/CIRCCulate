@@ -1,4 +1,4 @@
-package com.example.circculate;
+package com.example.circculate.Model;
 
 import java.io.Serializable;
 import java.util.Comparator;
