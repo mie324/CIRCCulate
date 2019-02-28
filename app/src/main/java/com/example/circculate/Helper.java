@@ -6,29 +6,29 @@ public class Helper {
     public static String transformDate(int year, int monthOfYear, int dayOfMonth){
         String month;
         switch (monthOfYear){
-            case 1: month = "January"; break;
+            case 0: month = "January"; break;
 
-            case 2: month = "February"; break;
+            case 1: month = "February"; break;
 
-            case 3: month = "March"; break;
+            case 2: month = "March"; break;
 
-            case 4: month = "April"; break;
+            case 3: month = "April"; break;
 
-            case 5: month = "May"; break;
+            case 4: month = "May"; break;
 
-            case 6: month = "June"; break;
+            case 5: month = "June"; break;
 
-            case 7: month = "July"; break;
+            case 6: month = "July"; break;
 
-            case 8: month = "August"; break;
+            case 7: month = "August"; break;
 
-            case 9: month = "September"; break;
+            case 8: month = "September"; break;
 
-            case 10: month = "October"; break;
+            case 9: month = "October"; break;
 
-            case 11: month = "November"; break;
+            case 10: month = "November"; break;
 
-            case 12: month = "December"; break;
+            case 11: month = "December"; break;
 
             default: month = "December"; break;
 
@@ -61,6 +61,41 @@ public class Helper {
             minute = Integer.toString(minuteOfHour);
         }
         return hour + ": " + minute;
+    }
+
+    public static String transformTimestampDate(int year, int month, int day){
+        String result = Integer.toString(year);
+        int month_new = month + 1;
+        if(month_new < 10){
+            result = result + "0" + month_new;
+        }else {
+            result = result + month_new;
+        }
+
+        if(day < 10){
+            result = result + "0" + day;
+        }else {
+            result = result + day;
+        }
+
+        return result;
+    }
+
+    public static String transformTimestampTime(int hour, int minute){
+        String result;
+        if(hour < 10){
+            result = "0" + hour;
+        }else {
+            result = Integer.toString(hour);
+        }
+
+        if(minute < 10){
+            result = result +"0" + minute;
+        }else {
+            result = result + minute;
+        }
+
+        return result;
     }
 
 

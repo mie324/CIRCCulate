@@ -42,7 +42,8 @@
                 <android.support.v7.widget.AppCompatEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Appointment Info" />
+                    android:id="@+id/appoint_title"
+                    android:hint="Appointment Title" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -58,6 +59,7 @@
 
                 <android.support.v7.widget.AppCompatEditText
                     android:layout_width="match_parent"
+                    android:id="@+id/appoint_location"
                     android:layout_height="wrap_content"
                     android:hint="Location" />
 
@@ -165,8 +167,9 @@
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
                     android:gravity="top"
+                    android:id="@+id/appoint_note"
                     android:hint="Note"
-                    android:inputType="textMultiLine"
+                    android:inputType="textMultiLine|textCapSentences"
                     android:maxLines="12"
                     android:minLines="7" />
 

@@ -12,13 +12,13 @@ public class EventModel {
         userId = null;
     }
 
-    public EventModel(String title, String timestamp, String location) {
-        this.title = title;
-        this.timestamp = timestamp;
-        this.location = location;
-        note = null;
-        userId = null;
-    }
+//    public EventModel(String title, String timestamp, String location) {
+//        this.title = title;
+//        this.timestamp = timestamp;
+//        this.location = location;
+//        note = null;
+//        userId = null;
+//    }
 
     public EventModel(String title, String timestamp, String location, String userId, String note) {
         this.title = title;
