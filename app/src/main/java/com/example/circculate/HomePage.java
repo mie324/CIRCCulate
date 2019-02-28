@@ -19,6 +19,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 //import com.material.components.utils.Tools;
 
+import com.example.circculate.Fragment.FavoritesFragment;
+import com.example.circculate.Fragment.NearbyFragment;
+import com.example.circculate.Fragment.RecentFragment;
 import com.google.firebase.auth.FirebaseAuth;
 //import com.material.components.utils.Tools;
 
@@ -47,7 +50,7 @@ public class HomePage extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_logout, menu);
+        inflater.inflate(R.menu.menu_calender, menu);
 //        Tools.changeMenuIconColor(menu, getResources().getColor(R.color.grey_60));
         return super.onCreateOptionsMenu(menu);
     }
@@ -57,6 +60,10 @@ public class HomePage extends AppCompatActivity {
         switch(item.getItemId()){
             case R.id.action_logout:
                 Logout();
+                return true;
+            case R.id.action_allevents:
+                return true;
+            case R.id.action_yourevents:
                 return true;
             case R.id.action_addevent: {
                 Log.d("select", "onOptionsItemSelected: click add event.");

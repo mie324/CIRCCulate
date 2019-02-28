@@ -1,4 +1,4 @@
-package com.example.circculate;
+package com.example.circculate.Fragment;
 
 
 import android.content.Intent;
@@ -16,6 +16,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.Toast;
+
+import com.example.circculate.DetailPage;
+import com.example.circculate.R;
 
 
 /**
