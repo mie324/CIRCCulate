@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.example.circculate.DetailPage;
 import com.example.circculate.Helper;
 import com.example.circculate.Model.EventModel;
+import com.example.circculate.Model.UserModel;
 import com.example.circculate.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -33,16 +34,18 @@ public class CalendarEventAdapter extends RecyclerView.Adapter<RecyclerView.View
     private static final String TAG = "adapter";
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
+    private UserModel user;
 
     public interface OnItemClickListener {
         void onItemClick(View view, EventModel event, int position);
     }
 
-    public CalendarEventAdapter(Context context, List<EventModel> events){
+    public CalendarEventAdapter(Context context, List<EventModel> events, UserModel user){
         this.events = events;
         this.context = context;
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+        this.user = user;
     }
 
     public class EventViewHolder extends RecyclerView.ViewHolder{
@@ -80,7 +83,7 @@ public class CalendarEventAdapter extends RecyclerView.Adapter<RecyclerView.View
                 event.getTimestamp()));
         eventViewHolder.appointmentLocation.setText(Helper.tranformAppointLoca(event.getLocation()));
 
-        eventViewHolder.appointmentPerson.setText(Helper.transformAppointPerson(event.getUserId()));
+        eventViewHolder.appointmentPerson.setText(user.getUsername());
         eventViewHolder.detailButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -102,12 +105,13 @@ public class CalendarEventAdapter extends RecyclerView.Adapter<RecyclerView.View
                     }
                 }else {
                     event.setUserId(mAuth.getUid());
+                    event.setUserName(user.getUsername());
                     db.collection("events").document(event.getTimestamp())
                             .set(event).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if(task.isSuccessful()){
-                                eventViewHolder.appointmentPerson.setText(Helper.transformAppointPerson(event.getUserId()));
+                                eventViewHolder.appointmentPerson.setText(user.getUsername());
                                 Toast.makeText(context, "You have signed for the event.",
                                         Toast.LENGTH_SHORT).show();
                             }else {
@@ -116,6 +120,7 @@ public class CalendarEventAdapter extends RecyclerView.Adapter<RecyclerView.View
                             }
                         }
                     });
+//                    eventViewHolder.appointmentPerson.setText(user.getUsername());
                 }
                 Log.d(TAG, "onClick: sign up.");
             }

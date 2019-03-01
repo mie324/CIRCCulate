@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.example.circculate.Adapter.CalendarEventAdapter;
 import com.example.circculate.Helper;
 import com.example.circculate.Model.EventModel;
+import com.example.circculate.Model.UserModel;
 import com.example.circculate.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -52,13 +53,23 @@ public class FavoritesFragment extends Fragment {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private List<EventModel> events;
+    private UserModel user;
 
     public FavoritesFragment() {
         // Required empty public constructor
     }
 
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
 
+        super.onCreate(savedInstanceState);
+        if(getArguments()!=null){
+            user = (UserModel) getArguments().getSerializable("LoggedUser");
+//            Log.d("username", user.getUsername());
+        }
+
+    }
     @Override
     public void onStart() {
         super.onStart();
@@ -135,7 +146,7 @@ public class FavoritesFragment extends Fragment {
         calenderRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         //get the event according to calendar date
-        mAdapter = new CalendarEventAdapter(getActivity(), events);
+        mAdapter = new CalendarEventAdapter(getActivity(), events, user);
         calenderRecycler.setAdapter(mAdapter);
         getTodayEvents();
         Log.d(TAG, "initRecyclerView: recyclerview init");

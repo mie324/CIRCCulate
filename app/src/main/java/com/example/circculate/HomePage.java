@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.example.circculate.Fragment.FavoritesFragment;
 import com.example.circculate.Fragment.NearbyFragment;
 import com.example.circculate.Fragment.RecentFragment;
+import com.example.circculate.Model.UserModel;
 import com.google.firebase.auth.FirebaseAuth;
 //import com.material.components.utils.Tools;
 
@@ -35,11 +36,14 @@ public class HomePage extends AppCompatActivity {
     private ViewPager view_pager;
     private TabLayout tab_layout;
     private FirebaseAuth mAuth;
+    private UserModel user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
         mAuth = FirebaseAuth.getInstance();
+//        Bundle b = getIntent().getExtras();
+        user = (UserModel)getIntent().getSerializableExtra("loggedUser");
 
         initToolbar();
         initComponent();
@@ -70,6 +74,7 @@ public class HomePage extends AppCompatActivity {
             case R.id.action_addevent: {
                 Log.d("select", "onOptionsItemSelected: click add event.");
                 Intent intent = new Intent(this, AddEvent.class);
+                intent.putExtra("loggedUser1", user);
                 startActivity(intent);
                 return true;
             }
@@ -191,12 +196,18 @@ public class HomePage extends AppCompatActivity {
     }
 
     public void switchToFavorites(){
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("LoggedUser",user);
+        Log.d("username2", user.getUsername());
+        FavoritesFragment fragment = new FavoritesFragment();
+        fragment.setArguments(bundle);
         getSupportActionBar().setTitle("Calendar");
         FragmentManager manager = getSupportFragmentManager();
-        manager.beginTransaction().replace(R.id.fragment_container, new FavoritesFragment()).commit();
+        manager.beginTransaction().replace(R.id.fragment_container, fragment).commit();
     }
 
     public void switchToNearby(){
+
         getSupportActionBar().setTitle("Timeline");
         FragmentManager manager = getSupportFragmentManager();
         manager.beginTransaction().replace(R.id.fragment_container, new NearbyFragment()).commit();
