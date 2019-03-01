@@ -118,6 +118,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="?attr/actionBarSize"
                         android:gravity="center_vertical"
+                        android:id="@+id/title"
                         android:text="Title"
                         android:textAppearance="@style/TextAppearance.AppCompat.Title"
                         android:textColor="@color/grey_80" />
@@ -144,6 +145,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
                             android:minHeight="@dimen/spacing_xmlarge"
+                            android:id="@+id/date_and_time"
                             android:text="16:30 2/26/2019"
                             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                             android:textColor="@color/grey_40" />
@@ -172,6 +174,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
                             android:minHeight="@dimen/spacing_xmlarge"
+                            android:id="@+id/location"
                             android:text="Torontol Hospital"
                             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                             android:textColor="@color/grey_40" />
@@ -200,7 +203,7 @@
                             android:layout_height="wrap_content">
 
                             <TextView
-                                android:id="@+id/textView10"
+                                android:id="@+id/person"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:gravity="center_vertical"
@@ -210,7 +213,7 @@
                                 android:textColor="@color/grey_40" />
 
                             <Switch
-                                android:id="@+id/switch1"
+                                android:id="@+id/signup_switch"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentEnd="true"
@@ -357,6 +360,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
+                        android:id="@+id/note_content"
                         android:text="anc"
                         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                         android:textColor="@color/grey_40" />

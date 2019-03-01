@@ -1,16 +1,19 @@
 package com.example.circculate.Model;
 
-public class EventModel {
-    private String title, timestamp, location, userName, note,userId;
-    public EventModel(){}
+import java.io.Serializable;
+import java.util.Comparator;
+
+public class EventModel implements Serializable{
+    private String title, timestamp, location, userId, note, userName;
+    EventModel(){}
 
     public EventModel(String title, String timestamp, String location, String note) {
         this.title = title;
         this.timestamp = timestamp;
         this.location = location;
         this.note = note;
-        userName = null;
-        userId = null;
+        this.userName = null;
+        this.userId = null;
     }
 
 //    public EventModel(String title, String timestamp, String location) {
@@ -69,4 +72,27 @@ public class EventModel {
     public void setUserName(String userName) {
         this.userName = userName;
     }
+
+    public static Comparator<EventModel> eventComparator = new Comparator<EventModel>() {
+        @Override
+        public int compare(EventModel event1, EventModel event2) {
+
+            long timestamp1 = Long.parseLong(event1.getTimestamp());
+
+            long timestamp2 = Long.parseLong(event2.getTimestamp());
+            if(timestamp1 > timestamp2){
+                return 1;
+            }else {
+                return -1;
+            }
+//            return (int)(timestamp1 - timestamp2);
+        }
+    };
+
+
+//    @Override
+//    public int compare(EventModel event1, EventModel event2) {
+//
+//        return 0;
+//    }
 }

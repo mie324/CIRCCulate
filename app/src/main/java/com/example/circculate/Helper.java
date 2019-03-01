@@ -1,6 +1,9 @@
 package com.example.circculate;
-
-import android.widget.Toast;
+//
+//import android.widget.Toast;
+//
+//import com.google.firebase.auth.FirebaseAuth;
+//import com.google.firebase.firestore.FirebaseFirestore;
 
 public class Helper {
     public static String getTimedate(String timestamp){
@@ -142,5 +145,27 @@ public class Helper {
         return result;
     }
 
+    public static String transformAppointTitle(String title, String timestamp){
+        String result = timestamp.substring(8, 10) + ":" + timestamp.substring(10);
+        result = result + " - " + title;
+
+
+        return result;
+    }
+
+    public static String tranformAppointLoca(String location){
+        return "Location: " + location;
+
+    }
+
+    public static String transformAppointPerson(String username){
+        return "Person: " + username;
+    }
+
+    public static String transformDetailTime(String timestamp){
+        return timestamp.substring(8, 10) + ":" + timestamp.substring(10)
+                + " " + timestamp.substring(4, 6) + "/" + timestamp.substring(6, 8)
+                + "/" + timestamp.substring(0, 4);
+    }
 
 }

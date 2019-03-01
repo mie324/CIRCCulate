@@ -3,9 +3,12 @@ package com.example.circculate.Fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,8 +20,20 @@ import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.Toast;
 
-import com.example.circculate.DetailPage;
-import com.example.circculate.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.TimeZone;
 
 
 /**
@@ -28,7 +43,11 @@ public class FavoritesFragment extends Fragment {
     private CalendarView eventCalendar;
     private String date;
     private static final String TAG = "select";
-    private Button detailBtn;
+    private RecyclerView calenderRecycler;
+    private CalendarEventAdapter mAdapter;
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
+    private List<EventModel> events;
 
     public FavoritesFragment() {
         // Required empty public constructor
@@ -39,6 +58,87 @@ public class FavoritesFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+        events = new ArrayList<>();
+        setCalendarListener();
+        initRecyclerView();
+        setHasOptionsMenu(true);
+
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_add, menu);
+    }
+
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View root = inflater.inflate(R.layout.fragment_favorites, container, false);
+//        detailBtn = (Button)root.findViewById(R.id.detail_button);
+//        detailBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(getActivity(), DetailPage.class);
+//                startActivity(intent);
+//
+//            }
+//        });
+
+        // Inflate the layout for this fragment
+        return root;
+    }
+
+    private void getTodayEvents(){
+        Log.d(TAG, "getTodayEvents: get today's event");
+        Date currentDate = Calendar.getInstance(TimeZone.getTimeZone("America/Toronto")).getTime();
+        String currentDateString = Helper.transformTimestampDate(currentDate.getYear() + 1900, currentDate.getMonth(),
+                currentDate.getDate());
+        String minTime = currentDateString + "0000";
+        String maxTime = currentDateString + "2359";
+        Log.d(TAG, "getTodayEvents: " + currentDateString);
+
+        db.collection("events").whereGreaterThan("timestamp", minTime)
+                .whereLessThan("timestamp", maxTime).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    events.clear();
+                    tranDocs(task.getResult().getDocuments());
+                }else {
+                    showToast(task.getException().toString());
+                }
+            }
+        });
+
+
+    }
+
+    private void tranDocs(List<DocumentSnapshot> documents){
+        for(DocumentSnapshot document: documents){
+            events.add(document.toObject(EventModel.class));
+        }
+        Collections.sort(events, EventModel.eventComparator);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    private void initRecyclerView(){
+        calenderRecycler = (RecyclerView)getView().findViewById(R.id.recycler_calendar_event);
+        calenderRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        //get the event according to calendar date
+        mAdapter = new CalendarEventAdapter(getActivity(), events);
+        calenderRecycler.setAdapter(mAdapter);
+        getTodayEvents();
+        Log.d(TAG, "initRecyclerView: recyclerview init");
+        //set on click listener
+
+    }
+
+    private void setCalendarListener(){
         if(eventCalendar == null){
             eventCalendar = (CalendarView) getView().findViewById(R.id.event_calendar);
         }
@@ -49,57 +149,27 @@ public class FavoritesFragment extends Fragment {
                 if(view != null){
                     Log.d(TAG, "not null.");
                 }
-                month += 1;
-                String currentDate = Integer.toString(year) + "/" + Integer.toString(month) + "/" + Integer.toString(dayOfMonth);
+                String currentDate = Helper.transformTimestampDate(year, month, dayOfMonth);
                 if(!currentDate.equals(date)){
                     date = currentDate;
-                    String msg = "You select " + month + "/" + dayOfMonth + "in year " + year;
-                    Log.d(TAG, "onSelectedDayChange: " + msg);
-                    showToast(msg);
+                    String minTime = currentDate + "0000";
+                    String maxTime = currentDate + "2359";
+                    db.collection("events").whereGreaterThan("timestamp", minTime)
+                            .whereLessThan("timestamp", maxTime).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if(task.isSuccessful()){
+                                events.clear();
+                                tranDocs(task.getResult().getDocuments());
+                            }else {
+                                showToast(task.getException().toString());
+                            }
+                        }
+                    });
                 }
             }
         });
-
     }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_add, menu);
-    }
-
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        switch (item.getItemId()){
-//            case R.id.action_addevent:{
-//                Log.d(TAG, "onOptionsItemSelected: click add event.");
-//                Intent intent = new Intent(getActivity(), AddEvent.class);
-//                startActivity(intent);
-//                return true;
-//            }
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_favorites, container, false);
-        detailBtn = (Button)root.findViewById(R.id.detail_button);
-        detailBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), DetailPage.class);
-                startActivity(intent);
-
-            }
-        });
-        setHasOptionsMenu(true);
-        // Inflate the layout for this fragment
-        return root;
-    }
-
-
 
     private void showToast(String message){
         Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
