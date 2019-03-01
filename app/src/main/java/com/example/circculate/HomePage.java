@@ -62,8 +62,10 @@ public class HomePage extends AppCompatActivity {
                 Logout();
                 return true;
             case R.id.action_allevents:
+                gotoAllEvents();
                 return true;
             case R.id.action_yourevents:
+                gotoYourEvents();
                 return true;
             case R.id.action_addevent: {
                 Log.d("select", "onOptionsItemSelected: click add event.");
@@ -74,6 +76,16 @@ public class HomePage extends AppCompatActivity {
             default:
                 return true;
         }
+    }
+
+    private void gotoYourEvents() {
+        Intent intent = new Intent(this, YourEvents.class);
+        startActivity(intent);
+    }
+
+    private void gotoAllEvents() {
+        Intent intent = new Intent(this, AllEvents.class);
+        startActivity(intent);
     }
 
     private void Logout() {

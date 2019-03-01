@@ -3,34 +3,78 @@ package com.example.circculate;
 import android.widget.Toast;
 
 public class Helper {
+    public static String getTimedate(String timestamp){
+        int len = timestamp.length();
+        String timedate = timestamp.substring(0,8);
+        return timedate;
+    }
+
+    public static String getTime(String timestamp){
+        int len = timestamp.length();
+        String time = timestamp.substring(8,len);
+        return time;
+    }
+    public static String transformMon(String monthOfYear){
+        String month;
+        switch (monthOfYear){
+            case "01": month = "Jan"; break;
+
+            case "02": month = "Feb"; break;
+
+            case "03": month = "Mar"; break;
+
+            case "04": month = "Apr"; break;
+
+            case "05": month = "May"; break;
+
+            case "06": month = "Jun"; break;
+
+            case "07": month = "Jul"; break;
+
+            case "08": month = "Aug"; break;
+
+            case "09": month = "Sept"; break;
+
+            case "10": month = "Oct"; break;
+
+            case "11": month = "Nov"; break;
+
+            case "12": month = "Dec"; break;
+
+            default: month = "Dec"; break;
+
+        }
+        return month;
+    }
+
     public static String transformDate(int year, int monthOfYear, int dayOfMonth){
         String month;
         switch (monthOfYear){
-            case 0: month = "January"; break;
+            case 0: month = "Jan"; break;
 
-            case 1: month = "February"; break;
+            case 1: month = "Feb"; break;
 
-            case 2: month = "March"; break;
+            case 2: month = "Mar"; break;
 
-            case 3: month = "April"; break;
+            case 3: month = "Apr"; break;
 
             case 4: month = "May"; break;
 
-            case 5: month = "June"; break;
+            case 5: month = "Jun"; break;
 
-            case 6: month = "July"; break;
+            case 6: month = "Jul"; break;
 
-            case 7: month = "August"; break;
+            case 7: month = "Aug"; break;
 
-            case 8: month = "September"; break;
+            case 8: month = "Sept"; break;
 
-            case 9: month = "October"; break;
+            case 9: month = "Oct"; break;
 
-            case 10: month = "November"; break;
+            case 10: month = "Nov"; break;
 
-            case 11: month = "December"; break;
+            case 11: month = "Dec"; break;
 
-            default: month = "December"; break;
+            default: month = "Dec"; break;
 
         }
 

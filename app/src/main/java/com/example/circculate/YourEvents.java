@@ -1,3 +1,4 @@
+
 package com.example.circculate;
 
 import android.content.Intent;
@@ -21,13 +22,12 @@ import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-public class AllEvents extends AppCompatActivity {
+public class YourEvents extends AppCompatActivity {
     private ArrayList<EventModel> eventList;
-    private RecyclerView allEventsRv;
-    private AlleventsAdapter alleventsAdapter;
+    private RecyclerView yourEventsRv;
+    private AlleventsAdapter youreventsAdapter;
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
@@ -36,22 +36,21 @@ public class AllEvents extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_all_events);
-        allEventsRv = findViewById(R.id.allEventsRv);
-        allEventsRv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false));
+        setContentView(R.layout.activity_your_events);
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+        yourEventsRv = findViewById(R.id.yourEventsRv);
+        yourEventsRv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false));
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
 //                .setPersistenceEnabled(true)
 //                .setTimestampsInSnapshotsEnabled(true)
                 .build();
         db.setFirestoreSettings(settings);
-        getAllEvents();
-
+        getYourEvents();
     }
 
-    private void getAllEvents() {
-        db.collection("events").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+    private void getYourEvents() {
+        db.collection("events").whereEqualTo("userId", mAuth.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful()){
@@ -66,7 +65,6 @@ public class AllEvents extends AppCompatActivity {
 
             }
         });
-
     }
 
     private void displayEvents(List<DocumentSnapshot> eventsDoc) {
@@ -74,14 +72,14 @@ public class AllEvents extends AppCompatActivity {
         for(DocumentSnapshot doc:eventsDoc){
             eventList.add(doc.toObject(EventModel.class));
         }
-        Log.d("Num", Integer.toString(eventList.size()));
+//        Log.d("Num", Integer.toString(eventList.size()));
 
-        alleventsAdapter = new AlleventsAdapter(this, eventList);
-        allEventsRv.setAdapter(alleventsAdapter);
+        youreventsAdapter = new AlleventsAdapter(this, eventList);
+        yourEventsRv.setAdapter(youreventsAdapter);
     }
 
-    public void gotoYourEvents(View view) {
-        Intent intent = new Intent(this, YourEvents.class);
+    public void gotoAllEventsPage(View view) {
+        Intent intent = new Intent(this, AllEvents.class);
         startActivity(intent);
     }
 }

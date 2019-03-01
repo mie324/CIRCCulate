@@ -1,8 +1,12 @@
 package com.example.circculate;
 
+import com.example.circculate.Model.EventModel;
+import com.example.circculate.Model.UserModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
@@ -39,6 +43,7 @@ public class AddEvent extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private static final String TAG = "select";
+    private UserModel user_u;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +102,9 @@ public class AddEvent extends AppCompatActivity {
 
         if(checkBoxFlag){
             mAuth = FirebaseAuth.getInstance();
-            newEvent = new EventModel(this.title, this.timestamp, this.location, mAuth.getCurrentUser().getUid(),this.note);
+            String uid = mAuth.getCurrentUser().getUid();
+            String username = getUsername(uid);
+            newEvent = new EventModel(this.title, this.timestamp, this.location, username, uid,this.note);
         }else {
             newEvent = new EventModel(this.title, this.timestamp, this.location, this.note);
         }
@@ -121,6 +128,25 @@ public class AddEvent extends AppCompatActivity {
 //        dialog.hide();
 
 
+    }
+
+    private String getUsername(String uid) {
+        final DocumentReference docRef = db.collection("users").document(uid);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot doc =  task.getResult();
+                    if(doc.exists()){
+                        user_u = doc.toObject(UserModel.class);
+
+                    }
+
+                }
+
+            }
+        });
+        return user_u.getUsername();
     }
 
     private boolean isValidInput() {

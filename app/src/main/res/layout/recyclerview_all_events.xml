@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginTop="10dp"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
@@ -21,7 +21,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/null"
             android:orientation="vertical">
 
             <LinearLayout
@@ -36,7 +35,7 @@
                     android:layout_height="wrap_content">
 
                     <ImageView
-                        android:id="@+id/imageView2"
+                        android:id="@+id/calender_icon"
                         android:layout_width="70dp"
                         android:layout_height="90dp"
                         android:scaleType="centerCrop"
@@ -56,7 +55,7 @@
                         android:textSize="16sp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/imageView2" />
+                        app:layout_constraintTop_toTopOf="@+id/calender_icon" />
 
                     <TextView
                         android:id="@+id/Day_text"
@@ -104,14 +103,24 @@
                                 android:textColor="@color/grey_90" />
 
                             <TextView
+                                android:id="@+id/Time_text"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/spacing_medium"
-                                android:text="Location: "
+                                android:text=""
                                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                                 android:textColor="@color/grey_60" />
 
                         </LinearLayout>
+                        <Switch
+                            android:id="@+id/switch1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentBottom="true"
+                            android:layout_marginEnd="2dp"
+                            android:layout_marginBottom="6dp"
+                            android:thumbTint="@color/colorAccent"/>
 
                         <!--<ImageButton-->
                             <!--android:layout_width="wrap_content"-->
@@ -120,9 +129,9 @@
                             <!--android:tint="@color/grey_40"-->
                             <!--app:srcCompat="@drawable/ic_more_vert" />-->
 
-                        <!--<View-->
-                            <!--android:layout_width="@dimen/spacing_small"-->
-                            <!--android:layout_height="0dp" />-->
+                        <View
+                            android:layout_width="@dimen/spacing_small"
+                            android:layout_height="0dp" />
 
                     </LinearLayout>
 
@@ -142,6 +151,7 @@
                             android:layout_height="0dp" />
 
                         <TextView
+                            android:id="@+id/Person_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Vivian Zhang"
@@ -155,7 +165,7 @@
                             android:layout_weight="1" />
 
                         <TextView
-                            android:id="@+id/detail_text"
+                            android:id="@+id/Detail_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="DETAIL"
