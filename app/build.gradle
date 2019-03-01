@@ -64,4 +64,5 @@ dependencies {
 //    implementation 'com.android.support:support-v13:27.0.0'
 //    implementation 'com.android.support:support-vector-drawable:27.0.0'
 //    implementation 'com.android.support:customtabs:27.0.0'
+    implementation 'com.android.support:support-v4:27.1.1'
 }

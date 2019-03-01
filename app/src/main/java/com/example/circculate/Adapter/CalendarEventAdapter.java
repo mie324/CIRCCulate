@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.example.circculate.DetailPage;
 import com.example.circculate.Helper;
 import com.example.circculate.Model.EventModel;
+import com.example.circculate.Model.UserModel;
 import com.example.circculate.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;

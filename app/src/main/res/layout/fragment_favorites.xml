@@ -1,32 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:orientation="vertical"
     android:layout_height="match_parent"
 
     tools:context=".Fragment.FavoritesFragment">
 
-
-
-    <LinearLayout
-        android:orientation="vertical"
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tab_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <CalendarView
-            android:layout_width="match_parent"
-            android:id="@+id/event_calendar"
-            android:layout_height="wrap_content">
-        </CalendarView>
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_calendar_event"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-        </android.support.v7.widget.RecyclerView>
-
-        </LinearLayout>
+        android:layout_height="?attr/actionBarSize"
+        app:tabGravity="fill"
+        app:tabIndicatorColor="@color/colorAccent"
+        app:tabIndicatorHeight="3dp"
+        app:tabMode="fixed"
+        app:tabSelectedTextColor="@color/colorAccent"
+        app:tabTextAppearance="@style/TextAppearance.Subhead.Bold"
+        app:tabTextColor="@color/grey_60" />
 
 
-</android.support.design.widget.CoordinatorLayout>
+    <android.support.v4.view.ViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+
+</LinearLayout>

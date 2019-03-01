@@ -1,75 +1,42 @@
 package com.example.circculate.Fragment;
 
 
-import android.content.Intent;
+
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
+
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
+
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.CalendarView;
-import android.widget.Toast;
 
-import com.example.circculate.Adapter.CalendarEventAdapter;
-import com.example.circculate.Helper;
-import com.example.circculate.Model.EventModel;
 import com.example.circculate.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
+
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class FavoritesFragment extends Fragment {
-    private CalendarView eventCalendar;
-    private String date;
-    private static final String TAG = "select";
-    private RecyclerView calenderRecycler;
-    private CalendarEventAdapter mAdapter;
-    private FirebaseAuth mAuth;
-    private FirebaseFirestore db;
-    private List<EventModel> events;
+    //new
+    private ViewPager viewPager;
+    private TabLayout tabLayout;
 
     public FavoritesFragment() {
         // Required empty public constructor
     }
 
 
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        mAuth = FirebaseAuth.getInstance();
-        db = FirebaseFirestore.getInstance();
-        events = new ArrayList<>();
-        setCalendarListener();
-        initRecyclerView();
-        setHasOptionsMenu(true);
-
-    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -83,101 +50,55 @@ public class FavoritesFragment extends Fragment {
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_favorites, container, false);
 
-//        detailBtn = (Button)root.findViewById(R.id.detail_button);
-//        detailBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(getActivity(), DetailPage.class);
-//                startActivity(intent);
-//
-//            }
-//        });
+        viewPager = root.findViewById(R.id.view_pager);
+        SectionsPagerAdapter adapter = new SectionsPagerAdapter(getChildFragmentManager());
+        adapter.addFragment(new CalendarFragment(), "Calendar");
+        adapter.addFragment(new AllEventFragment(), "All Events");
+        adapter.addFragment(new MyEventFragment(), "My Events");
+        viewPager.setAdapter(adapter);
 
+        tabLayout = root.findViewById(R.id.tab_layout);
+        tabLayout.setupWithViewPager(viewPager);
         // Inflate the layout for this fragment
         return root;
     }
 
-    private void getTodayEvents(){
-        Log.d(TAG, "getTodayEvents: get today's event");
-        Date currentDate = Calendar.getInstance(TimeZone.getTimeZone("America/Toronto")).getTime();
-        String currentDateString = Helper.transformTimestampDate(currentDate.getYear() + 1900, currentDate.getMonth(),
-                currentDate.getDate());
-        String minTime = currentDateString + "0000";
-        String maxTime = currentDateString + "2359";
-        Log.d(TAG, "getTodayEvents: " + currentDateString);
+    private class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-        db.collection("events").whereGreaterThan("timestamp", minTime)
-                .whereLessThan("timestamp", maxTime).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()){
-                    events.clear();
-                    tranDocs(task.getResult().getDocuments());
-                }else {
-                    showToast(task.getException().toString());
-                }
-            }
-        });
+        private final List<Fragment> mFragmentList = new ArrayList<>();
+        private final List<String> mFragmentTitleList = new ArrayList<>();
 
+        public SectionsPagerAdapter(FragmentManager manager) {
+            super(manager);
 
-    }
-
-    private void tranDocs(List<DocumentSnapshot> documents){
-        for(DocumentSnapshot document: documents){
-            events.add(document.toObject(EventModel.class));
-        }
-        Collections.sort(events, EventModel.eventComparator);
-        mAdapter.notifyDataSetChanged();
-    }
-
-    private void initRecyclerView(){
-        calenderRecycler = (RecyclerView)getView().findViewById(R.id.recycler_calendar_event);
-        calenderRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        //get the event according to calendar date
-        mAdapter = new CalendarEventAdapter(getActivity(), events);
-        calenderRecycler.setAdapter(mAdapter);
-        getTodayEvents();
-        Log.d(TAG, "initRecyclerView: recyclerview init");
-        //set on click listener
-
-    }
-
-    private void setCalendarListener(){
-        if(eventCalendar == null){
-            eventCalendar = (CalendarView) getView().findViewById(R.id.event_calendar);
         }
 
-        eventCalendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
-            @Override
-            public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
-                if(view != null){
-                    Log.d(TAG, "not null.");
-                }
-                String currentDate = Helper.transformTimestampDate(year, month, dayOfMonth);
-                if(!currentDate.equals(date)){
-                    date = currentDate;
-                    String minTime = currentDate + "0000";
-                    String maxTime = currentDate + "2359";
-                    db.collection("events").whereGreaterThan("timestamp", minTime)
-                            .whereLessThan("timestamp", maxTime).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if(task.isSuccessful()){
-                                events.clear();
-                                tranDocs(task.getResult().getDocuments());
-                            }else {
-                                showToast(task.getException().toString());
-                            }
-                        }
-                    });
-                }
-            }
-        });
+        @Override
+        public Fragment getItem(int position) {
+            return mFragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragmentList.size();
+        }
+
+        public void addFragment(Fragment fragment, String title) {
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mFragmentTitleList.get(position);
+        }
     }
 
-    private void showToast(String message){
-        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
-    }
+
+
+
+
+
+
 
 }

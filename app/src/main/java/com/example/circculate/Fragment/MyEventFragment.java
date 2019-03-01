@@ -1,21 +1,21 @@
+package com.example.circculate.Fragment;
 
-package com.example.circculate;
 
-import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.example.circculate.Adapter.AlleventsAdapter;
 import com.example.circculate.Model.EventModel;
+import com.example.circculate.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
@@ -24,28 +24,40 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class YourEvents extends AppCompatActivity {
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class MyEventFragment extends Fragment {
+
     private ArrayList<EventModel> eventList;
-    private RecyclerView yourEventsRv;
-    private AlleventsAdapter youreventsAdapter;
+    private RecyclerView myEventsRv;
+    private AlleventsAdapter myEventsAdapter;
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
     private List<DocumentSnapshot> EventsDoc;
+    public MyEventFragment() {
+        // Required empty public constructor
+    }
+
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_your_events);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View root = inflater.inflate(R.layout.fragment_my_event, container, false);
+
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
-        yourEventsRv = findViewById(R.id.yourEventsRv);
-        yourEventsRv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false));
+        myEventsRv = root.findViewById(R.id.yourEventsRv);
+        myEventsRv.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL,false));
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
 //                .setPersistenceEnabled(true)
 //                .setTimestampsInSnapshotsEnabled(true)
                 .build();
         db.setFirestoreSettings(settings);
         getYourEvents();
+
+        return root;
     }
 
     private void getYourEvents() {
@@ -73,12 +85,8 @@ public class YourEvents extends AppCompatActivity {
         }
 //        Log.d("Num", Integer.toString(eventList.size()));
 
-        youreventsAdapter = new AlleventsAdapter(this, eventList);
-        yourEventsRv.setAdapter(youreventsAdapter);
+        myEventsAdapter = new AlleventsAdapter(getActivity(), eventList);
+        myEventsRv.setAdapter(myEventsAdapter);
     }
 
-    public void gotoAllEventsPage(View view) {
-        Intent intent = new Intent(this, AllEvents.class);
-        startActivity(intent);
-    }
 }
