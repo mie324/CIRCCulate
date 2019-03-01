@@ -34,7 +34,7 @@ public class EventModel implements Serializable{
     }
 
     public String getTitle() {
-        return title;
+        return this.title;
     }
 
     public void setTitle(String title) {
@@ -42,7 +42,7 @@ public class EventModel implements Serializable{
     }
 
     public String getTimestamp() {
-        return timestamp;
+        return this.timestamp;
     }
 
     public void setTimestamp(String timestamp) {
@@ -50,7 +50,7 @@ public class EventModel implements Serializable{
     }
 
     public String getLocation() {
-        return location;
+        return this.location;
     }
 
     public void setLocation(String location) {
@@ -58,7 +58,7 @@ public class EventModel implements Serializable{
     }
 
     public String getNote() {
-        return note;
+        return this.note;
     }
 
     public void setNote(String note) {
@@ -66,11 +66,19 @@ public class EventModel implements Serializable{
     }
 
     public String getUserName() {
-        return userName;
+        return this.userName;
     }
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public String getUserId(){
+        return  this.userId;
+    }
+
+    public void setUserId(String userId){
+        this.userId = userId;
     }
 
     public static Comparator<EventModel> eventComparator = new Comparator<EventModel>() {

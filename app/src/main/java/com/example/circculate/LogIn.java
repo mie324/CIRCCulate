@@ -68,8 +68,12 @@ public class LogIn extends AppCompatActivity {
     }
 
     private void toHomeActivity() {
-
+        //get user and reconstruct
+        // UserModel user = ...
         Intent intent = new Intent(this, HomePage.class);
+        /*
+        intent.putExtra("loggedInUser", user)
+         */
         startActivity(intent);
     }
 

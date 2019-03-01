@@ -20,6 +20,10 @@ import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.Toast;
 
+import com.example.circculate.Adapter.CalendarEventAdapter;
+import com.example.circculate.Helper;
+import com.example.circculate.Model.EventModel;
+import com.example.circculate.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -78,6 +82,7 @@ public class FavoritesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_favorites, container, false);
+
 //        detailBtn = (Button)root.findViewById(R.id.detail_button);
 //        detailBtn.setOnClickListener(new View.OnClickListener() {
 //            @Override
