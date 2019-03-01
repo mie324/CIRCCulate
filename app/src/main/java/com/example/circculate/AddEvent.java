@@ -52,6 +52,7 @@ public class AddEvent extends AppCompatActivity {
         appointTime = findViewById(R.id.time_pick_result);
         appointDate = findViewById(R.id.date_pick_result);
         checkmark = findViewById(R.id.check_box);
+        user_u = (UserModel)getIntent().getSerializableExtra("loggedUser1");
         initToolbar();
         addPickerListener();
         addCheckBoxListner();
@@ -103,7 +104,7 @@ public class AddEvent extends AppCompatActivity {
         if(checkBoxFlag){
             mAuth = FirebaseAuth.getInstance();
             String uid = mAuth.getCurrentUser().getUid();
-            String username = getUsername(uid);
+            String username = user_u.getUsername();
             newEvent = new EventModel(this.title, this.timestamp, this.location, username, uid,this.note);
         }else {
             newEvent = new EventModel(this.title, this.timestamp, this.location, this.note);
@@ -116,6 +117,7 @@ public class AddEvent extends AppCompatActivity {
                         if(task.isSuccessful()){
                             showToast("Create a new event.");
                             Intent intent = new Intent(getApplicationContext(), HomePage.class);
+                            intent.putExtra("loggedUser", user_u);
                             startActivity(intent);
 //                            appointDate.setText(null);
                         }else{
@@ -130,24 +132,24 @@ public class AddEvent extends AppCompatActivity {
 
     }
 
-    private String getUsername(String uid) {
-        final DocumentReference docRef = db.collection("users").document(uid);
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if(task.isSuccessful()){
-                    DocumentSnapshot doc =  task.getResult();
-                    if(doc.exists()){
-                        user_u = doc.toObject(UserModel.class);
-
-                    }
-
-                }
-
-            }
-        });
-        return user_u.getUsername();
-    }
+//    private String getUsername(String uid) {
+//        final DocumentReference docRef = db.collection("users").document(uid);
+//        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                if(task.isSuccessful()){
+//                    DocumentSnapshot doc =  task.getResult();
+//                    if(doc.exists()){
+//                        user_u = doc.toObject(UserModel.class);
+//
+//                    }
+//
+//                }
+//
+//            }
+//        });
+//        return user_u.getUsername();
+//    }
 
     private boolean isValidInput() {
         this.timestamp = null;

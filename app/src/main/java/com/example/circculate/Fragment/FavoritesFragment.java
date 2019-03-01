@@ -37,7 +37,16 @@ public class FavoritesFragment extends Fragment {
     }
 
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
 
+        super.onCreate(savedInstanceState);
+        if(getArguments()!=null){
+            user = (UserModel) getArguments().getSerializable("LoggedUser");
+//            Log.d("username", user.getUsername());
+        }
+
+    }
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);

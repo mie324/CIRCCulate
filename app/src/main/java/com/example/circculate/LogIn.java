@@ -10,25 +10,33 @@ import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.circculate.Fragment.FavoritesFragment;
+import com.example.circculate.Model.UserModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class LogIn extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private TextInputEditText email, password;
     private ProgressDialog progressDialog;
+    private FirebaseFirestore db;
+    private UserModel user_u;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
         mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
     }
 
@@ -70,11 +78,53 @@ public class LogIn extends AppCompatActivity {
     private void toHomeActivity() {
         //get user and reconstruct
         // UserModel user = ...
-        Intent intent = new Intent(this, HomePage.class);
-        /*
-        intent.putExtra("loggedInUser", user)
-         */
-        startActivity(intent);
+
+        final Bundle bundle = new Bundle();
+        final Intent intent = new Intent(this, HomePage.class);
+        db.collection("users").document(mAuth.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot doc = task.getResult();
+                    if(doc.exists()){
+//                        FavoritesFragment fragment1 = new FavoritesFragment();
+                        user_u = doc.toObject(UserModel.class);
+//                        bundle.putSerializable("loggedInUser", user_u);
+//                        fragment1.setArguments(bundle);
+                        intent.putExtra("loggedUser", user_u);
+                        Log.d("username1", user_u.getUsername());
+//                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,fragment1).commit();
+                        startActivity(intent);
+                    }
+                }
+
+            }
+        });
+
+//        Log.d("loggedinus
+// er", user.getUsername());
+
+
+
+    }
+
+    private void getUser() {
+        db.collection("users").document(mAuth.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot doc = task.getResult();
+                    if(doc.exists()){
+                        user_u = doc.toObject(UserModel.class);
+
+
+                    }
+                }
+
+            }
+        });
+        Log.d("loggedinuser", user_u.getUsername());
+
     }
 
     private boolean verifyEmailPassword(){
