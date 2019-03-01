@@ -1,8 +1,9 @@
 package com.example.circculate.Model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class UserModel {
+public class UserModel implements Serializable {
     private String username;
     private String email;
 //    private ArrayList<EventModel> events;

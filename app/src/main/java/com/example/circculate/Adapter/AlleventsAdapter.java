@@ -60,7 +60,7 @@ public class AlleventsAdapter extends RecyclerView.Adapter<AlleventsAdapter.Even
 
     @Override
     public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
-        EventModel newEvent = eventList.get(position);
+        final EventModel newEvent = eventList.get(position);
         String hour = Helper.getTime(newEvent.getTimestamp()).substring(0,2);
         String minute = Helper.getTime(newEvent.getTimestamp()).substring(2,4);
         String day = Helper.getTimedate(newEvent.getTimestamp()).substring(6,8);
@@ -80,7 +80,9 @@ public class AlleventsAdapter extends RecyclerView.Adapter<AlleventsAdapter.Even
         holder.detailText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                gotoDetailPage();
+                Intent intent = new Intent(ctx, DetailPage.class);
+                intent.putExtra("clickedEvent",newEvent);
+                ctx.startActivity(intent);
             }
         });
 
@@ -89,11 +91,6 @@ public class AlleventsAdapter extends RecyclerView.Adapter<AlleventsAdapter.Even
 
     }
 
-    private void gotoDetailPage() {
-        // need further expansion
-        Intent intent = new Intent(ctx, DetailPage.class);
-        ctx.startActivity(intent);
-    }
 
 //    private String getUsername(EventModel newEvent) {
 //        final UserModel queryUser;
