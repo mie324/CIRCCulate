@@ -204,7 +204,7 @@ public class HomePage extends AppCompatActivity {
     public void switchToFavorites(){
         Bundle bundle = new Bundle();
         bundle.putSerializable("LoggedUser",user);
-        Log.d("username2", user.getUsername());
+//        Log.d("username2", user.getUsername());
         FavoritesFragment fragment = new FavoritesFragment();
         fragment.setArguments(bundle);
         getSupportActionBar().setTitle("Calendar");

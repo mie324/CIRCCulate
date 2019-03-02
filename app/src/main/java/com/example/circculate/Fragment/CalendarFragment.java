@@ -10,6 +10,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CalendarView;
@@ -19,6 +21,7 @@ import com.example.circculate.Adapter.CalendarEventAdapter;
 import com.example.circculate.Helper;
 import com.example.circculate.HomePage;
 import com.example.circculate.Model.EventModel;
+import com.example.circculate.Model.UserModel;
 import com.example.circculate.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -46,11 +49,17 @@ public class CalendarFragment extends Fragment {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private List<EventModel> events;
+    private UserModel currentUser;
 
     public CalendarFragment() {
         // Required empty public constructor
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_add, menu);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,6 +67,13 @@ public class CalendarFragment extends Fragment {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_calendar, container, false);
 
+        if(getArguments() == null){
+            Log.d(TAG, "onCreateView: get argument null");
+        }
+        if(getArguments() != null){
+            currentUser = (UserModel) getArguments().getSerializable("LoggedUser");
+            Log.d(TAG, currentUser.getUsername());
+        }
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         events = new ArrayList<>();
@@ -109,7 +125,8 @@ public class CalendarFragment extends Fragment {
         calenderRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         //get the event according to calendar date
-        mAdapter = new CalendarEventAdapter(getActivity(), events);
+        Log.d(TAG, currentUser.getUsername());
+        mAdapter = new CalendarEventAdapter(getActivity(), events, currentUser);
         calenderRecycler.setAdapter(mAdapter);
         getTodayEvents();
         Log.d(TAG, "initRecyclerView: recyclerview init");

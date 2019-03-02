@@ -46,6 +46,11 @@ public class CalendarEventAdapter extends RecyclerView.Adapter<RecyclerView.View
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         this.user = user;
+        if(user == null){
+            Log.d(TAG, "CalendarEventAdapter: user null");
+        }else {
+            Log.d(TAG, "CalendarEventAdapter: user not null");
+        }
     }
 
     public class EventViewHolder extends RecyclerView.ViewHolder{
