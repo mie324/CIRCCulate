@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 //import com.material.components.utils.Tools;
@@ -36,6 +37,7 @@ public class HomePage extends AppCompatActivity {
     private ViewPager view_pager;
     private TabLayout tab_layout;
     private FirebaseAuth mAuth;
+    private static final String TAG = "HomePage";
     private UserModel user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,40 +145,44 @@ public class HomePage extends AppCompatActivity {
             }
         });
 
-        NestedScrollView nested_content = (NestedScrollView) findViewById(R.id.nested_scroll_view);
-        nested_content.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                if (scrollY < oldScrollY) { // up
-                    animateNavigation(false);
-
-                }
-                if (scrollY > oldScrollY) { // down
-                    animateNavigation(true);
-
-                }
-            }
-        });
-
-        // display image
-
-
-
-//        ((ImageButton) findViewById(R.id.bt_menu)).setOnClickListener(new View.OnClickListener() {
+        LinearLayout parentLayout = findViewById(R.id.parent_layout);
+//        parentLayout.setOnScrollChangeListener(new View.OnScrollChangeListener() {
 //            @Override
-//            public void onClick(View v) {
-//                finish();
+//            public void onScrollChange(View view, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+//                if (scrollY < oldScrollY) { // up
+//                    animateNavigation(false);
+//
+//                }
+//                if (scrollY > oldScrollY) { // down
+//                    animateNavigation(true);
+//
+//                }
 //            }
 //        });
+//        NestedScrollView nested_content = (NestedScrollView) findViewById(R.id.nested_scroll_view);
+//        parentLayout.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+//            @Override
+//            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+//                Log.d(TAG, "onScrollChange: scroll change");
+//                if (scrollY < oldScrollY) { // up
+//                    animateNavigation(false);
 //
-//        Tools.setSystemBarColor(this, R.color.grey_5);
-//        Tools.setSystemBarLight(this);
+//                }
+//                if (scrollY > oldScrollY) { // down
+//                    animateNavigation(true);
+//
+//                }
+//            }
+//        });
+
+
+
     }
 
 
     boolean isNavigationHide = false;
 
-    private void animateNavigation(final boolean hide) {
+    public void animateNavigation(final boolean hide) {
         if (isNavigationHide && hide || !isNavigationHide && !hide) return;
         isNavigationHide = hide;
         int moveY = hide ? (2 * navigation.getHeight()) : 0;
@@ -198,7 +204,7 @@ public class HomePage extends AppCompatActivity {
     public void switchToFavorites(){
         Bundle bundle = new Bundle();
         bundle.putSerializable("LoggedUser",user);
-        Log.d("username2", user.getUsername());
+//        Log.d("username2", user.getUsername());
         FavoritesFragment fragment = new FavoritesFragment();
         fragment.setArguments(bundle);
         getSupportActionBar().setTitle("Calendar");
