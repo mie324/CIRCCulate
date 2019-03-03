@@ -2,8 +2,15 @@ package com.example.circculate;
 
 import com.example.circculate.Model.EventModel;
 import com.example.circculate.Model.UserModel;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -19,6 +26,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.AppCompatEditText;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -30,32 +38,80 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.app.ProgressDialog;
-import java.util.Calendar;
 
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.List;
+import com.google.android.libraries.places.api.model.Place;
 
 
 public class AddEvent extends AppCompatActivity {
+    private View parent_view;
+    private static final int AUTOCOMPLETE_REQUEST_CODE = 500;
     private AppCompatEditText appointDate;
     private AppCompatEditText appointTime;
     private AppCompatCheckBox checkmark;
+    private AppCompatEditText appointLoc;
     private String title, timestamp, location, note, timestamp_date, timestamp_time;
     private boolean checkBoxFlag = false;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private static final String TAG = "select";
     private UserModel currentUser;
+    private String apiKey = "AIzaSyDm8X7dfXkmuikVSqrqqFvyww2aK8MWmVc";
+    List<Place.Field> fields;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_event);
+        if(!Places.isInitialized()){
+            Places.initialize(getApplicationContext(), apiKey);
+        }
+        PlacesClient placesClient = Places.createClient(this);
+//        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+        fields = Arrays.asList(Place.Field.ID, Place.Field.NAME);
         appointTime = findViewById(R.id.time_pick_result);
         appointDate = findViewById(R.id.date_pick_result);
         checkmark = findViewById(R.id.check_box);
+        appointLoc = (AppCompatEditText)findViewById(R.id.appoint_location);
         currentUser = (UserModel)getIntent().getSerializableExtra("loggedUser");
         initToolbar();
+        addLocationLister();
         addPickerListener();
         addCheckBoxListner();
+    }
+
+    private void addLocationLister() {
+        appointLoc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openAutocompleteActivity(AUTOCOMPLETE_REQUEST_CODE);
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        if(requestCode == AUTOCOMPLETE_REQUEST_CODE){
+            if(resultCode == RESULT_OK){
+                Place place = Autocomplete.getPlaceFromIntent(data);
+                appointLoc.setText(place.getName());
+                Log.i(TAG, "Place: " + place.getName() + ", " + place.getId());
+
+            }else if(resultCode == AutocompleteActivity.RESULT_ERROR){
+                Status status = Autocomplete.getStatusFromIntent(data);
+                Log.i("Status_message", status.getStatusMessage());
+            }else if(requestCode == RESULT_CANCELED){
+
+            }
+
+        }
+    }
+
+    private void openAutocompleteActivity(int requestCodeOrigin) {
+        Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY,fields).build(this);
+        startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
     }
 
     private void addCheckBoxListner() {
