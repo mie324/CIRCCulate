@@ -43,7 +43,7 @@ import java.util.TimeZone;
 public class CalendarFragment extends Fragment {
     private CalendarView eventCalendar;
     private String date;
-    private static final String TAG = "calendarFragment";
+    private static final String TAG = "FragmentLifeCycle";
     private RecyclerView calenderRecycler;
     private CalendarEventAdapter mAdapter;
     private FirebaseAuth mAuth;
@@ -59,6 +59,7 @@ public class CalendarFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_add, menu);
+        Log.d(TAG, "onCreateOptionsMenu: Calendar create option menu");
     }
 
     @Override
@@ -66,7 +67,27 @@ public class CalendarFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_calendar, container, false);
+        Log.d(TAG, "onCreateView: Calendar onCreateView");
+//        if(getArguments() == null){
+//            Log.d(TAG, "onCreateView: get argument null");
+//        }
+//        if(getArguments() != null){
+//            currentUser = (UserModel) getArguments().getSerializable("LoggedUser");
+//            Log.d(TAG, currentUser.getUsername());
+//        }
+//        mAuth = FirebaseAuth.getInstance();
+//        db = FirebaseFirestore.getInstance();
+//        events = new ArrayList<>();
+//        setCalendarListener(root);
+//        setScrollListener(root);
+//        initRecyclerView(root);
+        setHasOptionsMenu(true);
+        return root;
+    }
 
+    @Override
+    public void onStart() {
+        super.onStart();
         if(getArguments() == null){
             Log.d(TAG, "onCreateView: get argument null");
         }
@@ -77,15 +98,43 @@ public class CalendarFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         events = new ArrayList<>();
-        setCalendarListener(root);
-        setScrollListener(root);
-        initRecyclerView(root);
-        setHasOptionsMenu(true);
-        return root;
+        setCalendarListener();
+        setScrollListener();
+        initRecyclerView();
+        Log.d(TAG, "onStart: Calendar on start");
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate: Calendar on create");
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume: Calendar on resume");
+    }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause: Calendar on pause");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        eventCalendar = null;
+
+        Log.d(TAG, "onStop: Calendar on stop");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy: Calendar on destroy");
+    }
 
     private void getTodayEvents(){
         Log.d(TAG, "getTodayEvents: get today's event");
@@ -120,8 +169,8 @@ public class CalendarFragment extends Fragment {
         mAdapter.notifyDataSetChanged();
     }
 
-    private void initRecyclerView(View root){
-        calenderRecycler = (RecyclerView)root.findViewById(R.id.recycler_calendar_event);
+    private void initRecyclerView(){
+        calenderRecycler = (RecyclerView)getView().findViewById(R.id.recycler_calendar_event);
         calenderRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         //get the event according to calendar date
@@ -134,11 +183,12 @@ public class CalendarFragment extends Fragment {
 
     }
 
-    private void setCalendarListener(View root){
+    private void setCalendarListener(){
         if(eventCalendar == null){
-            eventCalendar = (CalendarView) root.findViewById(R.id.event_calendar);
+            eventCalendar = (CalendarView) getView().findViewById(R.id.event_calendar);
         }
 
+        Log.d(TAG, "setCalendarListener: set Calendar listener");
         eventCalendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
@@ -169,8 +219,8 @@ public class CalendarFragment extends Fragment {
         });
     }
 
-    private void setScrollListener(View root){
-        NestedScrollView scrollView = root.findViewById(R.id.scroll_calendar);
+    private void setScrollListener(){
+        NestedScrollView scrollView = getView().findViewById(R.id.scroll_calendar);
         final HomePage hostActivity = (HomePage)getActivity();
 
         scrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {

@@ -120,6 +120,7 @@ public class AlleventsAdapter extends RecyclerView.Adapter<AlleventsAdapter.Even
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if(task.isSuccessful()){
+
                                         Toast.makeText(ctx, "You have cancel the sign up.", Toast.LENGTH_SHORT).show();
                                         holder.personName.setText("No one signed up yet.");
                                     }else {
