@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -129,6 +130,23 @@ public class MyEventFragment extends Fragment {
 
         myEventsAdapter = new yourEventsAdapter(getActivity(), eventList, currentUser);
         myEventsRv.setAdapter(myEventsAdapter);
+        if(eventList.size() == 0){
+            getView().findViewById(R.id.no_event_layout).setVisibility(View.VISIBLE);
+        }else {
+            getView().findViewById(R.id.no_event_layout).setVisibility(View.INVISIBLE);
+        }
+//        getView().findViewById(R.id.my_event_layout).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Log.d(TAG, "onClick: on click");
+//                if(eventList.size() == 0){
+//                    getView().findViewById(R.id.no_event_layout).setVisibility(View.VISIBLE);
+//                }else {
+//                    getView().findViewById(R.id.no_event_layout).setVisibility(View.INVISIBLE);
+//                }
+//            }
+//        });
+
     }
 
 }

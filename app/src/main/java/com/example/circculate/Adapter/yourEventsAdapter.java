@@ -116,6 +116,7 @@ public class yourEventsAdapter extends RecyclerView.Adapter<yourEventsAdapter.Ev
                             if(task.isSuccessful()){
                                 eventList.remove(newEvent);
                                 notifyDataSetChanged();
+
                                 Toast.makeText(ctx, "You have cancel the sign up.", Toast.LENGTH_SHORT).show();
                                 holder.personName.setText("No one signed up yet.");
                             }else {
