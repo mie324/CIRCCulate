@@ -24,32 +24,36 @@ import com.example.circculate.Fragment.FavoritesFragment;
 import com.example.circculate.Fragment.NearbyFragment;
 import com.example.circculate.Fragment.RecentFragment;
 import com.example.circculate.Model.UserModel;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 //import com.material.components.utils.Tools;
 
 //import com.material.components.utils.Tools;
 
 public class HomePage extends AppCompatActivity {
 
-    private TextView mTextMessage;
+
     private BottomNavigationView navigation;
-    private View search_bar;
-    private ViewPager view_pager;
-    private TabLayout tab_layout;
+
     private FirebaseAuth mAuth;
     private static final String TAG = "HomePage";
+    private FirebaseFirestore db;
     private UserModel user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
         mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 //        Bundle b = getIntent().getExtras();
-        user = (UserModel)getIntent().getSerializableExtra("loggedUser");
+
 
         initToolbar();
         initComponent();
-        switchToFavorites();
+//        switchToFavorites();
     }
 
 
@@ -67,16 +71,16 @@ public class HomePage extends AppCompatActivity {
             case R.id.action_logout:
                 Logout();
                 return true;
-            case R.id.action_allevents:
-                gotoAllEvents();
-                return true;
-            case R.id.action_yourevents:
-                gotoYourEvents();
-                return true;
+//            case R.id.action_allevents:
+//                gotoAllEvents();
+//                return true;
+//            case R.id.action_yourevents:
+//                gotoYourEvents();
+//                return true;
             case R.id.action_addevent: {
                 Log.d("select", "onOptionsItemSelected: click add event.");
                 Intent intent = new Intent(this, AddEvent.class);
-                intent.putExtra("loggedUser1", user);
+                intent.putExtra("loggedUser", user);
                 startActivity(intent);
                 return true;
             }
@@ -85,15 +89,15 @@ public class HomePage extends AppCompatActivity {
         }
     }
 
-    private void gotoYourEvents() {
-        Intent intent = new Intent(this, YourEvents.class);
-        startActivity(intent);
-    }
-
-    private void gotoAllEvents() {
-        Intent intent = new Intent(this, AllEvents.class);
-        startActivity(intent);
-    }
+//    private void gotoYourEvents() {
+//        Intent intent = new Intent(this, YourEvents.class);
+//        startActivity(intent);
+//    }
+//
+//    private void gotoAllEvents() {
+//        Intent intent = new Intent(this, AllEvents.class);
+//        startActivity(intent);
+//    }
 
     private void Logout() {
         mAuth.signOut();
@@ -145,40 +149,26 @@ public class HomePage extends AppCompatActivity {
             }
         });
 
-        LinearLayout parentLayout = findViewById(R.id.parent_layout);
-//        parentLayout.setOnScrollChangeListener(new View.OnScrollChangeListener() {
-//            @Override
-//            public void onScrollChange(View view, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-//                if (scrollY < oldScrollY) { // up
-//                    animateNavigation(false);
-//
-//                }
-//                if (scrollY > oldScrollY) { // down
-//                    animateNavigation(true);
-//
-//                }
-//            }
-//        });
-//        NestedScrollView nested_content = (NestedScrollView) findViewById(R.id.nested_scroll_view);
-//        parentLayout.setOnScrollChangeListener(new View.OnScrollChangeListener() {
-//            @Override
-//            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-//                Log.d(TAG, "onScrollChange: scroll change");
-//                if (scrollY < oldScrollY) { // up
-//                    animateNavigation(false);
-//
-//                }
-//                if (scrollY > oldScrollY) { // down
-//                    animateNavigation(true);
-//
-//                }
-//            }
-//        });
-
-
+        db.collection("users").document(mAuth.getUid())
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    reconstructUser(task.getResult());
+                    switchToFavorites();
+                    return;
+                }else {
+                    Intent intent = new Intent(getApplication(), LogIn.class);
+                    startActivity(intent);
+                }
+            }
+        });
 
     }
 
+    private void reconstructUser(DocumentSnapshot result){
+        this.user = result.toObject(UserModel.class);
+    }
 
     boolean isNavigationHide = false;
 
@@ -202,6 +192,7 @@ public class HomePage extends AppCompatActivity {
     }
 
     public void switchToFavorites(){
+        Log.d(TAG, "switchToFavorites: " + user.getUsername());
         Bundle bundle = new Bundle();
         bundle.putSerializable("LoggedUser",user);
 //        Log.d("username2", user.getUsername());

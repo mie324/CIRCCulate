@@ -43,7 +43,7 @@ public class AddEvent extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private static final String TAG = "select";
-    private UserModel user_u;
+    private UserModel currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +52,7 @@ public class AddEvent extends AppCompatActivity {
         appointTime = findViewById(R.id.time_pick_result);
         appointDate = findViewById(R.id.date_pick_result);
         checkmark = findViewById(R.id.check_box);
-        user_u = (UserModel)getIntent().getSerializableExtra("loggedUser1");
+        currentUser = (UserModel)getIntent().getSerializableExtra("loggedUser");
         initToolbar();
         addPickerListener();
         addCheckBoxListner();
@@ -103,9 +103,8 @@ public class AddEvent extends AppCompatActivity {
 
         if(checkBoxFlag){
             mAuth = FirebaseAuth.getInstance();
-            String uid = mAuth.getCurrentUser().getUid();
-            String username = user_u.getUsername();
-            newEvent = new EventModel(this.title, this.timestamp, this.location, username, uid,this.note);
+            newEvent = new EventModel(this.title, this.timestamp, this.location,
+                    currentUser.getUsername(), mAuth.getUid(),this.note);
         }else {
             newEvent = new EventModel(this.title, this.timestamp, this.location, this.note);
         }
@@ -117,7 +116,7 @@ public class AddEvent extends AppCompatActivity {
                         if(task.isSuccessful()){
                             showToast("Create a new event.");
                             Intent intent = new Intent(getApplicationContext(), HomePage.class);
-                            intent.putExtra("loggedUser", user_u);
+                            intent.putExtra("loggedUser", currentUser);
                             startActivity(intent);
 //                            appointDate.setText(null);
                         }else{

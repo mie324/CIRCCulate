@@ -79,53 +79,49 @@ public class LogIn extends AppCompatActivity {
         //get user and reconstruct
         // UserModel user = ...
 
-        final Bundle bundle = new Bundle();
+//        final Bundle bundle = new Bundle();
         final Intent intent = new Intent(this, HomePage.class);
-        db.collection("users").document(mAuth.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if(task.isSuccessful()){
-                    DocumentSnapshot doc = task.getResult();
-                    if(doc.exists()){
-//                        FavoritesFragment fragment1 = new FavoritesFragment();
-                        user_u = doc.toObject(UserModel.class);
-//                        bundle.putSerializable("loggedInUser", user_u);
-//                        fragment1.setArguments(bundle);
-                        intent.putExtra("loggedUser", user_u);
-                        Log.d("username1", user_u.getUsername());
-//                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,fragment1).commit();
-                        startActivity(intent);
-                    }
-                }
-
-            }
-        });
-
-//        Log.d("loggedinus
-// er", user.getUsername());
-
-
+//        db.collection("users").document(mAuth.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                if(task.isSuccessful()){
+//                    DocumentSnapshot doc = task.getResult();
+//                    if(doc.exists()){
+////                        FavoritesFragment fragment1 = new FavoritesFragment();
+//                        user_u = doc.toObject(UserModel.class);
+////                        bundle.putSerializable("loggedInUser", user_u);
+////                        fragment1.setArguments(bundle);
+//                        intent.putExtra("loggedUser", user_u);
+//                        Log.d("username1", user_u.getUsername());
+////                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,fragment1).commit();
+//                        startActivity(intent);
+//                    }
+//                }
+//
+//            }
+//        });
+        startActivity(intent);
 
     }
 
-    private void getUser() {
-        db.collection("users").document(mAuth.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if(task.isSuccessful()){
-                    DocumentSnapshot doc = task.getResult();
-                    if(doc.exists()){
-                        user_u = doc.toObject(UserModel.class);
-
-
-                    }
-                }
-
-            }
-        });
-        Log.d("loggedinuser", user_u.getUsername());
-
-    }
+//    private void getUser() {
+//        db.collection("users").document(mAuth.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                if(task.isSuccessful()){
+//                    DocumentSnapshot doc = task.getResult();
+//                    if(doc.exists()){
+//                        user_u = doc.toObject(UserModel.class);
+//
+//
+//                    }
+//                }
+//
+//            }
+//        });
+//        Log.d("loggedinuser", user_u.getUsername());
+//
+//    }
 
     private boolean verifyEmailPassword(){
         email = findViewById(R.id.email);

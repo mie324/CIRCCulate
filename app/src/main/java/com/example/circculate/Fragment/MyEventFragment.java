@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import com.example.circculate.Adapter.AlleventsAdapter;
 import com.example.circculate.Model.EventModel;
+import com.example.circculate.Model.UserModel;
 import com.example.circculate.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -35,6 +36,7 @@ public class MyEventFragment extends Fragment {
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
     private List<DocumentSnapshot> EventsDoc;
+    private UserModel currentUser;
     public MyEventFragment() {
         // Required empty public constructor
     }
@@ -45,7 +47,7 @@ public class MyEventFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_my_event, container, false);
-
+        currentUser = (UserModel) getArguments().getSerializable("LoggedUser");
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         myEventsRv = root.findViewById(R.id.yourEventsRv);
@@ -55,9 +57,16 @@ public class MyEventFragment extends Fragment {
 //                .setTimestampsInSnapshotsEnabled(true)
                 .build();
         db.setFirestoreSettings(settings);
-        getYourEvents();
+
 
         return root;
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getYourEvents();
     }
 
     private void getYourEvents() {
@@ -85,7 +94,7 @@ public class MyEventFragment extends Fragment {
         }
 //        Log.d("Num", Integer.toString(eventList.size()));
 
-        myEventsAdapter = new AlleventsAdapter(getActivity(), eventList);
+        myEventsAdapter = new AlleventsAdapter(getActivity(), eventList, currentUser);
         myEventsRv.setAdapter(myEventsAdapter);
     }
 

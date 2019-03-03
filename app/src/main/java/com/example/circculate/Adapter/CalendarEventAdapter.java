@@ -88,7 +88,8 @@ public class CalendarEventAdapter extends RecyclerView.Adapter<RecyclerView.View
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         final EventModel event = events.get(position);
         final EventViewHolder eventViewHolder = (EventViewHolder) holder;
-        setUserName(event,eventViewHolder);
+        eventViewHolder.appointmentPerson.setText(event.getUserId() == null ?
+                "No one sign up for this event" : "Person:" + event.getUserName());
         eventViewHolder.appointmentTitle.setText(Helper.transformAppointTitle(event.getTitle(),
                 event.getTimestamp()));
         eventViewHolder.appointmentLocation.setText(Helper.tranformAppointLoca(event.getLocation()));
@@ -97,6 +98,7 @@ public class CalendarEventAdapter extends RecyclerView.Adapter<RecyclerView.View
             public void onClick(View view) {
                 Intent detailIntent = new Intent(context, DetailPage.class);
                 detailIntent.putExtra("clickedEvent", event);
+                detailIntent.putExtra("loggedUser", user);
                 context.startActivity(detailIntent);
             }
         });
@@ -114,7 +116,7 @@ public class CalendarEventAdapter extends RecyclerView.Adapter<RecyclerView.View
                 }else {
                     event.setUserId(mAuth.getUid());
 //                    String username = getUserName();
-//                    event.setUserName(username);
+                    event.setUserName(user.getUsername());
                     db.collection("events").document(event.getTimestamp())
                             .set(event).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
@@ -136,18 +138,6 @@ public class CalendarEventAdapter extends RecyclerView.Adapter<RecyclerView.View
         });
     }
 
-    private void setUserName(EventModel event, final EventViewHolder eventViewHolder) {
-        db.collection("users").document(event.getUserId()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if(task.isSuccessful()){
-                    DocumentSnapshot doc = task.getResult();
-                    UserModel signedUser = doc.toObject(UserModel.class);
-                    eventViewHolder.appointmentPerson.setText(signedUser.getUsername());
-                }
-            }
-        });
-    }
 
 
     @Override

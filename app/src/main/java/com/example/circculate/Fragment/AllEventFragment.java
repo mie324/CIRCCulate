@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.example.circculate.Adapter.AlleventsAdapter;
 import com.example.circculate.Model.EventModel;
+import com.example.circculate.Model.UserModel;
 import com.example.circculate.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -24,6 +25,7 @@ import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -36,7 +38,7 @@ public class AllEventFragment extends Fragment {
     private AlleventsAdapter alleventsAdapter;
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
-    private FirebaseUser currentUser;
+    private UserModel currentUser;
     private List<DocumentSnapshot> EventsDoc;
 
     public AllEventFragment() {
@@ -49,7 +51,9 @@ public class AllEventFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_all_event, container, false);
-
+        if(getArguments() != null){
+            currentUser = (UserModel)getArguments().getSerializable("LoggedUser");
+        }
         //init recycler view
         allEventsRv = root.findViewById(R.id.allEventsRv);
         allEventsRv.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL,false));
@@ -90,8 +94,8 @@ public class AllEventFragment extends Fragment {
             eventList.add(doc.toObject(EventModel.class));
         }
         Log.d("Num", Integer.toString(eventList.size()));
-
-        alleventsAdapter = new AlleventsAdapter(getActivity(), eventList);
+        Collections.sort(eventList, EventModel.eventComparator);
+        alleventsAdapter = new AlleventsAdapter(getActivity(), eventList, currentUser);
         allEventsRv.setAdapter(alleventsAdapter);
     }
 }

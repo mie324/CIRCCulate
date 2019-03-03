@@ -7,7 +7,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.circculate.DetailPage;
 import com.example.circculate.Helper;
@@ -16,6 +19,7 @@ import com.example.circculate.Model.UserModel;
 import com.example.circculate.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -27,16 +31,21 @@ public class AlleventsAdapter extends RecyclerView.Adapter<AlleventsAdapter.Even
     private Context ctx;
     private List<EventModel> eventList;
     private FirebaseFirestore db;
+    private UserModel currentUser;
+    private FirebaseAuth mAuth;
 
-    public AlleventsAdapter(Context ctx, List<EventModel> eventList) {
+    public AlleventsAdapter(Context ctx, List<EventModel> eventList, UserModel currentUser) {
         this.eventList = eventList;
+        mAuth = FirebaseAuth.getInstance();
         this.ctx = ctx;
         this.db = FirebaseFirestore.getInstance();
+        this.currentUser = currentUser;
 
     }
 
     public class EventViewHolder extends RecyclerView.ViewHolder {
         TextView monthText, dayText, eventTitle, timeText, personName, detailText;
+        Switch signupSW;
 
         public EventViewHolder(View itemView) {
             super(itemView);
@@ -47,6 +56,7 @@ public class AlleventsAdapter extends RecyclerView.Adapter<AlleventsAdapter.Even
             timeText = itemView.findViewById(R.id.Time_text);
             personName = itemView.findViewById(R.id.Person_name);
             detailText = itemView.findViewById(R.id.Detail_text);
+            signupSW = itemView.findViewById(R.id.signup_switch);
         }
     }
 
@@ -59,15 +69,15 @@ public class AlleventsAdapter extends RecyclerView.Adapter<AlleventsAdapter.Even
     }
 
     @Override
-    public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final EventViewHolder holder, int position) {
         final EventModel newEvent = eventList.get(position);
-        String hour = Helper.getTime(newEvent.getTimestamp()).substring(0,2);
-        String minute = Helper.getTime(newEvent.getTimestamp()).substring(2,4);
-        String day = Helper.getTimedate(newEvent.getTimestamp()).substring(6,8);
-        String month = Helper.getTimedate(newEvent.getTimestamp()).substring(4,6);
+        String hour = newEvent.getTimestamp().substring(8, 10);
+        String minute = newEvent.getTimestamp().substring(10);
+        String day = newEvent.getTimestamp().substring(6, 8);
+        String month = newEvent.getTimestamp().substring(4, 6);
         String mon = Helper.transformMon(month);
         holder.eventTitle.setText(newEvent.getTitle());
-        holder.timeText.setText(hour+":"+minute);
+        holder.timeText.setText(hour + ":" + minute);
         String signedName = newEvent.getUserName();
         if(signedName == null){
             holder.personName.setText("No one signed up yet.");
@@ -86,6 +96,58 @@ public class AlleventsAdapter extends RecyclerView.Adapter<AlleventsAdapter.Even
             }
         });
 
+        if(currentUser.getUsername().equals(newEvent.getUserName())){
+            holder.signupSW.setChecked(true);
+        }
+
+        holder.signupSW.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if(newEvent.getUserId() != null){
+                    //someone sign up for the event.
+                    if(isChecked){
+                        compoundButton.setChecked(false);
+                        Toast.makeText(ctx, "Someone else has already sign up.", Toast.LENGTH_SHORT).show();
+                        return;
+                    }else {
+                        //uncheck
+                        if(newEvent.getUserName().equals(currentUser.getUsername())){
+                            //cancel the sign up.
+                            newEvent.setUserName(null);
+                            newEvent.setUserId(null);
+                            db.collection("events").document(newEvent.getTimestamp())
+                                    .set(newEvent).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if(task.isSuccessful()){
+                                        Toast.makeText(ctx, "You have cancel the sign up.", Toast.LENGTH_SHORT).show();
+                                        holder.personName.setText("No one signed up yet.");
+                                    }else {
+                                        Toast.makeText(ctx, "Fail to cancel the sign up.", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }else {
+                    if(isChecked){
+                        newEvent.setUserId(mAuth.getUid());
+                        newEvent.setUserName(currentUser.getUsername());
+                        db.collection("events").document(newEvent.getTimestamp())
+                                .set(newEvent).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if(task.isSuccessful()){
+                                    Toast.makeText(ctx, "You have signed up for the event.", Toast.LENGTH_SHORT).show();
+                                    holder.personName.setText(currentUser.getUsername());
+                                }
+                            }
+                        });
+                    }
+                }
+
+            }
+        });
 //        holder.locText.setText(newEvent.getUserId().get);
 
 

@@ -9,6 +9,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.circculate.Model.EventModel;
+import com.example.circculate.Model.UserModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -19,6 +20,7 @@ public class DetailPage extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private TextView appointPerson;
+    private UserModel currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +29,7 @@ public class DetailPage extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         eventToDisplay = (EventModel) getIntent().getSerializableExtra("clickedEvent");
+        currentUser = (UserModel) getIntent().getSerializableExtra("loggedUser");
         initPage();
 
     }
@@ -48,7 +51,7 @@ public class DetailPage extends AppCompatActivity {
         if(eventToDisplay.getUserId() == null){
             appointPerson.setText("No one sign up for this event.");
         }else {
-            appointPerson.setText(eventToDisplay.getUserId());
+            appointPerson.setText(eventToDisplay.getUserName());
         }
 
         TextView appointNote = findViewById(R.id.note_content);
@@ -74,6 +77,7 @@ public class DetailPage extends AppCompatActivity {
                         }else {
                             //cancel the sign up
                             eventToDisplay.setUserId(null);
+                            eventToDisplay.setUserName(null);
                             db.collection("events").document(eventToDisplay.getTimestamp())
                                     .set(eventToDisplay).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
@@ -82,7 +86,7 @@ public class DetailPage extends AppCompatActivity {
                                         appointPerson.setText("No one sign up for this event.");
                                         showToast("Cancel the sign up.");
                                     }else {
-                                        showToast("Fail to cancel to sign up");
+                                        showToast("Fail to cancel the signing up");
                                     }
                                 }
                             });
@@ -94,13 +98,14 @@ public class DetailPage extends AppCompatActivity {
                     //check to sign up
                     if(isChecked){
                         eventToDisplay.setUserId(mAuth.getUid());
+                        eventToDisplay.setUserName(currentUser.getUsername());
                         db.collection("events").document(eventToDisplay.getTimestamp())
                                 .set(eventToDisplay).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if(task.isSuccessful()){
                                     showToast("You have signed up for this event.");
-                                    appointPerson.setText(eventToDisplay.getUserId());
+                                    appointPerson.setText(eventToDisplay.getUserName());
                                 }else {
                                     showToast("Fail to sign up for the event");
                                 }

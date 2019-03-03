@@ -35,8 +35,6 @@
             android:name=".DetailPage"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
-        <activity android:name=".AllEvents" />
-        <activity android:name=".YourEvents"></activity>
     </application>
 
 </manifest>
