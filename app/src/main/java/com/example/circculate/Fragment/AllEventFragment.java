@@ -8,6 +8,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -38,8 +40,9 @@ public class AllEventFragment extends Fragment {
     private AlleventsAdapter alleventsAdapter;
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
+    private static final String TAG = "FragmentLifeCycle";
     private UserModel currentUser;
-    private List<DocumentSnapshot> EventsDoc;
+    private List<DocumentSnapshot> eventsDoc;
 
     public AllEventFragment() {
         // Required empty public constructor
@@ -61,23 +64,54 @@ public class AllEventFragment extends Fragment {
         //firebase set up
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
-
-
-        getAllEvents();
+        setHasOptionsMenu(true);
+//        getAllEvents();
 
         return root;
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_add, menu);
+        Log.d(TAG, "onCreateOptionsMenu: all event create option menu");
+        getAllEvents();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart: All event on start");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume: All event on Resume");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop: All event on stop");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause: All event on pause");
+    }
 
     private void getAllEvents() {
+
         db.collection("events").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful()){
-                    EventsDoc = task.getResult().getDocuments();
+                    eventsDoc = task.getResult().getDocuments();
 //                    int a = EventsDoc.size();
 //                    Log.d("Num", Integer.toString(a));
-                    displayEvents(EventsDoc);
+                    displayEvents(eventsDoc);
 
                 }else{
 
@@ -93,7 +127,7 @@ public class AllEventFragment extends Fragment {
         for(DocumentSnapshot doc:eventsDoc){
             eventList.add(doc.toObject(EventModel.class));
         }
-        Log.d("Num", Integer.toString(eventList.size()));
+//        Log.d("Num", Integer.toString(eventList.size()));
         Collections.sort(eventList, EventModel.eventComparator);
         alleventsAdapter = new AlleventsAdapter(getActivity(), eventList, currentUser);
         allEventsRv.setAdapter(alleventsAdapter);
