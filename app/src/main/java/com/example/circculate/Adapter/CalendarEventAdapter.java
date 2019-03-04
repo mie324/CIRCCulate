@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -63,6 +64,7 @@ public class CalendarEventAdapter extends RecyclerView.Adapter<RecyclerView.View
         public TextView appointmentPerson;
         public Button detailButton;
         public Button signupButton;
+        public LinearLayout itemLayout;
 
         public EventViewHolder(View view){
             super(view);
@@ -71,7 +73,7 @@ public class CalendarEventAdapter extends RecyclerView.Adapter<RecyclerView.View
             appointmentPerson = view.findViewById(R.id.appointment_people);
             detailButton = view.findViewById(R.id.detail_button);
             signupButton = view.findViewById(R.id.signup_button);
-
+            itemLayout = view.findViewById(R.id.item_layout);
         }
     }
 
@@ -103,6 +105,17 @@ public class CalendarEventAdapter extends RecyclerView.Adapter<RecyclerView.View
             }
         });
 
+        //change the color theme if no one sign up
+
+        if(event.getUserId() == null){
+            eventViewHolder.itemLayout.setBackgroundColor(context.getColor(R.color.red_900));//red_900
+            eventViewHolder.appointmentTitle.setTextAppearance(R.style.TextAppearance_Headline_RedBG);
+            eventViewHolder.appointmentLocation.setTextAppearance(R.style.TextAppearance_Subhead_RedBG);
+            eventViewHolder.appointmentPerson.setTextAppearance(R.style.TextAppearance_Subhead_RedBG);
+            eventViewHolder.detailButton.setTextColor(context.getColor(R.color.grey_3));
+
+        }
+
         eventViewHolder.signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -123,6 +136,15 @@ public class CalendarEventAdapter extends RecyclerView.Adapter<RecyclerView.View
                         public void onComplete(@NonNull Task<Void> task) {
                             if(task.isSuccessful()){
                                 eventViewHolder.appointmentPerson.setText(user.getUsername());
+                                //change the style of view holder
+                                eventViewHolder.itemLayout.setBackgroundColor(context.getColor(R.color.grey_3));
+                                eventViewHolder.appointmentTitle.setTextAppearance(R.style.TextAppearance_AppCompat_Headline);
+                                eventViewHolder.appointmentLocation.setTextAppearance(R.style.TextAppearance_AppCompat_Subhead);
+                                eventViewHolder.appointmentPerson.setTextAppearance(R.style.TextAppearance_AppCompat_Subhead);
+                                eventViewHolder.detailButton.setTextColor(context.getColor(R.color.colorAccent));
+
+                                //end of change style
+
                                 Toast.makeText(context, "You have signed for the event.",
                                         Toast.LENGTH_SHORT).show();
                             }else {
