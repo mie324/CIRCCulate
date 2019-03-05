@@ -1,5 +1,6 @@
 package com.example.circculate;
 
+import com.example.circculate.Fragment.CalendarFragment;
 import com.example.circculate.Model.EventModel;
 import com.example.circculate.Model.UserModel;
 import com.google.android.gms.common.api.Status;
@@ -145,6 +146,7 @@ public class AddEvent extends AppCompatActivity {
         } else {
             Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
         }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -256,6 +258,15 @@ public class AddEvent extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Add Event");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Log.d("click:", "yes");
+//                Intent intent = new Intent(getApplicationContext(), HomePage.class);
+//                startActivity(intent);
+//
+//            }
+//        });
 
     }
 

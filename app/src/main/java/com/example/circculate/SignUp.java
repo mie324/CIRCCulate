@@ -10,6 +10,7 @@ import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -190,15 +191,18 @@ public class SignUp extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(verifyInputs()){
-                    progressDialog.setMessage("signing up...");
-                    progressDialog.show();
+//                    progressDialog.setMessage("signing up...");
+//                    progressDialog.show();
 
                     //sign up user
+                    Log.d("task", "sign");
                     mAuth.createUserWithEmailAndPassword(emailText, passwordText)
                             .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
+                                    Log.d("task", "in");
                                     if(task.isSuccessful()){
+                                        Log.d("task", "succ");
                                         //sign up succeed, create user in database.
                                         addUserToDB(mAuth.getCurrentUser());
                                     }else{
@@ -210,14 +214,15 @@ public class SignUp extends AppCompatActivity {
                 }
             }
         });
-        progressDialog.dismiss();
+//        progressDialog.dismiss();
     }
 
     private void addUserToDB(final FirebaseUser currentUser){
         if(currentUser == null){
+            Log.d("current", "null");
             return;
         }
-
+        showToast("sign up");
         UserModel newUser = new UserModel(emailText, usernameText, colorCode);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("users").document(currentUser.getUid())
@@ -226,7 +231,7 @@ public class SignUp extends AppCompatActivity {
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
                     showToast("Sign up succeed.");
-                    toHomePage(currentUser);
+//                    toHomePage(currentUser);
                 }else {
                     showToast("Sign up fail.");
 

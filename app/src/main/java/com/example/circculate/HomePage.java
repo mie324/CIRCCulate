@@ -123,6 +123,20 @@ public class HomePage extends AppCompatActivity {
 
 
     private void initComponent() {
+        db.collection("users").document(mAuth.getUid())
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    reconstructUser(task.getResult());
+                    switchToFavorites();
+                    return;
+                }else {
+                    Intent intent = new Intent(getApplication(), LogIn.class);
+                    startActivity(intent);
+                }
+            }
+        });
 
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -149,20 +163,6 @@ public class HomePage extends AppCompatActivity {
             }
         });
 
-        db.collection("users").document(mAuth.getUid())
-                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if(task.isSuccessful()){
-                    reconstructUser(task.getResult());
-                    switchToFavorites();
-                    return;
-                }else {
-                    Intent intent = new Intent(getApplication(), LogIn.class);
-                    startActivity(intent);
-                }
-            }
-        });
 
     }
 
@@ -192,7 +192,7 @@ public class HomePage extends AppCompatActivity {
     }
 
     public void switchToFavorites(){
-        Log.d(TAG, "switchToFavorites: " + user.getUsername());
+//        Log.d(TAG, "switchToFavorites: " + user.getUsername());
         Bundle bundle = new Bundle();
         bundle.putSerializable("LoggedUser",user);
 //        Log.d("username2", user.getUsername());

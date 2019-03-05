@@ -88,20 +88,37 @@ public class CalendarFragment extends Fragment implements SwipeRefreshLayout.OnR
                 if(task.isSuccessful()){
 //                    List<DocumentSnapshot> documentSnapshot = task.getResult().getDocuments();
                     for(QueryDocumentSnapshot doc:task.getResult()){
+                        int monthofDay;
+                        int month;
+                        int year;
                         Log.d("fresh", doc.toObject(EventModel.class).getTimestamp());
                         String timestamp = Helper.getTimedate(doc.toObject(EventModel.class).getTimestamp());
-                        int monthofDay = Integer.parseInt(timestamp.substring(6,8));
-                        int month = Integer.parseInt(timestamp.substring(4,6));
-                        int year = Integer.parseInt(timestamp.substring(0,4));
+                        if(timestamp.charAt(6)=='0'){
+                            monthofDay = Character.getNumericValue(timestamp.charAt(6));
+                        }else{
+                            monthofDay = Integer.parseInt(timestamp.substring(6,8));
+                        }
+
+                        if(timestamp.charAt(4)=='0'){
+                            month = Character.getNumericValue(timestamp.charAt(4));
+                        }else{
+                            month = Integer.parseInt(timestamp.substring(4,6));
+                        }
+
+                        year = Integer.parseInt(timestamp.substring(0,4));
                         CalendarDay day = new CalendarDay(year, month, monthofDay);
-                        dates.add(day);
+//                        dates.add(day);
 
                     }
+                    dates.add(new CalendarDay(2019, 3, 5));
+                    dates.add(new CalendarDay(2019, 3, 6));
                     Log.d("date_num", Integer.toString(dates.size()));
+                    Log.d("date", dates.toString());
                     eventDecorator = new EventDecorator(dates);
                     if(eventCalendar == null){
                         Log.d("calendar_null", "yes");
                     }
+                    eventCalendar = (MaterialCalendarView) getView().findViewById(R.id.calendarView);
                     eventCalendar.addDecorator(eventDecorator);
 
                 }
@@ -255,6 +272,9 @@ public class CalendarFragment extends Fragment implements SwipeRefreshLayout.OnR
                 int dayOfMonth = cdate.getDay();
                 int month = cdate.getMonth();
                 int year = cdate.getYear();
+                Log.d("year", Integer.toString(year));
+                Log.d("dayofmonth", Integer.toString(dayOfMonth));
+                Log.d("month", Integer.toString(month));
                 String currentDate = Helper.transformTimestampDate(year, month, dayOfMonth);
                 if(!currentDate.equals(date)){
                     date = currentDate;

@@ -52,9 +52,9 @@ public class LogIn extends AppCompatActivity {
         if(verifyEmailPassword()){
             //start log in process
             if(email != null && password != null){
-                progressDialog = new ProgressDialog(this);
-                progressDialog.setMessage("Logging in...");
-                progressDialog.show();
+//                progressDialog = new ProgressDialog(this);
+//                progressDialog.setMessage("Logging in...");
+//                progressDialog.show();
                 mAuth.signInWithEmailAndPassword(email.getText().toString(), password.getText().toString())
                         .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                             @Override
@@ -68,6 +68,8 @@ public class LogIn extends AppCompatActivity {
                         });
             }
         }
+//        progressDialog.dismiss();
+
     }
 
     public void toSignupActivity(View view) {

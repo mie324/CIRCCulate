@@ -69,7 +69,6 @@ public class MyEventFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 .build();
         db.setFirestoreSettings(settings);
         setHasOptionsMenu(true);
-        progressDialog = new ProgressDialog(getActivity());
         return root;
     }
 

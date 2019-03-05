@@ -1,7 +1,10 @@
 package com.example.circculate.Fragment;
 
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -31,6 +34,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -44,7 +49,7 @@ public class AllEventFragment extends Fragment implements SwipeRefreshLayout.OnR
     private static final String TAG = "FragmentLifeCycle";
     private UserModel currentUser;
     private List<DocumentSnapshot> eventsDoc;
-
+    private ProgressDialog progressDialog;
     public AllEventFragment() {
         // Required empty public constructor
     }
@@ -117,6 +122,8 @@ public class AllEventFragment extends Fragment implements SwipeRefreshLayout.OnR
 //                    int a = EventsDoc.size();
 //                    Log.d("Num", Integer.toString(a));
                     displayEvents(eventsDoc);
+
+
 
                 }else{
 
