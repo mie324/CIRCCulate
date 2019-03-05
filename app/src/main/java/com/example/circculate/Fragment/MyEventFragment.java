@@ -1,6 +1,7 @@
 package com.example.circculate.Fragment;
 
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -43,9 +44,11 @@ public class MyEventFragment extends Fragment {
     private static final String TAG = "FragmentLifeCycle";
     private List<DocumentSnapshot> EventsDoc;
     private UserModel currentUser;
+    private ProgressDialog progressDialog;
     public MyEventFragment() {
         // Required empty public constructor
     }
+
 
 
     @Override
@@ -102,6 +105,8 @@ public class MyEventFragment extends Fragment {
     }
 
     private void getYourEvents() {
+        progressDialog.setMessage("Loading your events...");
+        progressDialog.show();
         db.collection("events").whereEqualTo("userId", mAuth.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -120,6 +125,7 @@ public class MyEventFragment extends Fragment {
     }
 
     private void displayEvents(List<DocumentSnapshot> eventsDoc) {
+        progressDialog.hide();
         eventList = new ArrayList<>();
         for(DocumentSnapshot doc:eventsDoc){
             eventList.add(doc.toObject(EventModel.class));
