@@ -2,6 +2,7 @@ package com.example.circculate.Fragment;
 
 
 import android.app.ProgressDialog;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,6 +21,7 @@ import android.widget.CalendarView;
 import android.widget.Toast;
 
 import com.example.circculate.Adapter.CalendarEventAdapter;
+import com.example.circculate.EventDecorator;
 import com.example.circculate.Helper;
 import com.example.circculate.HomePage;
 import com.example.circculate.Model.EventModel;
@@ -30,20 +32,32 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.TimeZone;
+
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.prolificinteractive.materialcalendarview.DayViewDecorator;
+import com.prolificinteractive.materialcalendarview.DayViewFacade;
+import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
+import com.prolificinteractive.materialcalendarview.spans.DotSpan;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class CalendarFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
-    private CalendarView eventCalendar;
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private MaterialCalendarView eventCalendar;
     private String date;
     private static final String TAG = "FragmentLifeCycle";
     private RecyclerView calenderRecycler;
@@ -53,6 +67,8 @@ public class CalendarFragment extends Fragment implements SwipeRefreshLayout.OnR
     private List<EventModel> events;
     private UserModel currentUser;
     private ProgressDialog progressDialog;
+    private EventDecorator eventDecorator;
+    private HashSet<CalendarDay> dates;
 
     public CalendarFragment() {
         // Required empty public constructor
@@ -61,7 +77,27 @@ public class CalendarFragment extends Fragment implements SwipeRefreshLayout.OnR
     @Override
     public void onRefresh() {
         Log.d(TAG, "onRefresh: calendar on refresh");
+        showDots();
         getTodayEvents();
+    }
+
+    private void showDots() {
+        db.collection("events").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+//                    List<DocumentSnapshot> documentSnapshot = task.getResult().getDocuments();
+                    for(QueryDocumentSnapshot doc:task.getResult()){
+                        Log.d("fresh", doc.getData().toString());
+
+                    }
+
+                }
+
+            }
+        });
+
+//        eventDecorator = new EventDecorator();
     }
 
     @Override
@@ -104,6 +140,7 @@ public class CalendarFragment extends Fragment implements SwipeRefreshLayout.OnR
             currentUser = (UserModel) getArguments().getSerializable("LoggedUser");
             Log.d(TAG, currentUser.getUsername());
         }
+        dates = new HashSet<CalendarDay>();
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         events = new ArrayList<>();
@@ -195,38 +232,65 @@ public class CalendarFragment extends Fragment implements SwipeRefreshLayout.OnR
 
     private void setCalendarListener(){
         if(eventCalendar == null){
-            eventCalendar = (CalendarView) getView().findViewById(R.id.event_calendar);
+            eventCalendar = (MaterialCalendarView) getView().findViewById(R.id.calendarView);
         }
         progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage("Getting the events...");
         Log.d(TAG, "setCalendarListener: set Calendar listener");
-        eventCalendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+        eventCalendar.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
-            public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
-                progressDialog.show();
-                if(view != null){
-                    Log.d(TAG, "not null.");
-                }
+            public void onDateSelected(@NonNull MaterialCalendarView materialCalendarView, @NonNull CalendarDay cdate, boolean b) {
+                int dayOfMonth = cdate.getDay();
+                int month = cdate.getMonth();
+                int year = cdate.getYear();
                 String currentDate = Helper.transformTimestampDate(year, month, dayOfMonth);
-                Toast.makeText(getActivity(), currentDate, Toast.LENGTH_SHORT).show();
                 if(!currentDate.equals(date)){
                     date = currentDate;
                     String minTime = currentDate + "0000";
                     String maxTime = currentDate + "2359";
-                    db.collection("events").whereGreaterThan("timestamp", minTime)
+                    db.collection(("events")).whereGreaterThan("timestamp",minTime)
                             .whereLessThan("timestamp", maxTime).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if(task.isSuccessful()){
                                 events.clear();
                                 tranDocs(task.getResult().getDocuments());
-                            }else {
+                            }else{
                                 showToast(task.getException().toString());
                             }
                         }
                     });
-                }
+
+
             }
+        }
+//        eventCalendar.setOnDateChangedListener(new CalendarView.OnDateChangeListener() {
+//            @Override
+//            public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
+//                progressDialog.show();
+//                if(view != null){
+//                    Log.d(TAG, "not null.");
+//                }
+//                String currentDate = Helper.transformTimestampDate(year, month, dayOfMonth);
+//                Toast.makeText(getActivity(), currentDate, Toast.LENGTH_SHORT).show();
+//                if(!currentDate.equals(date)){
+//                    date = currentDate;
+//                    String minTime = currentDate + "0000";
+//                    String maxTime = currentDate + "2359";
+//                    db.collection("events").whereGreaterThan("timestamp", minTime)
+//                            .whereLessThan("timestamp", maxTime).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                            if(task.isSuccessful()){
+//                                events.clear();
+//                                tranDocs(task.getResult().getDocuments());
+//                            }else {
+//                                showToast(task.getException().toString());
+//                            }
+//                        }
+//                    });
+//                }
+//            }
         });
 
     }
@@ -253,4 +317,6 @@ public class CalendarFragment extends Fragment implements SwipeRefreshLayout.OnR
     private void showToast(String message){
         Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
     }
+
+
 }

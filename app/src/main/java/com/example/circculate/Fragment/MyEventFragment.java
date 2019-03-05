@@ -113,8 +113,6 @@ public class MyEventFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     private void getYourEvents() {
-        progressDialog.setMessage("Loading your events...");
-        progressDialog.show();
         db.collection("events").whereEqualTo("userId", mAuth.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -133,7 +131,6 @@ public class MyEventFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     private void displayEvents(List<DocumentSnapshot> eventsDoc) {
-        progressDialog.hide();
         eventList = new ArrayList<>();
         for(DocumentSnapshot doc:eventsDoc){
             eventList.add(doc.toObject(EventModel.class));

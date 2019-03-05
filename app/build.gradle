@@ -5,7 +5,7 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.example.circculate"
-        minSdkVersion 23
+        minSdkVersion 26
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
@@ -44,6 +44,9 @@ dependencies {
 
 
     implementation 'com.google.android.libraries.places:places:1.0.0'
+//    implementation 'com.github.tizisdeepan:eventscalendar:1.0.0'
+    implementation 'com.github.prolificinteractive:material-calendarview:1.6.0'
+//    implementation 'com.applandeo:material-calendar-view:1.4.0'
 //    implementation 'com.google.android.libraries.places:places-compat:1.0.0'
 //    implementation  'com.google.android.gms:play-services-location:16.0.0'
 //    implementation 'com.google.android.gms:play-services-places:16.0.0'
