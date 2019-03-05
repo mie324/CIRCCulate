@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 
 import com.example.circculate.Adapter.AlleventsAdapter;
 import com.example.circculate.Adapter.yourEventsAdapter;
+import com.example.circculate.HomePage;
 import com.example.circculate.Model.EventModel;
 import com.example.circculate.Model.UserModel;
 import com.example.circculate.R;
@@ -97,6 +98,7 @@ public class MyEventFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @Override
     public void onStart() {
         super.onStart();
+        setRecycerViewListener();
         Log.d(TAG, "onStart: my event on start");
     }
 
@@ -128,6 +130,27 @@ public class MyEventFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
                 }
 
+            }
+        });
+    }
+
+    private void setRecycerViewListener(){
+        RecyclerView recycerView = getView().findViewById(R.id.yourEventsRv);
+        final HomePage hostActivity = (HomePage)getActivity();
+
+        recycerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+//                Log.d(TAG, "onScrolled: " + dy);
+                if (dy < 0) { // up
+                    hostActivity.animateNavigation(false);
+
+                }
+                if (dy > 0) { // down
+                    hostActivity.animateNavigation(true);
+
+                }
             }
         });
     }

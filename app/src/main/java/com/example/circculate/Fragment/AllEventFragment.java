@@ -4,6 +4,7 @@ package com.example.circculate.Fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.circculate.Adapter.AlleventsAdapter;
+import com.example.circculate.HomePage;
 import com.example.circculate.Model.EventModel;
 import com.example.circculate.Model.UserModel;
 import com.example.circculate.R;
@@ -41,7 +43,7 @@ public class AllEventFragment extends Fragment implements SwipeRefreshLayout.OnR
     private AlleventsAdapter alleventsAdapter;
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
-    private static final String TAG = "FragmentLifeCycle";
+    private static final String TAG = "AllEvent";
     private UserModel currentUser;
     private List<DocumentSnapshot> eventsDoc;
 
@@ -86,6 +88,7 @@ public class AllEventFragment extends Fragment implements SwipeRefreshLayout.OnR
     @Override
     public void onStart() {
         super.onStart();
+        setRecycerViewListener();
         Log.d(TAG, "onStart: All event on start");
     }
 
@@ -136,5 +139,26 @@ public class AllEventFragment extends Fragment implements SwipeRefreshLayout.OnR
         Collections.sort(eventList, EventModel.eventComparator);
         alleventsAdapter = new AlleventsAdapter(getActivity(), eventList, currentUser);
         allEventsRv.setAdapter(alleventsAdapter);
+    }
+
+    private void setRecycerViewListener(){
+        RecyclerView recycerView = getView().findViewById(R.id.allEventsRv);
+        final HomePage hostActivity = (HomePage)getActivity();
+
+        recycerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+//                Log.d(TAG, "onScrolled: " + dy);
+                if (dy < 0) { // up
+                    hostActivity.animateNavigation(false);
+
+                }
+                if (dy > 0) { // down
+                    hostActivity.animateNavigation(true);
+
+                }
+            }
+        });
     }
 }
