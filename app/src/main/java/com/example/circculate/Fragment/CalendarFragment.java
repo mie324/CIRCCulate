@@ -1,6 +1,7 @@
 package com.example.circculate.Fragment;
 
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -51,6 +52,7 @@ public class CalendarFragment extends Fragment implements SwipeRefreshLayout.OnR
     private FirebaseFirestore db;
     private List<EventModel> events;
     private UserModel currentUser;
+    private ProgressDialog progressDialog;
 
     public CalendarFragment() {
         // Required empty public constructor
@@ -174,6 +176,7 @@ public class CalendarFragment extends Fragment implements SwipeRefreshLayout.OnR
         }
         Collections.sort(events, EventModel.eventComparator);
         mAdapter.notifyDataSetChanged();
+        progressDialog.hide();
     }
 
     private void initRecyclerView(){
@@ -194,16 +197,17 @@ public class CalendarFragment extends Fragment implements SwipeRefreshLayout.OnR
         if(eventCalendar == null){
             eventCalendar = (CalendarView) getView().findViewById(R.id.event_calendar);
         }
-
+        progressDialog = new ProgressDialog(getContext());
+        progressDialog.setMessage("Getting the events...");
         Log.d(TAG, "setCalendarListener: set Calendar listener");
         eventCalendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
+                progressDialog.show();
                 if(view != null){
                     Log.d(TAG, "not null.");
                 }
                 String currentDate = Helper.transformTimestampDate(year, month, dayOfMonth);
-
                 Toast.makeText(getActivity(), currentDate, Toast.LENGTH_SHORT).show();
                 if(!currentDate.equals(date)){
                     date = currentDate;
@@ -224,6 +228,7 @@ public class CalendarFragment extends Fragment implements SwipeRefreshLayout.OnR
                 }
             }
         });
+
     }
 
     private void setScrollListener(){
