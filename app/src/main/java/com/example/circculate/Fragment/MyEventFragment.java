@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -35,7 +36,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MyEventFragment extends Fragment {
+public class MyEventFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private ArrayList<EventModel> eventList;
     private RecyclerView myEventsRv;
@@ -73,11 +74,17 @@ public class MyEventFragment extends Fragment {
     }
 
     @Override
+    public void onRefresh() {
+        Log.d(TAG, "onRefresh: my event on refresh");
+        getYourEvents();
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_add, menu);
         Log.d(TAG, "onCreateOptionsMenu: my event create option menu");
-        getYourEvents();
+
     }
 
     @Override

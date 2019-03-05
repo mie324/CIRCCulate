@@ -75,7 +75,7 @@ public class yourEventsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         RecyclerView.ViewHolder viewHolder;
         if(viewType == EVENT_TYPE){
-            View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_all_events,parent,false);
+            View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_my_event,parent,false);
             viewHolder = new EventViewHolder(itemView);
         }else {
             View noItemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_no_item_layout, parent, false);

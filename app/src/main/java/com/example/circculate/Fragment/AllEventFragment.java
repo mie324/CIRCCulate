@@ -4,6 +4,7 @@ package com.example.circculate.Fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -33,7 +34,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AllEventFragment extends Fragment {
+public class AllEventFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private ArrayList<EventModel> eventList;
     private RecyclerView allEventsRv;
@@ -48,6 +49,11 @@ public class AllEventFragment extends Fragment {
         // Required empty public constructor
     }
 
+    @Override
+    public void onRefresh() {
+        Log.d(TAG, "onRefresh: all event on refresh");
+        getAllEvents();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,7 +71,7 @@ public class AllEventFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         setHasOptionsMenu(true);
-//        getAllEvents();
+        getAllEvents();
 
         return root;
     }
@@ -75,7 +81,6 @@ public class AllEventFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_add, menu);
         Log.d(TAG, "onCreateOptionsMenu: all event create option menu");
-        getAllEvents();
     }
 
     @Override

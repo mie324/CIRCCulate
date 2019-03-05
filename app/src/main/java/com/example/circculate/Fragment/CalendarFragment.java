@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -41,7 +42,7 @@ import java.util.TimeZone;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CalendarFragment extends Fragment {
+public class CalendarFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     private CalendarView eventCalendar;
     private String date;
     private static final String TAG = "FragmentLifeCycle";
@@ -55,6 +56,12 @@ public class CalendarFragment extends Fragment {
 
     public CalendarFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onRefresh() {
+        Log.d(TAG, "onRefresh: calendar on refresh");
+        getTodayEvents();
     }
 
     @Override
@@ -180,7 +187,7 @@ public class CalendarFragment extends Fragment {
         Log.d(TAG, currentUser.getUsername());
         mAdapter = new CalendarEventAdapter(getActivity(), events, currentUser);
         calenderRecycler.setAdapter(mAdapter);
-        getTodayEvents();
+//        getTodayEvents();
         Log.d(TAG, "initRecyclerView: recyclerview init");
         //set on click listener
 
