@@ -140,6 +140,18 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="TextAppearance.Headline.RedBG" parent="@style/TextAppearance.AppCompat.Headline">
+        <item name="android:textColor">@color/grey_3</item>
+    </style>
+
+    <style name="TextAppearance.Subhead.RedBG" parent="@style/TextAppearance.AppCompat.Subhead">
+        <item name="android:textColor">@color/grey_10</item>
+    </style>
+
+    <style name="Button.Accent.Borderless.RedBG" parent="@style/Button.Accent.Borderless">
+        <item name="android:textColor">@color/grey_3</item>
+    </style>
+
     <style name="TextAppearance.Medium.Bold" parent="@style/TextAppearance.AppCompat.Medium">
         <item name="android:textStyle">bold</item>
     </style>
