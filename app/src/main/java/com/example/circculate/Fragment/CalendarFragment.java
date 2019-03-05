@@ -88,9 +88,21 @@ public class CalendarFragment extends Fragment implements SwipeRefreshLayout.OnR
                 if(task.isSuccessful()){
 //                    List<DocumentSnapshot> documentSnapshot = task.getResult().getDocuments();
                     for(QueryDocumentSnapshot doc:task.getResult()){
-                        Log.d("fresh", doc.getData().toString());
+                        Log.d("fresh", doc.toObject(EventModel.class).getTimestamp());
+                        String timestamp = Helper.getTimedate(doc.toObject(EventModel.class).getTimestamp());
+                        int monthofDay = Integer.parseInt(timestamp.substring(6,8));
+                        int month = Integer.parseInt(timestamp.substring(4,6));
+                        int year = Integer.parseInt(timestamp.substring(0,4));
+                        CalendarDay day = new CalendarDay(year, month, monthofDay);
+                        dates.add(day);
 
                     }
+                    Log.d("date_num", Integer.toString(dates.size()));
+                    eventDecorator = new EventDecorator(dates);
+                    if(eventCalendar == null){
+                        Log.d("calendar_null", "yes");
+                    }
+                    eventCalendar.addDecorator(eventDecorator);
 
                 }
 
