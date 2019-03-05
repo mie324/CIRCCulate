@@ -15,11 +15,23 @@
 
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <CalendarView
+            <!--<CalendarView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:id="@+id/event_calendar"-->
+                <!--android:layout_height="wrap_content">-->
+            <!--</CalendarView>-->
+            <com.prolificinteractive.materialcalendarview.MaterialCalendarView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/calendarView"
                 android:layout_width="match_parent"
-                android:id="@+id/event_calendar"
-                android:layout_height="wrap_content">
-            </CalendarView>
+                android:layout_height="wrap_content"
+                android:layout_marginStart="25dp"
+                android:layout_marginEnd="25dp"
+                app:mcv_showOtherDates="none"
+                app:mcv_showWeekDays="false"
+                app:mcv_selectionColor="@color/colorAccent"
+
+                />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycler_calendar_event"

@@ -46,7 +46,7 @@ public class MyEventFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private static final String TAG = "FragmentLifeCycle";
     private List<DocumentSnapshot> EventsDoc;
     private UserModel currentUser;
-    private ProgressDialog progressDialog;
+//    private ProgressDialog progressDialog;
     public MyEventFragment() {
         // Required empty public constructor
     }
@@ -69,7 +69,7 @@ public class MyEventFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 .build();
         db.setFirestoreSettings(settings);
         setHasOptionsMenu(true);
-        progressDialog = new ProgressDialog(getActivity());
+//        progressDialog = new ProgressDialog(getActivity());
         return root;
     }
 
@@ -113,8 +113,8 @@ public class MyEventFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     private void getYourEvents() {
-        progressDialog.setMessage("Loading your events...");
-        progressDialog.show();
+//        progressDialog.setMessage("Loading your events...");
+//        progressDialog.show();
         db.collection("events").whereEqualTo("userId", mAuth.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -133,7 +133,7 @@ public class MyEventFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     private void displayEvents(List<DocumentSnapshot> eventsDoc) {
-        progressDialog.hide();
+//        progressDialog.hide();
         eventList = new ArrayList<>();
         for(DocumentSnapshot doc:eventsDoc){
             eventList.add(doc.toObject(EventModel.class));

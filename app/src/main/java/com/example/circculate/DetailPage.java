@@ -1,12 +1,16 @@
 package com.example.circculate;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import android.support.v7.widget.Toolbar;
 
 import com.example.circculate.Model.EventModel;
 import com.example.circculate.Model.UserModel;
@@ -21,6 +25,7 @@ public class DetailPage extends AppCompatActivity {
     private FirebaseFirestore db;
     private TextView appointPerson;
     private UserModel currentUser;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +35,23 @@ public class DetailPage extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         eventToDisplay = (EventModel) getIntent().getSerializableExtra("clickedEvent");
         currentUser = (UserModel) getIntent().getSerializableExtra("loggedUser");
+        initToolbar();
         initPage();
+
+    }
+
+    private void initToolbar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getApplicationContext(), HomePage.class);
+                    startActivity(intent);
+                }
+        });
 
     }
 
