@@ -198,7 +198,7 @@ public class HomePage extends AppCompatActivity {
 //        Log.d("username2", user.getUsername());
         FavoritesFragment fragment = new FavoritesFragment();
         fragment.setArguments(bundle);
-        getSupportActionBar().setTitle("Calendar");
+        getSupportActionBar().setTitle("Welcome, " + user.getUsername());
         FragmentManager manager = getSupportFragmentManager();
         manager.beginTransaction().replace(R.id.fragment_container, fragment).commit();
     }

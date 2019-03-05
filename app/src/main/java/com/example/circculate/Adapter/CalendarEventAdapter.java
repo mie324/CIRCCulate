@@ -108,11 +108,13 @@ public class CalendarEventAdapter extends RecyclerView.Adapter<RecyclerView.View
         //change the color theme if no one sign up
 
         if(event.getUserId() == null){
-            eventViewHolder.itemLayout.setBackgroundColor(context.getColor(R.color.red_900));//red_900
-            eventViewHolder.appointmentTitle.setTextAppearance(R.style.TextAppearance_Headline_RedBG);
-            eventViewHolder.appointmentLocation.setTextAppearance(R.style.TextAppearance_Subhead_RedBG);
-            eventViewHolder.appointmentPerson.setTextAppearance(R.style.TextAppearance_Subhead_RedBG);
-            eventViewHolder.detailButton.setTextColor(context.getColor(R.color.grey_3));
+//            eventViewHolder.itemLayout.setBackgroundColor(context.getColor(R.color.red_900));//red_900
+//            eventViewHolder.appointmentTitle.setTextAppearance(R.style.TextAppearance_Headline_RedBG);
+//            eventViewHolder.appointmentLocation.setTextAppearance(R.style.TextAppearance_Subhead_RedBG);
+//            eventViewHolder.appointmentPerson.setTextAppearance(R.style.TextAppearance_Subhead_RedBG);
+//            eventViewHolder.detailButton.setTextColor(context.getColor(R.color.grey_3));
+
+            eventViewHolder.appointmentPerson.setTextAppearance(R.style.TextAppearance_Subhead_Red);
 
         }
 
@@ -135,14 +137,15 @@ public class CalendarEventAdapter extends RecyclerView.Adapter<RecyclerView.View
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if(task.isSuccessful()){
-                                eventViewHolder.appointmentPerson.setText(user.getUsername());
+                                eventViewHolder.appointmentPerson.setText("Person: " + user.getUsername());
                                 //change the style of view holder
-                                eventViewHolder.itemLayout.setBackgroundColor(context.getColor(R.color.grey_3));
-                                eventViewHolder.appointmentTitle.setTextAppearance(R.style.TextAppearance_AppCompat_Headline);
-                                eventViewHolder.appointmentLocation.setTextAppearance(R.style.TextAppearance_AppCompat_Subhead);
-                                eventViewHolder.appointmentPerson.setTextAppearance(R.style.TextAppearance_AppCompat_Subhead);
-                                eventViewHolder.detailButton.setTextColor(context.getColor(R.color.colorAccent));
+//                                eventViewHolder.itemLayout.setBackgroundColor(context.getColor(R.color.grey_3));
+//                                eventViewHolder.appointmentTitle.setTextAppearance(R.style.TextAppearance_AppCompat_Headline);
+//                                eventViewHolder.appointmentLocation.setTextAppearance(R.style.TextAppearance_AppCompat_Subhead);
+//                                eventViewHolder.appointmentPerson.setTextAppearance(R.style.TextAppearance_AppCompat_Subhead);
+//                                eventViewHolder.detailButton.setTextColor(context.getColor(R.color.colorAccent));
 
+                                eventViewHolder.appointmentPerson.setTextAppearance(R.style.TextAppearance_Subhead_Black);
                                 //end of change style
 
                                 Toast.makeText(context, "You have signed for the event.",

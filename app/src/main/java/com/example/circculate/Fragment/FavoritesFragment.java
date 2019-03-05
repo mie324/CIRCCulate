@@ -35,6 +35,9 @@ public class FavoritesFragment extends Fragment {
     private TabLayout tabLayout;
     private UserModel user;
     private static final String TAG = "calendarFragment";
+    private CalendarFragment calendarFrag;
+    private AllEventFragment allFrag;
+    private MyEventFragment myFrag;
     public FavoritesFragment() {
         // Required empty public constructor
     }
@@ -56,10 +59,39 @@ public class FavoritesFragment extends Fragment {
         viewPager = root.findViewById(R.id.view_pager);
         user = (UserModel) getArguments().getSerializable("LoggedUser");
         SectionsPagerAdapter adapter = new SectionsPagerAdapter(getChildFragmentManager());
-        adapter.addFragment(new CalendarFragment(), "Calendar", user);
-        adapter.addFragment(new AllEventFragment(), "All Events", user);
-        adapter.addFragment(new MyEventFragment(), "My Events", user);
+
+        calendarFrag = new CalendarFragment();
+        allFrag = new AllEventFragment();
+        myFrag = new MyEventFragment();
+        adapter.addFragment(allFrag, "All Events", user);
+        adapter.addFragment(myFrag, "My Events", user);
+        adapter.addFragment(calendarFrag, "Calendar", user);
         viewPager.setAdapter(adapter);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (position == 2){
+                    calendarFrag.onRefresh();
+                }
+                if(position == 0){
+                    allFrag.onRefresh();
+                }
+
+                if(position == 1){
+                    myFrag.onRefresh();
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         if(user != null){
             Log.d(TAG, "onCreateView: user not null");
         }
