@@ -61,7 +61,7 @@ public class DetailPage extends AppCompatActivity {
     }
 
     private void addSwitchListener(){
-        Switch signupSwitch = findViewById(R.id.signup_switch);
+        final Switch signupSwitch = findViewById(R.id.signup_switch);
         if(mAuth.getUid().equals(eventToDisplay.getUserId())){
             signupSwitch.setChecked(true);
         }
@@ -92,6 +92,7 @@ public class DetailPage extends AppCompatActivity {
                             });
                         }
                     }else {
+                        signupSwitch.setChecked(false);
                         showToast("Someone else already sign up for this event.");
                     }
                 }else{

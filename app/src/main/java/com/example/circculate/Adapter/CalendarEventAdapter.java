@@ -117,6 +117,8 @@ public class CalendarEventAdapter extends RecyclerView.Adapter<RecyclerView.View
 
             eventViewHolder.appointmentPerson.setTextAppearance(R.style.TextAppearance_Subhead_Red);
 
+        }else {
+            eventViewHolder.appointmentPerson.setTextColor(event.getUserColorCode());
         }
 
         eventViewHolder.signupButton.setOnClickListener(new View.OnClickListener() {
@@ -133,12 +135,15 @@ public class CalendarEventAdapter extends RecyclerView.Adapter<RecyclerView.View
                     event.setUserId(mAuth.getUid());
 //                    String username = getUserName();
                     event.setUserName(user.getUsername());
+                    event.setUserColorCode(user.getColorCode());
                     db.collection("events").document(event.getTimestamp())
                             .set(event).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if(task.isSuccessful()){
                                 eventViewHolder.appointmentPerson.setText("Person: " + user.getUsername());
+                                eventViewHolder.appointmentPerson.setTextAppearance(R.style.TextAppearance_Subhead_Black);
+                                eventViewHolder.appointmentPerson.setTextColor(user.getColorCode());
                                 //change the style of view holder
 //                                eventViewHolder.itemLayout.setBackgroundColor(context.getColor(R.color.grey_3));
 //                                eventViewHolder.appointmentTitle.setTextAppearance(R.style.TextAppearance_AppCompat_Headline);
@@ -146,7 +151,6 @@ public class CalendarEventAdapter extends RecyclerView.Adapter<RecyclerView.View
 //                                eventViewHolder.appointmentPerson.setTextAppearance(R.style.TextAppearance_AppCompat_Subhead);
 //                                eventViewHolder.detailButton.setTextColor(context.getColor(R.color.colorAccent));
 
-                                eventViewHolder.appointmentPerson.setTextAppearance(R.style.TextAppearance_Subhead_Black);
                                 //end of change style
 
                                 Toast.makeText(context, "You have signed for the event.",

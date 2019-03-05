@@ -5,6 +5,7 @@ import java.util.Comparator;
 
 public class EventModel implements Serializable{
     private String title, timestamp, location, userId, note, userName;
+    private int userColorCode;
     EventModel(){}
 
     public EventModel(String title, String timestamp, String location, String note) {
@@ -14,6 +15,7 @@ public class EventModel implements Serializable{
         this.note = note;
         this.userName = null;
         this.userId = null;
+        this.userColorCode = 0;
     }
 
 //    public EventModel(String title, String timestamp, String location) {
@@ -24,13 +26,15 @@ public class EventModel implements Serializable{
 //        userId = null;
 //    }
 
-    public EventModel(String title, String timestamp, String location, String userName, String userId, String note) {
+    public EventModel(String title, String timestamp, String location, String userName, String userId, String note,
+                      int colorCode) {
         this.title = title;
         this.timestamp = timestamp;
         this.location = location;
         this.userName = userName;
         this.userId = userId;
         this.note = note;
+        this.userColorCode = colorCode;
     }
 
     public String getTitle() {
@@ -39,6 +43,13 @@ public class EventModel implements Serializable{
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public int getUserColorCode(){
+        return this.userColorCode;
+    }
+    public void setUserColorCode(int colorCode){
+        this.userColorCode = colorCode;
     }
 
     public String getTimestamp() {

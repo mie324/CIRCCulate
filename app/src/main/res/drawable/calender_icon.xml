@@ -6,7 +6,7 @@
             <size
                 android:width="35dp"
                 android:height="40dp" />
-            <solid android:color="@color/colorAccent" />
+            <solid android:color="@color/transparent" />
         </shape>
     </item>
     <item>
@@ -21,7 +21,7 @@
             <size
                 android:width="30dp"
                 android:height="20dp" />
-            <solid android:color="@color/colorAccent" />
+            <solid android:color="@color/transparent" />
         </shape>
     </item>
 

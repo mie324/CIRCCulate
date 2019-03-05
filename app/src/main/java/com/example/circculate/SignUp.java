@@ -1,14 +1,21 @@
 package com.example.circculate;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatSeekBar;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.circculate.Model.UserModel;
@@ -24,6 +31,9 @@ public class SignUp extends AppCompatActivity {
     private String emailText, passwordText, usernameText;
     private static final int MIN_PASSWORD_LENGTH = 6;
     private ProgressDialog progressDialog;
+    private TextInputEditText pickerColorResult;
+    private int colorCode;
+    private int currentRed = 127, currentGreen = 127, currentBlue = 118;
 
 
     @Override
@@ -35,6 +45,8 @@ public class SignUp extends AppCompatActivity {
         // setSupportActionBar(toolbar);
         mAuth = FirebaseAuth.getInstance();
         toHomePage(mAuth.getCurrentUser());
+        pickerColorResult = findViewById(R.id.pick_color_text);
+        initPicker();
         addButtonLisner();
     }
 
@@ -43,6 +55,132 @@ public class SignUp extends AppCompatActivity {
             Intent intent = new Intent(this, HomePage.class);
             startActivity(intent);
         }
+    }
+
+    private void initPicker(){
+        ((Button)findViewById(R.id.color_picker)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openPickerDialog();
+            }
+        });
+
+        pickerColorResult.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openPickerDialog();
+            }
+        });
+    }
+
+    private void openPickerDialog(){
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // before
+        dialog.setContentView(R.layout.dialog_color_picker);
+        dialog.setCancelable(true);
+
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
+        final View viewResult = (View) dialog.findViewById(R.id.view_result);
+        final AppCompatSeekBar seekbarRed = (AppCompatSeekBar) dialog.findViewById(R.id.seekbar_red);
+        final AppCompatSeekBar seekbarGreen = (AppCompatSeekBar) dialog.findViewById(R.id.seekbar_green);
+        final AppCompatSeekBar seekbarBlue = (AppCompatSeekBar) dialog.findViewById(R.id.seekbar_blue);
+
+        final TextView tvRed = (TextView) dialog.findViewById(R.id.tv_red);
+        final TextView tvGreen = (TextView) dialog.findViewById(R.id.tv_green);
+        final TextView tvBlue = (TextView) dialog.findViewById(R.id.tv_blue);
+
+        tvRed.setText(currentRed + "");
+        tvGreen.setText(currentGreen + "");
+        tvBlue.setText(currentBlue + "");
+
+        seekbarRed.setProgress(currentRed);
+        seekbarGreen.setProgress(currentGreen);
+        seekbarBlue.setProgress(currentBlue);
+
+        viewResult.setBackgroundColor(Color.rgb(currentRed, currentGreen, currentBlue));
+
+        seekbarRed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                tvRed.setText(progress + "");
+                viewResult.setBackgroundColor(Color.rgb(seekbarRed.getProgress(), seekbarGreen.getProgress(), seekbarBlue.getProgress()));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        seekbarGreen.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                tvGreen.setText(progress + "");
+                viewResult.setBackgroundColor(Color.rgb(seekbarRed.getProgress(), seekbarGreen.getProgress(), seekbarBlue.getProgress()));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        seekbarBlue.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                tvBlue.setText(progress + "");
+                viewResult.setBackgroundColor(Color.rgb(seekbarRed.getProgress(), seekbarGreen.getProgress(), seekbarBlue.getProgress()));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        ((Button) dialog.findViewById(R.id.bt_ok)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                currentRed = seekbarRed.getProgress();
+                currentGreen = seekbarGreen.getProgress();
+                currentBlue = seekbarBlue.getProgress();
+
+//                pickerColorResult.setText("RGB(" + currentRed + ", " + currentGreen + ", " + currentBlue + ")");
+                pickerColorResult.setText(Integer.toString(Color.rgb(currentRed, currentGreen, currentBlue)));
+                pickerColorResult.setBackgroundColor(Color.rgb(currentRed, currentGreen, currentBlue));
+                pickerColorResult.setTextColor(getResources().getColor(R.color.grey_3));
+
+            }
+        });
+        ((Button) dialog.findViewById(R.id.bt_cancel)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+        dialog.getWindow().setAttributes(lp);
     }
 
     private void addButtonLisner(){
@@ -80,7 +218,7 @@ public class SignUp extends AppCompatActivity {
             return;
         }
 
-        UserModel newUser = new UserModel(emailText, usernameText);
+        UserModel newUser = new UserModel(emailText, usernameText, colorCode);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("users").document(currentUser.getUid())
                 .set(newUser).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -121,8 +259,7 @@ public class SignUp extends AppCompatActivity {
             confirmPsd.setError("Password mush match!");
             return false;
 
-        }
-        else{
+        } else{
             passwordText = password.getText().toString();
         }
 
@@ -134,6 +271,13 @@ public class SignUp extends AppCompatActivity {
         }else{
             usernameText = username.getText().toString();
 
+        }
+
+        if(TextUtils.isEmpty(pickerColorResult.getText().toString())){
+            pickerColorResult.setError("Required.");
+            return false;
+        }else {
+            colorCode = Integer.parseInt(pickerColorResult.getText().toString());
         }
 
         return true;

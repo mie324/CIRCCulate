@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -45,6 +46,7 @@ public class yourEventsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public class EventViewHolder extends RecyclerView.ViewHolder {
         public TextView monthText, dayText, eventTitle, timeText, personName, detailText;
         public Switch signupSW;
+        public ImageView calendarBG;
 
         public EventViewHolder(View itemView) {
             super(itemView);
@@ -56,6 +58,7 @@ public class yourEventsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             personName = itemView.findViewById(R.id.Person_name);
             detailText = itemView.findViewById(R.id.Detail_text);
             signupSW = itemView.findViewById(R.id.signup_switch);
+            calendarBG = itemView.findViewById(R.id.calender_icon);
         }
     }
 
@@ -105,7 +108,7 @@ public class yourEventsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 //            holder.personName.setText(signedName);
 //        }
             ((EventViewHolder) holder).personName.setText(currentUser.getUsername());
-
+            ((EventViewHolder) holder).calendarBG.setBackgroundColor(currentUser.getColorCode());
             ((EventViewHolder) holder).dayText.setText(day);
             ((EventViewHolder) holder).monthText.setText(mon);
 
@@ -130,6 +133,7 @@ public class yourEventsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         //user cancel the sign up
                         newEvent.setUserName(null);
                         newEvent.setUserId(null);
+                        newEvent.setUserColorCode(0);
                         db.collection("events").document(newEvent.getTimestamp())
                                 .set(newEvent).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
@@ -139,7 +143,7 @@ public class yourEventsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                     notifyDataSetChanged();
 
                                     Toast.makeText(ctx, "You have cancel the sign up.", Toast.LENGTH_SHORT).show();
-                                    ((EventViewHolder) holder).personName.setText("No one signed up yet.");
+//                                    ((EventViewHolder) holder).personName.setText("No one signed up yet.");
                                 }else {
                                     Toast.makeText(ctx, "Fail to cancel the sign up.", Toast.LENGTH_SHORT).show();
                                 }

@@ -9,20 +9,6 @@
 
         android:title="Logout"
         app:showAsAction="never" />
-    <item
-        android:id="@+id/action_yourevents"
-        android:orderInCategory="100"
-        android:title="Your events"
-        app:showAsAction="never"
 
-        />
-
-    <item
-        android:id="@+id/action_allevents"
-        android:orderInCategory="100"
-        android:title="All events"
-        app:showAsAction="never"
-
-        />
 
 </menu>
