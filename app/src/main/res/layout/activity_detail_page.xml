@@ -33,11 +33,10 @@
                 android:src="@drawable/image_11"
                 app:layout_collapseMode="parallax" />
 
-
-            <!--<View-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:background="@color/overlay_dark_40" />-->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/overlay_dark_40" />
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -115,14 +114,53 @@
                     android:paddingRight="@dimen/spacing_large"
                     android:paddingBottom="@dimen/spacing_large">
 
-                    <TextView
+                    <ViewSwitcher
+                        android:id="@+id/title_switcher"
                         android:layout_width="match_parent"
-                        android:layout_height="?attr/actionBarSize"
-                        android:gravity="center_vertical"
-                        android:id="@+id/title"
-                        android:text="Title"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                        android:textColor="@color/grey_80" />
+                        android:layout_height="?attr/actionBarSize">
+
+                        <TextView
+                            android:id="@+id/title"
+                            android:layout_width="match_parent"
+                            android:layout_height="?attr/actionBarSize"
+                            android:gravity="center_vertical"
+                            android:text="Title"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                            android:textColor="@color/grey_80" />
+
+
+                        <RelativeLayout
+                            android:id="@+id/title_edit_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="?attr/actionBarSize">
+
+                            <EditText
+                                android:id="@+id/title_edit"
+                                android:layout_width="match_parent"
+                                android:layout_height="?attr/actionBarSize"
+                                android:layout_weight="2"
+                                android:gravity="center_vertical"
+                                android:text="Title"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                                android:textColor="@color/grey_80"/>
+
+                            <ImageButton
+                                android:id="@+id/title_edit_bt"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_alignParentBottom="true"
+                                android:layout_marginEnd="2dp"
+                                android:layout_marginBottom="6dp"
+                                android:background="@color/transparent"
+                                android:tint="@color/colorAccent"
+                                app:srcCompat="@drawable/ic_done"
+                                />
+
+                        </RelativeLayout>
+
+
+                    </ViewSwitcher>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -142,11 +180,11 @@
                             android:layout_height="0dp" />
 
                         <TextView
+                            android:id="@+id/date_and_time"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
                             android:minHeight="@dimen/spacing_xmlarge"
-                            android:id="@+id/date_and_time"
                             android:text="16:30 2/26/2019"
                             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                             android:textColor="@color/grey_40" />
@@ -170,15 +208,52 @@
                             android:layout_width="@dimen/spacing_middle"
                             android:layout_height="0dp" />
 
-                        <TextView
+                        <ViewSwitcher
+                            android:id="@+id/location_switcher"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:minHeight="@dimen/spacing_xmlarge"
-                            android:id="@+id/location"
-                            android:text="Torontol Hospital"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                            android:textColor="@color/grey_40" />
+                            android:layout_height="wrap_content">
+                            <TextView
+                                android:id="@+id/location"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:minHeight="@dimen/spacing_xmlarge"
+                                android:text="Torontol Hospital"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                                android:textColor="@color/grey_40" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <EditText
+                                    android:id="@+id/location_edit"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="4"
+                                    android:gravity="center_vertical"
+                                    android:minHeight="@dimen/spacing_xmlarge"
+                                    android:text="Torontol Hospital"
+                                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                                    android:textColor="@color/grey_80"/>
+
+                                <ImageButton
+                                    android:id="@+id/location_edit_bt"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginEnd="2dp"
+                                    android:layout_weight="1"
+                                    android:background="@color/transparent"
+                                    android:baselineAlignBottom="true"
+                                    android:tint="@color/colorAccent"
+                                    app:srcCompat="@drawable/ic_done"
+                                    />
+
+                            </LinearLayout>
+
+
+                        </ViewSwitcher>
 
                     </LinearLayout>
 
@@ -357,14 +432,48 @@
                         android:textAppearance="@style/TextAppearance.AppCompat.Title"
                         android:textColor="@color/grey_80" />
 
-                    <TextView
+                    <ViewSwitcher
+                        android:id="@+id/note_switcher"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:id="@+id/note_content"
-                        android:text="anc"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                        android:textColor="@color/grey_40" />
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/note_content"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:text="anc"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                            android:textColor="@color/grey_40" />
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <EditText
+                                android:id="@+id/note_content_edit"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                                android:textColor="@color/grey_80"/>
+
+                            <ImageButton
+                                android:id="@+id/note_edit_bt"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_alignParentBottom="false"
+                                android:layout_marginEnd="2dp"
+                                android:layout_marginBottom="6dp"
+                                android:background="@color/transparent"
+                                android:tint="@color/colorAccent"
+                                app:srcCompat="@drawable/ic_done"/>
+
+                        </RelativeLayout>
+
+                    </ViewSwitcher>
+
+
 
                 </LinearLayout>
 
