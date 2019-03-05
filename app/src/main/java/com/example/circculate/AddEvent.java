@@ -160,7 +160,7 @@ public class AddEvent extends AppCompatActivity {
         if(checkBoxFlag){
             mAuth = FirebaseAuth.getInstance();
             newEvent = new EventModel(this.title, this.timestamp, this.location,
-                    currentUser.getUsername(), mAuth.getUid(),this.note);
+                    currentUser.getUsername(), mAuth.getUid(),this.note, currentUser.getColorCode());
         }else {
             newEvent = new EventModel(this.title, this.timestamp, this.location, this.note);
         }

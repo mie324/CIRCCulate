@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,8 +45,9 @@ public class AlleventsAdapter extends RecyclerView.Adapter<AlleventsAdapter.Even
     }
 
     public class EventViewHolder extends RecyclerView.ViewHolder {
-        TextView monthText, dayText, eventTitle, timeText, personName, detailText;
-        Switch signupSW;
+        public TextView monthText, dayText, eventTitle, timeText, personName, detailText;
+        public Switch signupSW;
+        public ImageView calendarBG;
 
         public EventViewHolder(View itemView) {
             super(itemView);
@@ -57,6 +59,7 @@ public class AlleventsAdapter extends RecyclerView.Adapter<AlleventsAdapter.Even
             personName = itemView.findViewById(R.id.Person_name);
             detailText = itemView.findViewById(R.id.Detail_text);
             signupSW = itemView.findViewById(R.id.signup_switch);
+            calendarBG = itemView.findViewById(R.id.calender_icon);
         }
     }
 
@@ -83,6 +86,7 @@ public class AlleventsAdapter extends RecyclerView.Adapter<AlleventsAdapter.Even
             holder.personName.setText("No one signed up yet.");
         }else{
             holder.personName.setText(signedName);
+            holder.calendarBG.setBackgroundColor(newEvent.getUserColorCode());
         }
 
         holder.dayText.setText(day);
@@ -115,6 +119,7 @@ public class AlleventsAdapter extends RecyclerView.Adapter<AlleventsAdapter.Even
                             //cancel the sign up.
                             newEvent.setUserName(null);
                             newEvent.setUserId(null);
+                            newEvent.setUserColorCode(0);
                             db.collection("events").document(newEvent.getTimestamp())
                                     .set(newEvent).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
@@ -123,6 +128,7 @@ public class AlleventsAdapter extends RecyclerView.Adapter<AlleventsAdapter.Even
 
                                         Toast.makeText(ctx, "You have cancel the sign up.", Toast.LENGTH_SHORT).show();
                                         holder.personName.setText("No one signed up yet.");
+                                        holder.calendarBG.setBackgroundColor(ctx.getColor(R.color.colorAccent));
                                     }else {
                                         Toast.makeText(ctx, "Fail to cancel the sign up.", Toast.LENGTH_SHORT).show();
                                     }
@@ -134,6 +140,7 @@ public class AlleventsAdapter extends RecyclerView.Adapter<AlleventsAdapter.Even
                     if(isChecked){
                         newEvent.setUserId(mAuth.getUid());
                         newEvent.setUserName(currentUser.getUsername());
+                        newEvent.setUserColorCode(currentUser.getColorCode());
                         db.collection("events").document(newEvent.getTimestamp())
                                 .set(newEvent).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
@@ -141,6 +148,7 @@ public class AlleventsAdapter extends RecyclerView.Adapter<AlleventsAdapter.Even
                                 if(task.isSuccessful()){
                                     Toast.makeText(ctx, "You have signed up for the event.", Toast.LENGTH_SHORT).show();
                                     holder.personName.setText(currentUser.getUsername());
+                                    holder.calendarBG.setBackgroundColor(currentUser.getColorCode());
                                 }
                             }
                         });
