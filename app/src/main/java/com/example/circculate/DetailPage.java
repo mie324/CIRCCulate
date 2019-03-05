@@ -3,6 +3,7 @@ package com.example.circculate;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -37,10 +38,18 @@ public class DetailPage extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         eventToDisplay = (EventModel) getIntent().getSerializableExtra("clickedEvent");
         currentUser = (UserModel) getIntent().getSerializableExtra("loggedUser");
+        initToolbar();
         initPage();
 
     }
 
+    private void initToolbar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+    }
     private void initPage(){
         if(eventToDisplay == null){
             return;
