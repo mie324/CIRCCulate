@@ -88,6 +88,7 @@ public class CalendarFragment extends Fragment implements SwipeRefreshLayout.OnR
                 if(task.isSuccessful()){
 //                    List<DocumentSnapshot> documentSnapshot = task.getResult().getDocuments();
                     for(QueryDocumentSnapshot doc:task.getResult()){
+<<<<<<< HEAD
                         int monthofDay;
                         int month;
                         int year;
@@ -120,6 +121,11 @@ public class CalendarFragment extends Fragment implements SwipeRefreshLayout.OnR
                     }
                     eventCalendar = (MaterialCalendarView) getView().findViewById(R.id.calendarView);
                     eventCalendar.addDecorator(eventDecorator);
+=======
+                        Log.d("fresh", doc.getData().toString());
+
+                    }
+>>>>>>> parent of 77a3e03... dot is not displayed
 
                 }
 

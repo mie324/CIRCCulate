@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 public class EventDecorator implements DayViewDecorator {
+    private int color;
     private HashSet<CalendarDay> dates;
     private final Drawable highlightDrawable;
     private static final int color = Color.parseColor("#228BC34A");
@@ -26,6 +27,12 @@ public class EventDecorator implements DayViewDecorator {
         this.dates = dates;
         highlightDrawable = new ColorDrawable(color);
 
+<<<<<<< HEAD
+=======
+    public EventDecorator(Collection <CalendarDay> dates){
+        this.color = Color.parseColor("#FF4081");
+        this.dates = new HashSet<>(dates);
+>>>>>>> parent of 77a3e03... dot is not displayed
     }
 
     @Override
@@ -34,9 +41,15 @@ public class EventDecorator implements DayViewDecorator {
     }
 
     @Override
+<<<<<<< HEAD
     public void decorate(DayViewFacade view) {
 //        dayViewFacade.addSpan(new DotSpan(5, color));
           view.setBackgroundDrawable(highlightDrawable);
+=======
+    public void decorate(DayViewFacade dayViewFacade) {
+        dayViewFacade.addSpan(new DotSpan(5, color));
+
+>>>>>>> parent of 77a3e03... dot is not displayed
     }
 
 //    private CalendarDay date;
