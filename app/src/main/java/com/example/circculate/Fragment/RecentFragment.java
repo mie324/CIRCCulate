@@ -1,45 +1,36 @@
 package com.example.circculate.Fragment;
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.circculate.Model.UserModel;
 import com.example.circculate.R;
 
+import java.util.ArrayList;
+import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link RecentFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link RecentFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
+
 public class RecentFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-//    private static final String ARG_PARAM1 = "param1";
-//    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-//    private String mParam1;
-//    private String mParam2;
-
+    private ViewPager viewPager;
+    private TabLayout tabLayout;
+    private UserModel user;
+    private static final String TAG = "recentFragment";
+    private RecrodFragment recordFragment;
+    private LibraryFrament libraryFrament;
 
     public RecentFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-//     * @param param1 Parameter 1.
-//     * @param param2 Parameter 2.
-     * @return A new instance of fragment RecentFragment.
-     */
     // TODO: Rename and change types and number of parameters
     public static RecentFragment newInstance() {
         RecentFragment fragment = new RecentFragment();
@@ -50,22 +41,52 @@ public class RecentFragment extends Fragment {
         return fragment;
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-//        if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
-//        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_recent, container, false);
-    }
+        View root = inflater.inflate(R.layout.fragment_recent, container, false);
 
+        viewPager = root.findViewById(R.id.record_view_pager);
+        user = (UserModel) getArguments().getSerializable("LoggedUser");
+        SectionsPagerAdapter adapter = new SectionsPagerAdapter(getChildFragmentManager());
+        recordFragment = new RecrodFragment();
+        libraryFrament = new LibraryFrament();
+
+        adapter.addFragment(recordFragment, "Record", user);
+        adapter.addFragment(libraryFrament, "Library", user);
+//        adapter.addFragment(calendarFrag, "Calendar", user);
+        viewPager.setAdapter(adapter);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (position == 0) {
+                    recordFragment.onRefresh();
+                }
+                if (position == 1) {
+                    libraryFrament.onRefresh();
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+        if (user != null) {
+            Log.d(TAG, "onCreateView: user not null");
+        }
+        tabLayout = root.findViewById(R.id.tab_layout);
+        tabLayout.setupWithViewPager(viewPager);
+        // Inflate the layout for this fragment
+        return root;
+    }
 
 
     @Override
@@ -74,15 +95,43 @@ public class RecentFragment extends Fragment {
 
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
+    private class SectionsPagerAdapter extends FragmentPagerAdapter {
 
+        private final List<Fragment> mFragmentList = new ArrayList<>();
+        private final List<String> mFragmentTitleList = new ArrayList<>();
+
+        public SectionsPagerAdapter(FragmentManager manager) {
+            super(manager);
+
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mFragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragmentList.size();
+        }
+
+        public void addFragment(Fragment fragment, String title, UserModel user) {
+            if (user != null) {
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("LoggedUser", user);
+                fragment.setArguments(bundle);
+                Log.d(TAG, "addFragment: add user to bundle");
+            }
+
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mFragmentTitleList.get(position);
+        }
+
+
+    }
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,7 @@ public class AlleventsAdapter extends RecyclerView.Adapter<AlleventsAdapter.Even
     private FirebaseFirestore db;
     private UserModel currentUser;
     private FirebaseAuth mAuth;
+    private static final String TAG = "ColorCode";
 
     public AlleventsAdapter(Context ctx, List<EventModel> eventList, UserModel currentUser) {
         this.eventList = eventList;
@@ -141,6 +143,9 @@ public class AlleventsAdapter extends RecyclerView.Adapter<AlleventsAdapter.Even
                         newEvent.setUserId(mAuth.getUid());
                         newEvent.setUserName(currentUser.getUsername());
                         newEvent.setUserColorCode(currentUser.getColorCode());
+//                        Log.d(TAG, "onCheckedChanged: " + currentUser.getUsername());
+//                        Log.d(TAG, "onCheckedChanged: " + currentUser.getColorCode());
+//                        Log.d(TAG, "onCheckedChanged: " + newEvent.getUserColorCode());
                         db.collection("events").document(newEvent.getTimestamp())
                                 .set(newEvent).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override

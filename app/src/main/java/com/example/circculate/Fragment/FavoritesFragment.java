@@ -140,10 +140,4 @@ public class FavoritesFragment extends Fragment {
     }
 
 
-
-
-
-
-
-
 }

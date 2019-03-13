@@ -188,7 +188,12 @@ public class HomePage extends AppCompatActivity {
     public void switchToRecent(){
         getSupportActionBar().setTitle("Recordings");
         FragmentManager manager = getSupportFragmentManager();
-        manager.beginTransaction().replace(R.id.fragment_container, new RecentFragment()).commit();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("LoggedUser",user);
+        RecentFragment recentFragment = new RecentFragment();
+        recentFragment.setArguments(bundle);
+
+        manager.beginTransaction().replace(R.id.fragment_container, recentFragment).commit();
     }
 
     public void switchToFavorites(){
