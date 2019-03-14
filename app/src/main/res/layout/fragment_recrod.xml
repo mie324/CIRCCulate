@@ -38,7 +38,6 @@
                         app:civ_background_color="@color/colorAccent" />
 
 
-
                 </RelativeLayout>
 
                 <TextView
