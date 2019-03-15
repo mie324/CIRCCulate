@@ -7,6 +7,7 @@ public class RecordingModel implements Serializable {
     private String title;
     private String audioRef;
     private String textRef;
+    public boolean expanded = false;
 
 
     public RecordingModel(String timestamp, String title, String audioRef, String textRef) {
