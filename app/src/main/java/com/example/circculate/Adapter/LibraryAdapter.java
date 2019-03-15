@@ -62,6 +62,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.audioVie
             bt_prev = itemView.findViewById(R.id.bt_prev);
             bt_next = itemView.findViewById(R.id.bt_next);
             seek_song_progressbar = itemView.findViewById(R.id.seek_song_progressbar);
+//            bt_hide_text = itemView.findViewById(R.id.bt_hide_text);
             //Media Player
 //            InitProgressbar();
 //            playAudio();

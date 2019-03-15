@@ -25,6 +25,7 @@
 
         </service>
 
+
         <activity android:name=".AddEvent" />
         <activity android:name=".HomePage" />
         <activity
@@ -48,5 +49,6 @@
             android:theme="@style/AppTheme" />
 
     </application>
+
 
 </manifest>

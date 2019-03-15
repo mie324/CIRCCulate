@@ -2,6 +2,7 @@ package com.example.circculate.Fragment;
 
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.pm.PackageManager;
 import android.media.MediaRecorder;
@@ -25,21 +26,29 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.circculate.Model.AudioModel;
 import com.example.circculate.Model.UserModel;
 import com.example.circculate.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Calendar;
+import java.util.TimeZone;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -53,6 +62,7 @@ public class RecrodFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private static final String TAG = "RECORDER";
     private MediaRecorder recorder;
 
+    private String timestamp;
     private boolean hasPermissionToRecord = false;
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
     private String[] permissions = {Manifest.permission.RECORD_AUDIO};
@@ -103,6 +113,7 @@ public class RecrodFragment extends Fragment implements SwipeRefreshLayout.OnRef
 //        getActivity().getEx
         ActivityCompat.requestPermissions(getActivity(), permissions, REQUEST_RECORD_AUDIO_PERMISSION);
         recordButton.setOnClickListener(new View.OnClickListener() {
+            @TargetApi(Build.VERSION_CODES.O)
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View view) {
@@ -119,7 +130,7 @@ public class RecrodFragment extends Fragment implements SwipeRefreshLayout.OnRef
                     }catch (IOException e){
                         Log.e(TAG, "onClick: " + e.toString());
                     }
-
+//                    Log.d(TAG, "onClick: CurrentTime: " + currentTime.format(cal.getTime()));
                     recorder.start();
 
                     //set UI
@@ -162,7 +173,7 @@ public class RecrodFragment extends Fragment implements SwipeRefreshLayout.OnRef
                     recorder.release();
                     recorder = null;
 
-                    Toast.makeText(getActivity(), "Fragment pop up for saving recording", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getActivity(), "Fragment pop up for saving recording", Toast.LENGTH_SHORT).show();
                     startRecordFlag = false;
                     beforePauseTime = 0;
                     recordButton.setImageResource(R.drawable.ic_mic_white_large);
@@ -208,9 +219,13 @@ public class RecrodFragment extends Fragment implements SwipeRefreshLayout.OnRef
                 if(TextUtils.isEmpty(recordTitleText)){
                     Toast.makeText(getActivity(), "You must fill in title.", Toast.LENGTH_SHORT).show();
                 }else {
-                    uploadFileToStorage();
+                    Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("America/Toronto"));
+                    SimpleDateFormat currentTime = new SimpleDateFormat("yyyyMMddhhmmss");
+                    currentTime.setTimeZone(cal.getTimeZone());
+                    timestamp = currentTime.format(cal.getTime());
+                    uploadFileToStorage(recordTitleText, dialog);
                     Toast.makeText(getActivity(), recordTitleText, Toast.LENGTH_SHORT).show();
-                    dialog.dismiss();
+//                    dialog.dismiss();
                 }
             }
         });
@@ -218,23 +233,58 @@ public class RecrodFragment extends Fragment implements SwipeRefreshLayout.OnRef
         dialog.show();
     }
 
-    private void uploadFileToStorage(){
+    private void uploadFileToStorage(final String recordTitle, final Dialog dialog){
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
         Uri uploadedFile = Uri.fromFile(new File(filename));
-        StorageReference fileRef = storageRef.child(mAuth.getUid() + "/" + uploadedFile.getLastPathSegment());
+        final StorageReference fileRef = storageRef.child(mAuth.getUid() + "/" + timestamp + ".3gp");
         fileRef.putFile(uploadedFile).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                 if(task.isSuccessful()){
                     Toast.makeText(getActivity(), "Upload Successed.", Toast.LENGTH_SHORT).show();
+//                    transRecordToText();
+                    addRefToDb(recordTitle, dialog);
+//                    Log.d(TAG, "onComplete: filepath: " + fileRef.getPath());
                 }else {
                     Log.d(TAG, "onComplete: " + task.getException().toString());
                     Toast.makeText(getActivity(), "Upload Failed.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+
+
+
     }
+
+
+    private void addRefToDb(String recordTitle, final Dialog dialog){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        String audioRef = mAuth.getUid() + "/" + timestamp + ".3gp";
+        AudioModel newRecording = new AudioModel(timestamp, recordTitle, audioRef, null);
+        db.collection("recordings").document(timestamp).set(newRecording)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful()){
+                            Toast.makeText(getActivity(), "Add Ref to db", Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                        }else {
+                            Log.d(TAG, "onComplete: " + task.getException().toString());
+                        }
+                    }
+                });
+    }
+//    private void transRecordToText() throws Exception{
+//        try (SpeechClient client = SpeechClient.create()){
+//            RecognitionConfig config = RecognitionConfig.newBuilder()
+//                    .setEncoding(RecognitionConfig.AudioEncoding.FLAC)
+//                    .setLanguageCode("en-US")
+//                    .setSampleRateHertz(16000).build();
+//
+////            RecognitionAudio record = RecognitionAudio.newBuilder().setUri()
+//        }
+//    }
 
     private Runnable updateRecordTimeTask = new Runnable() {
         @Override
