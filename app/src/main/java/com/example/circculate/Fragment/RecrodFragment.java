@@ -162,7 +162,7 @@ public class RecrodFragment extends Fragment implements SwipeRefreshLayout.OnRef
                     recorder.release();
                     recorder = null;
 
-                    Toast.makeText(getActivity(), "Fragment pop up for saving recording", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getActivity(), "Fragment pop up for saving recording", Toast.LENGTH_SHORT).show();
                     startRecordFlag = false;
                     beforePauseTime = 0;
                     recordButton.setImageResource(R.drawable.ic_mic_white_large);
@@ -222,19 +222,35 @@ public class RecrodFragment extends Fragment implements SwipeRefreshLayout.OnRef
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
         Uri uploadedFile = Uri.fromFile(new File(filename));
-        StorageReference fileRef = storageRef.child(mAuth.getUid() + "/" + uploadedFile.getLastPathSegment());
+        final StorageReference fileRef = storageRef.child(mAuth.getUid() + "/" + uploadedFile.getLastPathSegment());
         fileRef.putFile(uploadedFile).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                 if(task.isSuccessful()){
                     Toast.makeText(getActivity(), "Upload Successed.", Toast.LENGTH_SHORT).show();
+//                    transRecordToText();
+                    Log.d(TAG, "onComplete: filepath: " + fileRef.getPath());
                 }else {
                     Log.d(TAG, "onComplete: " + task.getException().toString());
                     Toast.makeText(getActivity(), "Upload Failed.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+
+
+
     }
+
+//    private void transRecordToText() throws Exception{
+//        try (SpeechClient client = SpeechClient.create()){
+//            RecognitionConfig config = RecognitionConfig.newBuilder()
+//                    .setEncoding(RecognitionConfig.AudioEncoding.FLAC)
+//                    .setLanguageCode("en-US")
+//                    .setSampleRateHertz(16000).build();
+//
+////            RecognitionAudio record = RecognitionAudio.newBuilder().setUri()
+//        }
+//    }
 
     private Runnable updateRecordTimeTask = new Runnable() {
         @Override
