@@ -16,15 +16,21 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <service
+            android:name=".service.SpeechService"
+            android:enabled="true"
+            android:exported="true"></service>
+        <service
+            android:name=".SpeechService"
+            android:enabled="true"
+            android:exported="true" />
+        <service
             android:name=".service.MyFirebaseMessagingService"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
-
         </service>
-
 
         <activity android:name=".AddEvent" />
         <activity android:name=".HomePage" />
@@ -47,8 +53,6 @@
             android:name=".DetailPage"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
-
     </application>
-
 
 </manifest>

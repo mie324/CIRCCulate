@@ -1,6 +1,13 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 
+//new
+apply plugin: 'com.google.protobuf'
+
+ext {
+    supportLibraryVersion = '25.4.0'
+    grpcVersion = '1.4.0'
+}
 android {
     compileSdkVersion 27
     defaultConfig {
@@ -11,24 +18,81 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
+    //new
+//    signingConfigs {
+//        release {
+//            storeFile file(project.properties.storeFile)
+//            storePassword project.properties.storePassword
+//            keyAlias project.properties.keyAlias
+//            keyPassword project.properties.keyPassword
+//        }
+//    }
+    flavorDimensions "default"
+
+    productFlavors {
+        dev {
+            dimension "default"
+            // Minimum version with platform multi-dex support
+            minSdkVersion 23
+        }
+        prod {
+            dimension "default"
+            // Minimum version that can run gRPC (TLS extension)
+            minSdkVersion 16
+        }
+    }
+    //end of new
+
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+
+        //new
+        debug {
+            minifyEnabled false
+            multiDexEnabled true
+        }
     }
 
-    packagingOptions {
-        pickFirst 'META-INF/INDEX.LIST'
-        pickFirst 'META-INF/DEPENDENCIES'
-
+    //new
+    configurations.all {
+        resolutionStrategy.force 'com.google.code.findbugs:jsr305:3.0.2'
+        resolutionStrategy.force "com.android.support:support-annotations:$supportLibraryVersion"
     }
-//    configurations.all {exclude group: 'com.android.support', module: 'support-v13'}
-//    configurations.all {
-//        resolutionStrategy.force 'com.google.code.findbugs:jsr305:3.0.2'
-//        resolutionStrategy.force "com.android.support:support-annotations:$supportLibraryVersion"
-//    }
+
 }
+
+//new
+protobuf {
+    protoc {
+        artifact = 'com.google.protobuf:protoc:3.3.0'
+    }
+    plugins {
+        javalite {
+            artifact = "com.google.protobuf:protoc-gen-javalite:3.0.0"
+        }
+        grpc {
+            artifact = "io.grpc:protoc-gen-grpc-java:${grpcVersion}"
+        }
+    }
+    generateProtoTasks {
+        all().each { task ->
+            task.plugins {
+                javalite {}
+                grpc {
+                    // Options added to --grpc_out
+                    option 'lite'
+                }
+            }
+        }
+    }
+}
+
+//end of new
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -54,8 +118,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-storage:16.0.5'       // storage
     implementation 'com.google.firebase:firebase-core:16.0.6'
 //    implementation 'com.google.firebase:firebase-messaging:17.3.4'
-//    implementation 'com.google.cloud:google-cloud-speech:0.83.0-beta'
-//    api 'com.google.apis:google-api-services-speech:v1-rev77-1.25.0'
 
 
 
@@ -69,13 +131,31 @@ dependencies {
     implementation 'com.android.support:support-v4:27.1.1'
 
 
+    /**
+    ***new dependencies
+    **/
+    //gPRC library
+    // gRPC
+    implementation "io.grpc:grpc-okhttp:1.19.0"
+    implementation "io.grpc:grpc-protobuf-lite:1.19.0"
+    implementation "io.grpc:grpc-stub:1.19.0"
+    implementation 'javax.annotation:javax.annotation-api:1.2'
+    protobuf 'com.google.protobuf:protobuf-java:3.3.1'
 
-    //save dependencies
-//    implementation 'com.google.firebase:firebase-auth:16.1.0'          // authentication
-//    api 'com.google.firebase:firebase-firestore:18.0.0'
-//    implementation 'com.google.firebase:firebase-storage:16.0.5'       // storage
-//    implementation 'com.google.firebase:firebase-core:16.0.6'
 
-
+    // OAuth2 for Google API
+    implementation('com.google.auth:google-auth-library-oauth2-http:0.7.0') {
+        exclude module: 'httpclient'
+    }
 
 }
+
+//get secret key
+task copySecretKey(type: Copy) {
+    def File secretKey = file "$System.env.GOOGLE_APPLICATION_CREDENTIALS"
+    from secretKey.getParent()
+    include secretKey.getName()
+    into 'src/main/res/raw'
+    rename secretKey.getName(), "credential.json"
+}
+preBuild.dependsOn(copySecretKey)
