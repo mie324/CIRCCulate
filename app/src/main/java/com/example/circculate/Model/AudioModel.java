@@ -1,6 +1,7 @@
 package com.example.circculate.Model;
 
 import java.io.Serializable;
+import java.util.Comparator;
 
 public class AudioModel implements Serializable {
     private String timestamp;
@@ -9,6 +10,9 @@ public class AudioModel implements Serializable {
     private String textRef;
     public boolean expanded = false;
 
+    public AudioModel(){
+
+    }
 
     public AudioModel(String timestamp, String title, String audioRef, String textRef) {
         this.timestamp = timestamp;
@@ -48,4 +52,18 @@ public class AudioModel implements Serializable {
     public void setTextRef(String textRef) {
         this.textRef = textRef;
     }
+
+    public static Comparator<AudioModel> audioComparator = (new Comparator<AudioModel>() {
+        @Override
+        public int compare(AudioModel t1, AudioModel t2) {
+            long timestamp1 = Long.parseLong(t1.getTimestamp());
+
+            long timestamp2 = Long.parseLong(t2.getTimestamp());
+            if(timestamp1 > timestamp2){
+                return 1;
+            }else {
+                return -1;
+            }
+        }
+    });
 }

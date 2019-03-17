@@ -141,6 +141,10 @@ dependencies {
     implementation "io.grpc:grpc-stub:1.19.0"
     implementation 'javax.annotation:javax.annotation-api:1.2'
     protobuf 'com.google.protobuf:protobuf-java:3.3.1'
+//
+//    implementation "io.grpc:grpc-okhttp:$grpcVersion"
+//    implementation "io.grpc:grpc-protobuf-lite:$grpcVersion"
+//    implementation "io.grpc:grpc-stub:$grpcVersion"
 
 
     // OAuth2 for Google API

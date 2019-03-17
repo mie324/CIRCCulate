@@ -24,6 +24,8 @@ import com.example.circculate.utils.MusicUtils;
 import com.example.circculate.utils.Tools;
 import com.example.circculate.utils.ViewAnimation;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -107,32 +109,50 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.audioVie
             }
         });
         StorageReference audioRef = firebaseref.child(newRecording.getAudioRef());
-        audioRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+        audioRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
-            public void onComplete(@NonNull Task<Uri> task) {
-                if(task.isSuccessful()){
-                    Uri downloadedUri = task.getResult();
-                    Log.d("prepare", "prepared");
-//                    prepareAudio(downloadedUri);
-
-                }else{
-
-                }
+            public void onSuccess(Uri uri) {
+                Log.d("uri", uri.toString());
+//                prepareAudio(downloadedUri);
 
             }
-
-            private void prepareAudio(Uri downloadedUri) {
-                try{
-//                    holder.player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                    holder.player.setDataSource("https://firebasestorage.googleapis.com/v0/b/circculate.appspot.com/o/rUSzZ8NTnthxkk36ItXBRGWRkRr2%2Faudiorecord.3gp?alt=media&token=30046ad5-2e22-4f8e-bb72-89a2726e4cbb");
-                    holder.player.prepare();
-
-
-                }catch(Exception e){
-                    Snackbar.make(holder.parent_view, "Cannot load audio file", Snackbar.LENGTH_SHORT).show();
-                }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("download","failed");
             }
         });
+
+
+//        audioRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+//            @Override
+//            public void onComplete(@NonNull Task<Uri> task) {
+//                Log.d("prepare", "prepared");
+//                if(task.isSuccessful()){
+//                    Uri downloadedUri = task.getResult();
+//                    Log.d("uri", downloadedUri.toString());
+//                    prepareAudio(downloadedUri);
+//
+//                }else{
+//                    Log.d("download","failed");
+//
+//                }
+//
+//            }
+
+//            private void prepareAudio(Uri uri) {
+//                try{
+////                    holder.player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+////                    holder.player.setDataSource("https://firebasestorage.googleapis.com/v0/b/circculate.appspot.com/o/rUSzZ8NTnthxkk36ItXBRGWRkRr2%2Faudiorecord.3gp?alt=media&token=30046ad5-2e22-4f8e-bb72-89a2726e4cbb");
+//                    holder.player.setDataSource(downloadedUri.toString());
+//                    holder.player.prepare();
+//
+//
+//                }catch(Exception e){
+//                    Snackbar.make(holder.parent_view, "Cannot load audio file", Snackbar.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
 
         holder.recordingText.setText(newRecording.getTitle());
 //        holder.toggle_button.setOnClickListener(new View.OnClickListener() {
@@ -181,8 +201,8 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.audioVie
             public void onClick(View view) {
                 try{
 //                    holder.player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                    player.setDataSource("https://firebasestorage.googleapis.com/v0/b/circculate.appspot.com/o/rUSzZ8NTnthxkk36ItXBRGWRkRr2%2Faudiorecord.3gp?alt=media&token=30046ad5-2e22-4f8e-bb72-89a2726e4cbb");
-                    player.prepare();
+//                    player.setDataSource(newRe);
+//                    player.prepare();
                     Log.d("prepare","prepared");
 
 

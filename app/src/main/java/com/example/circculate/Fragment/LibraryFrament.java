@@ -2,6 +2,7 @@ package com.example.circculate.Fragment;
 
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -20,9 +21,15 @@ import com.example.circculate.Model.RecordingModel;
 import com.example.circculate.R;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -36,6 +43,7 @@ public class LibraryFrament extends Fragment implements SwipeRefreshLayout.OnRef
     StorageReference storageReference;
     private static final String TAG = "LibraryLifeCycle";
     private LibraryAdapter libraryAdapter;
+    private List<DocumentSnapshot> recordingDoc;
 
 
     public LibraryFrament() {
@@ -50,9 +58,25 @@ public class LibraryFrament extends Fragment implements SwipeRefreshLayout.OnRef
 
     private void getRecordings() {
         audioList = new ArrayList<AudioModel>();
-        audioList.add(new AudioModel("201903172100", "Test", "url","url"));
-        libraryAdapter = new LibraryAdapter(getActivity(), audioList);
-        libraryRv.setAdapter(libraryAdapter);
+        db.collection("recordings").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    recordingDoc = task.getResult().getDocuments();
+                    for(DocumentSnapshot doc:recordingDoc){
+                        audioList.add(doc.toObject(AudioModel.class));
+                    }
+                    Collections.sort(audioList, AudioModel.audioComparator);
+                    libraryAdapter = new LibraryAdapter(getActivity(), audioList);
+                    libraryRv.setAdapter(libraryAdapter);
+
+
+                }else{
+
+                }
+
+            }
+        });
     }
 
     @Override
