@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.util.List;
 
 import com.example.circculate.R;
@@ -113,8 +114,17 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.audioVie
             @Override
             public void onSuccess(Uri uri) {
                 Log.d("uri", uri.toString());
-//                prepareAudio(downloadedUri);
+                prepareAudio(uri.toString());
 
+            }
+
+            private void prepareAudio(String uri) {
+                try{
+                    holder.player.setDataSource(uri);
+                    holder.player.prepare();
+                }catch (IOException e){
+                    Snackbar.make(holder.parent_view, "Cannot load audio file", Snackbar.LENGTH_SHORT).show();
+                }
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -124,35 +134,8 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.audioVie
         });
 
 
-//        audioRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
-//            @Override
-//            public void onComplete(@NonNull Task<Uri> task) {
-//                Log.d("prepare", "prepared");
-//                if(task.isSuccessful()){
-//                    Uri downloadedUri = task.getResult();
-//                    Log.d("uri", downloadedUri.toString());
-//                    prepareAudio(downloadedUri);
-//
-//                }else{
-//                    Log.d("download","failed");
-//
-//                }
-//
-//            }
 
-//            private void prepareAudio(Uri uri) {
-//                try{
-////                    holder.player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-////                    holder.player.setDataSource("https://firebasestorage.googleapis.com/v0/b/circculate.appspot.com/o/rUSzZ8NTnthxkk36ItXBRGWRkRr2%2Faudiorecord.3gp?alt=media&token=30046ad5-2e22-4f8e-bb72-89a2726e4cbb");
-//                    holder.player.setDataSource(downloadedUri.toString());
-//                    holder.player.prepare();
-//
-//
-//                }catch(Exception e){
-//                    Snackbar.make(holder.parent_view, "Cannot load audio file", Snackbar.LENGTH_SHORT).show();
-//                }
-//            }
-//        });
+
 
         holder.recordingText.setText(newRecording.getTitle());
 //        holder.toggle_button.setOnClickListener(new View.OnClickListener() {
