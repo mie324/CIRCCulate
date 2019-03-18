@@ -60,6 +60,9 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.TimeZone;
+import java.io.DataInputStream;
+import java.io.FileInputStream;
+import java.io.DataOutputStream;
 
 
 /**
@@ -93,6 +96,8 @@ public class RecrodFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private UserModel currentUser;
 
     private FirebaseAuth mAuth;
+    private String filenameNew;
+
     public RecrodFragment() {
         // Required empty public constructor
     }
@@ -397,8 +402,14 @@ public class RecrodFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private void uploadFileToStorage(final String recordTitle, final Dialog dialog){
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
-        Uri uploadedFile = Uri.fromFile(new File(filename));
-        final StorageReference fileRef = storageRef.child(mAuth.getUid() + "/" + timestamp + ".raw");
+
+        rawToWave();
+
+        // to wave
+
+
+        Uri uploadedFile = Uri.fromFile(new File(filenameNew));
+        final StorageReference fileRef = storageRef.child(mAuth.getUid() + "/" + timestamp + ".wav");
         fileRef.putFile(uploadedFile).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
@@ -450,10 +461,209 @@ public class RecrodFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
     }
 
+    private void rawToWave() {
+//        byte buffer[] = null;
+//        int TOTAL_SIZE = 0;
+//        File file = new File(filename);
+//        if (!file.exists()) {
+//            return false;
+//        }
+//        TOTAL_SIZE = (int) file.length();
+//        WaveHeader header = new WaveHeader();
+//        header.sampleRateInHertz = 16000;
+//        header.channelNum = CHANNEL_IN_CONFIG;
+//        header.bitRate = 16;
+        filenameNew = getContext().getExternalCacheDir().getAbsolutePath();
+        filenameNew += "/audiorecord.wav";
+        File waveFile = new File(filenameNew);
+//        File waveFile = DirectoryOperations.createDirAndAudioFile("vocal.wav");
+        File rawFile = new File(filename);
+        byte[] rawData = new byte[(int) rawFile.length()];
+        DataInputStream input = null;
+        try {
+            input = new DataInputStream(new FileInputStream(rawFile));
+            input.read(rawData);
+        }catch (IOException e){
+
+        }
+        finally {
+            if(input!=null){
+                try{
+                    input.close();
+
+                }catch(Exception ignore){
+
+                }
+            }
+        }
+
+        DataOutputStream output = null;
+        try{
+            output = new DataOutputStream(new FileOutputStream(waveFile));
+            // WAVE header
+            // see http://ccrma.stanford.edu/courses/422/projects/WaveFormat/
+            writeString(output, "RIFF"); // chunk id
+            writeInt(output, 36 + rawData.length); // chunk size
+            writeString(output, "WAVE"); // format
+            writeString(output, "fmt "); // subchunk 1 id
+            writeInt(output, 16); // subchunk 1 size
+            writeShort(output, (short) 1); // audio format (1 = PCM)
+            writeShort(output, (short) 1); // number of channels
+            writeInt(output, SAMPLE_RATE); // sample rate
+            writeInt(output, SAMPLE_RATE * 2); // byte rate
+            writeShort(output, (short) 2); // block align
+            writeShort(output, (short) 16); // bits per sample
+            writeString(output, "data"); // subchunk 2 id
+            writeInt(output, rawData.length); // subchunk 2 size
+            output.write(fullyReadFileToBytes(rawFile));
+
+        }catch(IOException e){
+
+        }
+
+        finally {
+            try{
+                if(output!=null){
+                    output.close();
+
+                }
+
+            }catch (Exception e){
+
+            }
+        }
+
+
+
+    }
+
+    private byte[] fullyReadFileToBytes(File f) {
+        int size = (int) f.length();
+        byte bytes[] = new byte[size];
+        byte tmpBuff[] = new byte[size];
+        try (FileInputStream fis = new FileInputStream(f)) {
+            int read = fis.read(bytes, 0, size);
+            if (read < size) {
+                int remain = size - read;
+                while (remain > 0) {
+                    read = fis.read(tmpBuff, 0, remain);
+                    System.arraycopy(tmpBuff, 0, bytes, size - remain, read);
+                    remain -= read;
+                }
+            }
+        }catch (IOException e){
+
+        }
+
+        return bytes;
+    }
+
+    private void writeShort(DataOutputStream output, short value) throws IOException {
+        output.write(value);
+        output.write(value >> 8);
+    }
+
+    private void writeInt(DataOutputStream output, final int value) throws IOException {
+        output.write(value);
+        output.write(value >> 8);
+        output.write(value >> 16);
+        output.write(value >> 24);
+    }
+
+    private void writeString(DataOutputStream output, final String value) throws IOException {
+        for (int i = 0; i < value.length(); i++) {
+            output.write(value.charAt(i));
+        }
+    }
+
+    public static class WaveHeader{
+        private int byteNumber;
+        private int sampleRateInHertz;
+        private short channelNum;
+        private short bitRate;
+        public WaveHeader(){};
+
+
+        /**
+         *
+         * @param sampleRateInHertz The rate at which the recording samples audio data. Valid values are: 44100, 22050, 16000, 11025 hertz.
+         * @param channelNum The type of audio channel the .PCM file uses (Mono(1) or Stereo(2))
+         * @param bitRate The bit rate of the PCM file (8 or 16).
+         * @throws IllegalArgumentException If any parameters are invalid.
+         */
+        public WaveHeader(final int sampleRateInHertz, final short channelNum, final short bitRate){
+            this(sampleRateInHertz, channelNum, bitRate,-1);
+        }
+
+        /**
+         *
+         * @param sampleRateInHertz The rate at which the recording samples audio data. Valid values are: 44100, 22050, 16000, 11025 hertz.
+         * @param channelNum The type of audio channel the .PCM file uses (Mono(1) or Stereo(2))
+         * @param bitRate The bit rate of the PCM file (8 or 16).
+         * @param byteNumber The number of bytes in the PCM file. -1 for the converter to find the file size for you. Anything lower than -1 not allowed.
+         * @throws IllegalArgumentException If any parameters are invalid.
+         */
+        public WaveHeader(final int sampleRateInHertz, final short channelNum, final short bitRate,final int byteNumber){
+            if (channelNum!=1 && channelNum !=2){
+                throw new IllegalArgumentException("Channel number must be 1(mono) or 2(stereo)");
+            }
+            this.channelNum=channelNum;
+
+            if (sampleRateInHertz!=44100 && sampleRateInHertz !=22050
+                    && sampleRateInHertz != 16000 && sampleRateInHertz !=11025){
+                throw new IllegalArgumentException("Invalid sample rate given");
+            }
+            this.sampleRateInHertz=sampleRateInHertz;
+
+            if (bitRate !=8 && bitRate !=16){
+                throw new IllegalArgumentException("Invalid bit rate (must be 8 or 16)");
+            }
+            this.bitRate=bitRate;
+
+            if (byteNumber<-1){
+                throw new IllegalArgumentException("Invalid number of bytes for file.");
+            }
+            this.byteNumber=byteNumber;
+        }
+
+        /**
+         * The number of bytes the WAV header represents. -1 if it doesn't know, but will determine upon PCM conversion.
+         * @return A number equal to -1 or greater.
+         */
+        public int getByteNumber() {
+            return byteNumber;
+        }
+
+        /**
+         * The rate at which the recording samples audio data.
+         * @return 44100, 22050, 16000, or 11025
+         */
+        public int getSampleRateInHertz() {
+            return sampleRateInHertz;
+        }
+
+        /**
+         * The type of audio channel the .PCM file uses .
+         * @return Mono(1) or Stereo(2)
+         */
+        public short getChannelNum() {
+            return channelNum;
+        }
+
+        /**
+         * bitRate The bit rate of the PCM file.
+         * @return 8 or 16
+         */
+        public short getBitRate() {
+            return bitRate;
+        }
+    }
+
+
 
     private void addRefToDb(String recordTitle, final Dialog dialog){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        String audioRef = mAuth.getUid() + "/" + timestamp + ".raw";
+        String audioRef = mAuth.getUid() + "/" + timestamp + ".wav";
         String textRef = mAuth.getUid() + "/" + timestamp + ".txt";
         AudioModel newRecording = null;
         if(translatedText.equals("")){

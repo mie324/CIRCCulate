@@ -1,7 +1,11 @@
 package com.example.circculate.Adapter;
 
 import android.content.Context;
+import android.media.AudioManager;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,24 +17,31 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.util.List;
 
 import com.example.circculate.R;
 import com.example.circculate.utils.MusicUtils;
 import com.example.circculate.utils.Tools;
 import com.example.circculate.utils.ViewAnimation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.example.circculate.Model.RecordingModel;
 import android.media.MediaPlayer;
+import com.example.circculate.Model.AudioModel;
+import android.util.Log;
 
 public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.audioViewHolder>{
 
     public LibraryAdapter() {}
-    private List<RecordingModel> recordList;
+    private List<AudioModel> recordList;
     private StorageReference firebaseref;
     private Context context;
-    public LibraryAdapter(Context context, List<RecordingModel> recordList){
+    public LibraryAdapter(Context context, List<AudioModel> recordList){
         this.context = context;
         this.recordList = recordList;
         this.firebaseref = FirebaseStorage.getInstance().getReference();
@@ -50,6 +61,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.audioVie
         MediaPlayer player = new MediaPlayer();
         Button bt_hide_text;
         View lyt_expand_text;
+        View parent_view;
 
         public audioViewHolder(View itemView) {
             super(itemView);
@@ -62,6 +74,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.audioVie
             bt_prev = itemView.findViewById(R.id.bt_prev);
             bt_next = itemView.findViewById(R.id.bt_next);
             seek_song_progressbar = itemView.findViewById(R.id.seek_song_progressbar);
+            parent_view = itemView.findViewById(R.id.parent_view);
 //            bt_hide_text = itemView.findViewById(R.id.bt_hide_text);
             //Media Player
 //            InitProgressbar();
@@ -83,16 +96,57 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.audioVie
 
     @Override
     public void onBindViewHolder(@NonNull final LibraryAdapter.audioViewHolder holder, int position) {
-        final RecordingModel newRecording = recordList.get(position);
+        final AudioModel newRecording = recordList.get(position);
+        holder.seek_song_progressbar.setProgress(0);
+        holder.seek_song_progressbar.setMax(MusicUtils.MAX_PROGRESS);
 //        holder.lyt_expand_text.setVisibility(View.GONE);
-        holder.recordingText.setText(newRecording.getTitle());
-        holder.toggle_button.setOnClickListener(new View.OnClickListener() {
+
+        //get audio file
+        holder.player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
-            public void onClick(View view) {
-                toggleSectionText(holder.toggle_button, holder.lyt_expand_text);
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                holder.bt_play.setImageResource(R.drawable.ic_arrow);
 
             }
         });
+        StorageReference audioRef = firebaseref.child(newRecording.getAudioRef());
+        audioRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Log.d("uri", uri.toString());
+                prepareAudio(uri.toString());
+
+            }
+
+            private void prepareAudio(String uri) {
+                try{
+                    holder.player.setDataSource(uri);
+                    holder.player.prepare();
+                }catch (IOException e){
+                    Snackbar.make(holder.parent_view, "Cannot load audio file", Snackbar.LENGTH_SHORT).show();
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("download","failed");
+            }
+        });
+
+
+
+
+
+        holder.recordingText.setText(newRecording.getTitle());
+//        holder.toggle_button.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                toggleSectionText(holder.toggle_button, holder.lyt_expand_text);
+//
+//            }
+//        });
+
+        //toggle button animation
 
         holder.toggle_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,7 +171,40 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.audioVie
             }
         });
 
+        //play button listener
+        buttonPlayerAction(holder.bt_play, holder.player);
+
+
+
     }
+
+    private void buttonPlayerAction(final ImageView bt_play, final MediaPlayer player) {
+        bt_play.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try{
+//                    holder.player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+//                    player.setDataSource(newRe);
+//                    player.prepare();
+                    Log.d("prepare","prepared");
+
+
+                }catch(Exception e){
+
+                }
+                if(player.isPlaying()){
+                    player.pause();
+                    bt_play.setImageResource(R.drawable.ic_arrow);
+                }else{
+                    player.start();
+                    bt_play.setImageResource(R.drawable.ic_pause);
+                    
+                }
+                
+            }
+        });
+    }
+
 
     private boolean toggleLayoutExpand(boolean b, View view, View lyt_expand_text) {
         Tools.toggleArrow(b, view);
