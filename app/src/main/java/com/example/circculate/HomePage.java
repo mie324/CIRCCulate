@@ -1,11 +1,15 @@
 package com.example.circculate;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
@@ -23,12 +27,15 @@ import android.widget.Toast;
 import com.example.circculate.Fragment.FavoritesFragment;
 import com.example.circculate.Fragment.NearbyFragment;
 import com.example.circculate.Fragment.RecentFragment;
+import com.example.circculate.Model.NotificationModel;
 import com.example.circculate.Model.UserModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
 //import com.material.components.utils.Tools;
 
 //import com.material.components.utils.Tools;
@@ -37,7 +44,7 @@ public class HomePage extends AppCompatActivity {
 
 
     private BottomNavigationView navigation;
-
+    private ArrayList<NotificationModel> notifications;
     private FirebaseAuth mAuth;
     private static final String TAG = "HomePage";
     private FirebaseFirestore db;
@@ -49,13 +56,47 @@ public class HomePage extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 //        Bundle b = getIntent().getExtras();
-
-
+        Log.d(TAG, "onCreate: home page create");
+        notifications = new ArrayList<>();
         initToolbar();
         initComponent();
 //        switchToFavorites();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        LocalBroadcastManager.getInstance(this).registerReceiver(msgReceiver,
+                new IntentFilter("Data"));
+    }
+
+    private BroadcastReceiver msgReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String title = intent.getExtras().getString("title");
+            String body = intent.getExtras().getString("body");
+            Log.d(TAG, "onReceive: title: " + title + ", body: " + body);
+            NotificationModel newNotification = new NotificationModel(title, body);
+            notifications.add(newNotification);
+            //next steps:
+            //1 create a list of notification objects
+            //2 when received a notification, create an obj and push into the list
+            //3 when notification button is clicked, start the notification display activity
+            //4 add all the notification object into the intent and start the intent
+        }
+    };
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop: homepage stop");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause: homepage on pause");
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -83,6 +124,13 @@ public class HomePage extends AppCompatActivity {
                 intent.putExtra("loggedUser", user);
                 startActivity(intent);
                 return true;
+            }
+
+            case R.id.action_notify:{
+                Log.d("select", "to notification activity");
+                Intent intent = new Intent(this, Notification.class);
+                intent.putExtra("notifications", notifications);
+                startActivity(intent);
             }
             default:
                 return true;

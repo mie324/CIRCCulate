@@ -8,4 +8,11 @@
         android:orderInCategory="100"
         android:title="Add"
         app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_notify"
+        android:icon="@drawable/ic_notifications_outline"
+        android:orderInCategory="101"
+        android:title="Notifications"
+        app:showAsAction="always" />
 </menu>

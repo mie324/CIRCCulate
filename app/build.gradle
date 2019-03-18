@@ -117,9 +117,8 @@ dependencies {
     api 'com.google.firebase:firebase-firestore:18.0.0'
     implementation 'com.google.firebase:firebase-storage:16.0.5'       // storage
     implementation 'com.google.firebase:firebase-core:16.0.6'
-//    implementation 'com.google.firebase:firebase-messaging:17.3.4'
-
-
+    implementation 'com.google.firebase:firebase-messaging:17.3.4'
+    implementation 'com.firebase:firebase-jobdispatcher:0.8.5'
 
 //    implementation 'com.google.gms:google-services:4.2.0'
     implementation 'com.google.android.libraries.places:places:1.0.0'
@@ -130,10 +129,9 @@ dependencies {
 
     implementation 'com.android.support:support-v4:27.1.1'
 
-
     /**
-    ***new dependencies
-    **/
+     *** new dependencies
+     **/
     //gPRC library
     // gRPC
     implementation "io.grpc:grpc-okhttp:1.19.0"
@@ -141,7 +139,6 @@ dependencies {
     implementation "io.grpc:grpc-stub:1.19.0"
     implementation 'javax.annotation:javax.annotation-api:1.2'
     protobuf 'com.google.protobuf:protobuf-java:3.3.1'
-
 
     // OAuth2 for Google API
     implementation('com.google.auth:google-auth-library-oauth2-http:0.7.0') {

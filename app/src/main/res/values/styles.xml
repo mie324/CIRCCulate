@@ -268,4 +268,8 @@
         <item name="windowActionBar">false</item>
     </style>
 
+    <!--<style name="RippleStyleBlack" parent="RippleStyleWhite">-->
+        <!--<item name="mrl_rippleColor">#8096989A</item>-->
+    <!--</style>-->
+
 </resources>
