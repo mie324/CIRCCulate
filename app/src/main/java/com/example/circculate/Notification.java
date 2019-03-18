@@ -1,11 +1,13 @@
 package com.example.circculate;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 
 import com.example.circculate.Adapter.NotificationAdapter;
 import com.example.circculate.Model.NotificationModel;
@@ -33,6 +35,15 @@ public class Notification extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Notifications");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                notifications.clear();
+                Intent intent = new Intent(getApplication(), HomePage.class);
+                startActivity(intent);
+//                finish();
+            }
+        });
         Tools.setSystemBarColor(this);
     }
 
@@ -40,7 +51,6 @@ public class Notification extends AppCompatActivity {
         notifications = (ArrayList<NotificationModel>) getIntent().getSerializableExtra("notifications");
         recyclerView = findViewById(R.id.noti_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
         notifAdapter = new NotificationAdapter(this, notifications);
         recyclerView.setAdapter(notifAdapter);
     }

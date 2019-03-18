@@ -54,6 +54,7 @@ public class DetailPage extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), HomePage.class);
                 startActivity(intent);
+//                finish();
             }
         });
 

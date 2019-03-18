@@ -34,6 +34,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import java.util.ArrayList;
 //import com.material.components.utils.Tools;
@@ -58,6 +60,7 @@ public class HomePage extends AppCompatActivity {
 //        Bundle b = getIntent().getExtras();
         Log.d(TAG, "onCreate: home page create");
         notifications = new ArrayList<>();
+
         initToolbar();
         initComponent();
 //        switchToFavorites();
@@ -157,6 +160,11 @@ public class HomePage extends AppCompatActivity {
         startActivity(intent);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        notifications.clear();
+    }
 
     private void initToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -212,10 +220,25 @@ public class HomePage extends AppCompatActivity {
             }
         });
 
+
+
     }
 
     private void reconstructUser(DocumentSnapshot result){
         this.user = result.toObject(UserModel.class);
+        FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+            @Override
+            public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                if(task.isSuccessful()){
+                    String currentToken = task.getResult().getToken();
+                    Log.d(TAG, "onComplete: " + task.getResult().getToken());
+                    if(!currentToken.equals(user.getTokenId())){
+                        user.setTokenId(currentToken);
+                        db.collection("users").document(mAuth.getUid()).set(user);
+                    }
+                }
+            }
+        });
     }
 
     boolean isNavigationHide = false;
