@@ -82,6 +82,7 @@ public class SpeechService extends Service {
     private SpeechGrpc.SpeechStub mApi;
     private volatile AccessTokenTask mAccessTokenTask;
     private static Handler mHandler;
+    private static final int SAMPLE_RATE = 16000;
     public SpeechService() {
     }
 
@@ -149,7 +150,7 @@ public class SpeechService extends Service {
                             .setConfig(RecognitionConfig.newBuilder()
                                     .setEncoding(RecognitionConfig.AudioEncoding.LINEAR16)
                                     .setLanguageCode("en-US")
-                                    .setSampleRateHertz(16000)
+                                    .setSampleRateHertz(SAMPLE_RATE)
                                     .build())
                             .setAudio(RecognitionAudio.newBuilder()
                                     .setContent(ByteString.readFrom(stream))
