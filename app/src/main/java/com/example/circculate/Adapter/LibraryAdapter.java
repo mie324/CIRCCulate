@@ -87,6 +87,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.audioVie
         View parent_view;
         public boolean isFirstTouch = true;
         private Handler mHandler = new Handler();
+        private Runnable mUpdateTimeTask;
 
         public audioViewHolder(View itemView) {
             super(itemView);
@@ -186,13 +187,6 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.audioVie
         holder.bt_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                try {
-//                  player.stop();
-//                  player.release();
-//                  player = null;
-//                }catch (IllegalStateException e){
-//                    Log.d("delete", "onClick: " + e.toString());
-//                }
                 deleteRecording(newRecording);
 
 
@@ -221,6 +215,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.audioVie
                                 player.setDataSource(uri);
                                 player.prepare();
                                 player.start();
+                                holder.mHandler.post(holder.mUpdateTimeTask);
                                 holder.bt_play.setImageResource(R.drawable.ic_pause);
                             }catch (IOException e){
                                 Snackbar.make(holder.parent_view, "Cannot load audio file", Snackbar.LENGTH_SHORT).show();
@@ -239,6 +234,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.audioVie
                     }else{
                         player.start();
                         holder.bt_play.setImageResource(R.drawable.ic_pause);
+                        holder.mHandler.post(holder.mUpdateTimeTask);
 
                     }
                 }
@@ -248,41 +244,57 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.audioVie
             }
 
         });
+        holder.mUpdateTimeTask = new Runnable() {
+            @Override
+            public void run() {
+                long totalDuration = player.getDuration();
+                    long currentDuration = player.getCurrentPosition();
+                    // Updating progress bar
+                    int progress = (int) (holder.utils.getProgressSeekBar(currentDuration, totalDuration));
+                    holder.seek_song_progressbar.setProgress(progress);
+                    if (player.isPlaying()) {
+                        holder.mHandler.postDelayed(this, 100);
+                    }
+
+            }
+        };
 
 //        buttonPlayerAction(holder.bt_play, holder.player);
-//        holder.seek_song_progressbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-//
-//            @Override
-//            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-//
-//            }
-//
-//            @Override
-//            public void onStartTrackingTouch(SeekBar seekBar) {
-//                holder.mHandler.removeCallbacks(mUpdateTimeTask);
-//
-//            }
-//
-//            @Override
-//            public void onStopTrackingTouch(SeekBar seekBar) {
-//
-//            }
+        holder.seek_song_progressbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
-//            private Runnable mUpdateTimeTask = new Runnable() {
-//                @Override
-//                public void run() {
-//                    long totalDuration = holder.player.getDuration();
-//                    long currentDuration = holder.player.getCurrentPosition();
-//                    // Updating progress bar
-//                    int progress = (int) (holder.utils.getProgressSeekBar(currentDuration, totalDuration));
-//                    holder.seek_song_progressbar.setProgress(progress);
-//
-//
-//
-//                }
-//            };
-//        });
-//
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                holder.mHandler.removeCallbacks(holder.mUpdateTimeTask);
+
+            }
+
+            private int progressToTimer(int progress, int totalDuration) {
+                int currentDuration = 0;
+                totalDuration = (int) (totalDuration / 1000);
+                currentDuration = (int) ((((double)progress) / 100) * totalDuration);
+
+                // return current duration in milliseconds
+                return currentDuration * 1000;
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                holder.mHandler.removeCallbacks(holder.mUpdateTimeTask);
+                int totalDuration = player.getDuration();
+                int currentPosition = progressToTimer(seekBar.getProgress(), totalDuration);
+                player.seekTo(currentPosition);
+                holder.mHandler.post(holder.mUpdateTimeTask);
+
+            }
+
+        });
+
+
 //
 
     }
