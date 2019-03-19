@@ -10,6 +10,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
@@ -51,6 +52,7 @@ public class HomePage extends AppCompatActivity {
     private static final String TAG = "HomePage";
     private FirebaseFirestore db;
     private UserModel user;
+    private TextView notificationNumHolder;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,6 +83,12 @@ public class HomePage extends AppCompatActivity {
             Log.d(TAG, "onReceive: title: " + title + ", body: " + body);
             NotificationModel newNotification = new NotificationModel(title, body);
             notifications.add(newNotification);
+            String numNotify = notifications.size() < 99 ? Integer.toString(notifications.size()) : "99+";
+            notificationNumHolder.setText(numNotify);
+
+            if(notifications.size() > 0){
+                notificationNumHolder.setVisibility(View.VISIBLE);
+            }
             //next steps:
             //1 create a list of notification objects
             //2 when received a notification, create an obj and push into the list
@@ -106,6 +114,14 @@ public class HomePage extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_calender, menu);
 //        Tools.changeMenuIconColor(menu, getResources().getColor(R.color.grey_60));
+        final MenuItem notificationItem = menu.findItem(R.id.action_notify);
+        View actionView = MenuItemCompat.getActionView(notificationItem);
+        if(actionView == null){
+            Log.d(TAG, "onCreateOptionsMenu: action view null");
+        }
+        notificationNumHolder = (TextView)actionView.findViewById(R.id.notification_badge);
+        
+        notificationNumHolder.setVisibility(View.INVISIBLE);
         return super.onCreateOptionsMenu(menu);
     }
 

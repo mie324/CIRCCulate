@@ -83,12 +83,12 @@ public class AllEventFragment extends Fragment implements SwipeRefreshLayout.OnR
         return root;
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_add, menu);
-        Log.d(TAG, "onCreateOptionsMenu: all event create option menu");
-    }
+//    @Override
+//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        super.onCreateOptionsMenu(menu, inflater);
+//        inflater.inflate(R.menu.menu_add, menu);
+//        Log.d(TAG, "onCreateOptionsMenu: all event create option menu");
+//    }
 
     @Override
     public void onStart() {
