@@ -1,27 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+<!--<layer-list xmlns:android="http://schemas.android.com/apk/res/android">-->
 
-    <!-- Define the background properties like color etc -->
-    <item
-        android:id="@android:id/background"
-        android:bottom="6dp"
-        android:gravity="center_vertical"
-        android:top="6dp">
-        <shape android:shape="rectangle">
-            <solid android:color="@color/grey_20" />
+    <!--&lt;!&ndash; Define the background properties like color etc &ndash;&gt;-->
+    <!--<item-->
+        <!--android:id="@android:id/background"-->
+        <!--android:bottom="6dp"-->
+        <!--android:gravity="center_vertical"-->
+        <!--android:top="6dp">-->
+        <!--<shape android:shape="rectangle">-->
+            <!--<solid android:color="@color/grey_20" />-->
+        <!--</shape>-->
+    <!--</item>-->
+
+    <!--&lt;!&ndash; Define the progress properties like start color, end color etc &ndash;&gt;-->
+    <!--<item-->
+        <!--android:id="@android:id/progress"-->
+        <!--android:bottom="6dp"-->
+        <!--android:gravity="center_vertical"-->
+        <!--android:top="6dp">-->
+        <!--<clip>-->
+            <!--<shape android:shape="rectangle">-->
+                <!--<solid android:color="@color/red_900" />-->
+            <!--</shape>-->
+        <!--</clip>-->
+    <!--</item>-->
+<!--</layer-list>-->
+
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+
+<item android:id="@android:id/background" android:gravity="center_vertical">
+    <shape android:shape="rectangle" >
+        <corners android:radius="3dp" />
+        <size android:height="1dp"/>
+        <gradient
+            android:angle="270"
+            android:endColor="@color/grey_20"
+            android:startColor="@color/grey_20" />
+    </shape>
+</item>
+<item android:id="@android:id/secondaryProgress" android:gravity="center_vertical" android:top="5dp" android:bottom="5dp">
+    <clip>
+        <shape android:shape="rectangle" >
+
+            <solid android:color="@color/overlay_dark_30"/>
+
+            <!--<gradient-->
+                <!--android:angle="270"-->
+                <!--android:endColor="@color/overlay_dark_30"-->
+                <!--android:startColor="@color/overlay_dark_30" />-->
         </shape>
-    </item>
+    </clip>
+</item>
+<!--<item android:id="@android:id/progress" android:gravity="center_vertical">-->
+    <!--<clip>-->
+        <!--<shape android:shape="rectangle" >-->
+            <!--<corners android:radius="3dp" />-->
 
-    <!-- Define the progress properties like start color, end color etc -->
-    <item
-        android:id="@android:id/progress"
-        android:bottom="6dp"
-        android:gravity="center_vertical"
-        android:top="6dp">
-        <clip>
-            <shape android:shape="rectangle">
-                <solid android:color="@color/red_900" />
-            </shape>
-        </clip>
-    </item>
+            <!--<gradient-->
+                <!--android:angle="270"-->
+                <!--android:endColor="@color/overlay_dark_30"-->
+                <!--android:startColor="@color/overlay_dark_30" />-->
+        <!--</shape>-->
+    <!--</clip>-->
+<!--</item>-->
+
 </layer-list>

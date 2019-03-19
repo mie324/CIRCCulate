@@ -2,6 +2,7 @@ package com.example.circculate.Adapter;
 
 import android.content.Context;
 import android.media.AudioManager;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Handler;
 import android.provider.MediaStore;
@@ -50,7 +51,7 @@ import java.net.URLConnection;
 import java.net.URL;
 import java.net.HttpURLConnection;
 import android.os.Handler;
-
+import java.util.concurrent.TimeUnit;
 
 public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.audioViewHolder>{
 
@@ -73,6 +74,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.audioVie
 
     class audioViewHolder extends RecyclerView.ViewHolder{
         TextView recordingText;
+        TextView total_duration;
         ImageButton toggle_button;
         ImageView bt_translate;
         ImageView bt_delete;
@@ -88,6 +90,8 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.audioVie
         public boolean isFirstTouch = true;
         private Handler mHandler = new Handler();
         private Runnable mUpdateTimeTask;
+        MediaPlayer player1= new MediaPlayer();
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
 
         public audioViewHolder(View itemView) {
             super(itemView);
@@ -101,6 +105,9 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.audioVie
             bt_next = itemView.findViewById(R.id.bt_next);
             seek_song_progressbar = itemView.findViewById(R.id.seek_song_progressbar);
             parent_view = itemView.findViewById(R.id.parent_view);
+            total_duration = itemView.findViewById(R.id.song_total_duration);
+
+
 //            bt_hide_text = itemView.findViewById(R.id.bt_hide_text);
             //Media Player
 //            InitProgressbar();
@@ -125,6 +132,17 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.audioVie
         final AudioModel newRecording = recordList.get(position);
         holder.seek_song_progressbar.setProgress(0);
         holder.seek_song_progressbar.setMax(MusicUtils.MAX_PROGRESS);
+//        updateTimeerandSeeker(holder.total_duration,holder.utils,holder.seek_song_progressbar);
+//        holder.retriever.setDataSource("https://firebasestorage.googleapis.com/v0/b/circculate.appspot.com/o/DAWcN2mG7GZ37bI3Zu6r86rMCGa2%2Fdo_not_delete.wav?alt=media&token=86d96505-af66-40a5-ab04-28aa87128808");
+//        String duration = holder(.retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+//        int duration = player.getDuration();
+//        String time = String.format("%02d min, %02d sec",
+//                TimeUnit.MILLISECONDS.toMinutes(duration),
+//                TimeUnit.MILLISECONDS.toSeconds(duration) -
+//                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration))
+//        );
+//        Log.d("duration", duration);
+//        holder.total_duration.setText(player.getDuration());
 //        holder.lyt_expand_text.setVisibility(View.GONE);
 
         //get audio file
@@ -173,14 +191,52 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.audioVie
             public void onClick(View view) {
                 boolean isExpanded = toggleLayoutExpand(!newRecording.expanded, view, holder.lyt_expand_text);
                 newRecording.expanded = isExpanded;
+                if(newRecording.expanded == true){
+                    if(holder.isFirstTouch) {
+                        audioRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                Log.d("uri", uri.toString());
+                                if (uri != null) {
+                                    prepareAudio(uri.toString());
+                                }
+
+
+                            }
+
+                            private void prepareAudio(String uri) {
+                                try {
+                                    player.reset();
+                                    player.setDataSource(uri);
+                                    player.prepare();
+                                    holder.mHandler.post(holder.mUpdateTimeTask);
+                                } catch (IOException e) {
+                                    Snackbar.make(holder.parent_view, "Cannot load audio file", Snackbar.LENGTH_SHORT).show();
+                                }
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.d("download", "failed");
+                            }
+                        });
+                    }
+
+                }else{
+                    holder.isFirstTouch = true;
+                    player.stop();
+                }
+
             }
         });
 
         //void recycling view
         if(newRecording.expanded){
+            Log.d("expanded_test","uri");
             holder.lyt_expand_text.setVisibility(View.VISIBLE);
         }else{
             holder.lyt_expand_text.setVisibility(View.GONE);
+            holder.isFirstTouch = true;
         }
         Tools.toggleArrow(newRecording.expanded, (View)holder.toggle_button, false);
         //delete button
@@ -196,37 +252,41 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.audioVie
             @Override
             public void onClick(View view) {
                 if(holder.isFirstTouch){
-                    audioRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                        @Override
-                        public void onSuccess(Uri uri) {
-                            Log.d("uri", uri.toString());
-                            if(uri!=null){
-                                prepareAudio(uri.toString());
-                                holder.isFirstTouch = false;
-                            }
-
-
-                        }
-
-                        private void prepareAudio(String uri) {
-                            try{
-                                Log.d("uri", uri);
-                                player.reset();
-                                player.setDataSource(uri);
-                                player.prepare();
-                                player.start();
-                                holder.mHandler.post(holder.mUpdateTimeTask);
-                                holder.bt_play.setImageResource(R.drawable.ic_pause);
-                            }catch (IOException e){
-                                Snackbar.make(holder.parent_view, "Cannot load audio file", Snackbar.LENGTH_SHORT).show();
-                            }
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.d("download","failed");
-                        }
-                    });
+                    player.start();
+                    holder.bt_play.setImageResource(R.drawable.ic_pause);
+                    holder.isFirstTouch = false;
+                    holder.mHandler.post(holder.mUpdateTimeTask);
+//                    audioRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//                        @Override
+//                        public void onSuccess(Uri uri) {
+//                            Log.d("uri", uri.toString());
+//                            if(uri!=null){
+//                                prepareAudio(uri.toString());
+//                                holder.isFirstTouch = false;
+//                            }
+//
+//
+//                        }
+//
+//                        private void prepareAudio(String uri) {
+//                            try{
+//                                player.reset();
+//                                player.setDataSource(uri);
+//                                player.prepare();
+//                                player.start();
+//                                Log.d("test", "1");
+//                                holder.mHandler.post(holder.mUpdateTimeTask);
+//                                holder.bt_play.setImageResource(R.drawable.ic_pause);
+//                            }catch (IOException e){
+//                                Snackbar.make(holder.parent_view, "Cannot load audio file", Snackbar.LENGTH_SHORT).show();
+//                            }
+//                        }
+//                    }).addOnFailureListener(new OnFailureListener() {
+//                        @Override
+//                        public void onFailure(@NonNull Exception e) {
+//                            Log.d("download","failed");
+//                        }
+//                    });
                 }else {
                     if(player.isPlaying()){
                         player.pause();
@@ -244,17 +304,19 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.audioVie
             }
 
         });
+
         holder.mUpdateTimeTask = new Runnable() {
             @Override
             public void run() {
                 long totalDuration = player.getDuration();
-                    long currentDuration = player.getCurrentPosition();
+                long currentDuration = player.getCurrentPosition();
+                holder.total_duration.setText(holder.utils.milliSecondsToTimer(totalDuration));
                     // Updating progress bar
-                    int progress = (int) (holder.utils.getProgressSeekBar(currentDuration, totalDuration));
-                    holder.seek_song_progressbar.setProgress(progress);
-                    if (player.isPlaying()) {
+                int progress = (int) (holder.utils.getProgressSeekBar(currentDuration, totalDuration));
+                holder.seek_song_progressbar.setProgress(progress);
+                if (player.isPlaying()) {
                         holder.mHandler.postDelayed(this, 100);
-                    }
+                }
 
             }
         };
@@ -286,6 +348,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.audioVie
             public void onStopTrackingTouch(SeekBar seekBar) {
                 holder.mHandler.removeCallbacks(holder.mUpdateTimeTask);
                 int totalDuration = player.getDuration();
+
                 int currentPosition = progressToTimer(seekBar.getProgress(), totalDuration);
                 player.seekTo(currentPosition);
                 holder.mHandler.post(holder.mUpdateTimeTask);
@@ -297,6 +360,15 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.audioVie
 
 //
 
+    }
+
+    private void updateTimeerandSeeker(TextView total_duration, MusicUtils utils, AppCompatSeekBar seek_song_progressbar) {
+        long totalDuration = player.getDuration();
+        long currentDuration = player.getCurrentPosition();
+        total_duration.setText(utils.milliSecondsToTimer(totalDuration));
+        // Updating progress bar
+        int progress = (int) (utils.getProgressSeekBar(currentDuration, totalDuration));
+        seek_song_progressbar.setProgress(progress);
     }
 
     private void showNoticeDialog() {
@@ -344,16 +416,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.audioVie
         bt_play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try{
-//                    holder.player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-//                    player.setDataSource(newRe);
-//                    player.prepare();
-                    Log.d("prepare","prepared");
 
-
-                }catch(Exception e){
-
-                }
                 if(player.isPlaying()){
                     player.pause();
                     bt_play.setImageResource(R.drawable.ic_arrow);
@@ -428,18 +491,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.audioVie
         });
 
 
-//        db.collection("recordings").document(newRecording.getTimestamp()).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-//            @Override
-//            public void onComplete(@NonNull Task<Void> task) {
-//                if(task.isSuccessful()){
-//                    Log.d("delete", "onComplete: delete db refs");
-//                    recordList.remove(newRecording);
-//                    notifyDataSetChanged();
-//                }else {
-//                    Log.d("delete", "onComplete: " + task.getException().toString());
-//                }
-//            }
-//        });
+
 
 
 
