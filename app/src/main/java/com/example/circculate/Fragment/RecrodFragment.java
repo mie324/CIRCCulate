@@ -16,6 +16,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
@@ -171,6 +172,13 @@ public class RecrodFragment extends Fragment implements SwipeRefreshLayout.OnRef
                     if(isFinal){
                         if(!text.equals("not recognize")){
                             translatedText = translatedText + text;
+//                            Looper.prepare();
+//                            Toast.makeText(getActivity(), "Speech translate succeed.", Toast.LENGTH_SHORT).show();
+//                            Looper.loop();
+                        }else {
+//                            Looper.prepare();
+//                            Toast.makeText(getActivity(), "Translation failed.", Toast.LENGTH_SHORT).show();
+//                            Looper.loop();
                         }
                         Log.d(TAG, "onSpeechRecognized: audio file recognize: " + text);
 //                        Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
