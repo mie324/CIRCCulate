@@ -18,6 +18,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import java.io.BufferedInputStream;
@@ -48,6 +49,7 @@ import android.view.Window;
 import java.net.URLConnection;
 import java.net.URL;
 import java.net.HttpURLConnection;
+import android.os.Handler;
 
 
 public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.audioViewHolder>{
@@ -58,11 +60,14 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.audioVie
     private FirebaseFirestore db;
     private Context context;
     private ProgressBar progress_bar;
-    public LibraryAdapter(Context context, List<AudioModel> recordList){
+    private MediaPlayer player;
+    private static final String TAG = "playtest";
+    public LibraryAdapter(Context context, List<AudioModel> recordList, MediaPlayer player){
         this.context = context;
         this.recordList = recordList;
         this.firebaseref = FirebaseStorage.getInstance().getReference();
         this.db = FirebaseFirestore.getInstance();
+        this.player = player;
 
     }
 
@@ -76,11 +81,12 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.audioVie
         ImageButton bt_next;
         AppCompatSeekBar seek_song_progressbar;
         MusicUtils utils = new MusicUtils();
-        MediaPlayer player = new MediaPlayer();
+//        MediaPlayer player = new MediaPlayer();
         Button bt_hide_text;
         View lyt_expand_text;
         View parent_view;
-        private android.os.Handler mHandler = new Handler();
+        public boolean isFirstTouch = true;
+        private Handler mHandler = new Handler();
 
         public audioViewHolder(View itemView) {
             super(itemView);
@@ -121,44 +127,26 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.audioVie
 //        holder.lyt_expand_text.setVisibility(View.GONE);
 
         //get audio file
-        holder.player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+        player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mediaPlayer) {
-                holder.player.stop();
-                holder.player.release();
+                Log.d(TAG, "onCompletion:  play complete");
+//                player.stop();
+//                player.release();
+//                try {
+//                    player.setDataSource("https://firebasestorage.googleapis.com/v0/b/circculate.appspot.com/o/DAWcN2mG7GZ37bI3Zu6r86rMCGa2%2Fdo_not_delete.wav?alt=media&token=86d96505-af66-40a5-ab04-28aa87128808");
+////                    player.prepare();
+//                }catch (IOException e){
+//
+//                }
+                Log.d(TAG, "onCompletion: before change icon");
                 holder.bt_play.setImageResource(R.drawable.ic_arrow);
+                Log.d(TAG, "onCompletion: before change flag");
+                holder.isFirstTouch = true;
 
             }
         });
         final StorageReference audioRef = firebaseref.child(newRecording.getAudioRef());
-        audioRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                Log.d("uri", uri.toString());
-                if(uri!=null){
-                    prepareAudio(uri.toString());
-
-                }
-
-
-            }
-
-            private void prepareAudio(String uri) {
-                try{
-                    Log.d("uri", uri);
-                    holder.player.reset();
-                    holder.player.setDataSource(uri);
-                    holder.player.prepare();
-                }catch (IOException e){
-                    Snackbar.make(holder.parent_view, "Cannot load audio file", Snackbar.LENGTH_SHORT).show();
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d("download","failed");
-            }
-        });
 
 
 
@@ -198,22 +186,104 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.audioVie
         holder.bt_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    holder.player.stop();
-                    holder.player.release();
-                    holder.player = null;
-                }catch (IllegalStateException e){
-                    Log.d("delete", "onClick: " + e.toString());
-                }
+//                try {
+//                  player.stop();
+//                  player.release();
+//                  player = null;
+//                }catch (IllegalStateException e){
+//                    Log.d("delete", "onClick: " + e.toString());
+//                }
                 deleteRecording(newRecording);
 
 
             }
         });
+        holder.bt_play.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(holder.isFirstTouch){
+                    audioRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            Log.d("uri", uri.toString());
+                            if(uri!=null){
+                                prepareAudio(uri.toString());
+                                holder.isFirstTouch = false;
+                            }
 
-        buttonPlayerAction(holder.bt_play, holder.player);
+
+                        }
+
+                        private void prepareAudio(String uri) {
+                            try{
+                                Log.d("uri", uri);
+                                player.reset();
+                                player.setDataSource(uri);
+                                player.prepare();
+                                player.start();
+                                holder.bt_play.setImageResource(R.drawable.ic_pause);
+                            }catch (IOException e){
+                                Snackbar.make(holder.parent_view, "Cannot load audio file", Snackbar.LENGTH_SHORT).show();
+                            }
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d("download","failed");
+                        }
+                    });
+                }else {
+                    if(player.isPlaying()){
+                        player.pause();
+                        holder.bt_play.setImageResource(R.drawable.ic_arrow);
+                    }else{
+                        player.start();
+                        holder.bt_play.setImageResource(R.drawable.ic_pause);
+
+                    }
+                }
 
 
+
+            }
+
+        });
+
+//        buttonPlayerAction(holder.bt_play, holder.player);
+//        holder.seek_song_progressbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+//
+//            @Override
+//            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+//
+//            }
+//
+//            @Override
+//            public void onStartTrackingTouch(SeekBar seekBar) {
+//                holder.mHandler.removeCallbacks(mUpdateTimeTask);
+//
+//            }
+//
+//            @Override
+//            public void onStopTrackingTouch(SeekBar seekBar) {
+//
+//            }
+
+//            private Runnable mUpdateTimeTask = new Runnable() {
+//                @Override
+//                public void run() {
+//                    long totalDuration = holder.player.getDuration();
+//                    long currentDuration = holder.player.getCurrentPosition();
+//                    // Updating progress bar
+//                    int progress = (int) (holder.utils.getProgressSeekBar(currentDuration, totalDuration));
+//                    holder.seek_song_progressbar.setProgress(progress);
+//
+//
+//
+//                }
+//            };
+//        });
+//
+//
 
     }
 

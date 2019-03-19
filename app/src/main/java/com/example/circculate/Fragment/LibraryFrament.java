@@ -23,6 +23,7 @@ import com.example.circculate.Model.AudioModel;
 import com.example.circculate.Model.RecordingModel;
 import com.example.circculate.R;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -63,6 +64,14 @@ public class LibraryFrament extends Fragment implements SwipeRefreshLayout.OnRef
     private void getRecordings() {
         audioList = new ArrayList<AudioModel>();
         player = new MediaPlayer();
+        try{
+            player.reset();
+            player.setDataSource("https://firebasestorage.googleapis.com/v0/b/circculate.appspot.com/o/DAWcN2mG7GZ37bI3Zu6r86rMCGa2%2Fdo_not_delete.wav?alt=media&token=86d96505-af66-40a5-ab04-28aa87128808");
+            player.prepare();
+        }catch (IOException e){
+
+        }
+//        player.setDataSource("https://firebasestorage.googleapis.com/v0/b/circculate.appspot.com/o/DAWcN2mG7GZ37bI3Zu6r86rMCGa2%2Fdo_not_delete.wav?alt=media&token=86d96505-af66-40a5-ab04-28aa87128808");
         db.collection("recordings").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -72,7 +81,7 @@ public class LibraryFrament extends Fragment implements SwipeRefreshLayout.OnRef
                         audioList.add(doc.toObject(AudioModel.class));
                     }
                     Collections.sort(audioList, AudioModel.audioComparator);
-                    libraryAdapter = new LibraryAdapter(getActivity(), audioList);
+                    libraryAdapter = new LibraryAdapter(getActivity(), audioList, player);
                     libraryRv.setAdapter(libraryAdapter);
 
 
