@@ -15,15 +15,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".Notification"></activity>
 
         <service
             android:name=".service.SpeechService"
             android:enabled="true"
             android:exported="true" />
-        <service
-            android:name=".SpeechService"
-            android:enabled="true"
-            android:exported="true" />
+        
         <service
             android:name=".service.MyFirebaseMessagingService"
             android:enabled="true"
@@ -31,6 +29,13 @@
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
+
+            <meta-data
+                android:name="com.google.firebase.messaging.default_notification_icon"
+                android:resource="@drawable/ic_favorites" />
+            <meta-data
+                android:name="com.google.firebase.messaging.default_notification_color"
+                android:resource="@color/colorAccent" />
         </service>
 
         <activity android:name=".AddEvent" />

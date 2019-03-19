@@ -120,12 +120,12 @@ public class CalendarFragment extends Fragment implements SwipeRefreshLayout.OnR
 
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_add, menu);
-        Log.d(TAG, "onCreateOptionsMenu: Calendar create option menu");
-    }
+//    @Override
+//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        super.onCreateOptionsMenu(menu, inflater);
+//        inflater.inflate(R.menu.menu_add, menu);
+//        Log.d(TAG, "onCreateOptionsMenu: Calendar create option menu");
+//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

@@ -1,9 +1,14 @@
 package com.example.circculate.Fragment;
 
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -78,16 +83,17 @@ public class AllEventFragment extends Fragment implements SwipeRefreshLayout.OnR
         return root;
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_add, menu);
-        Log.d(TAG, "onCreateOptionsMenu: all event create option menu");
-    }
+//    @Override
+//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        super.onCreateOptionsMenu(menu, inflater);
+//        inflater.inflate(R.menu.menu_add, menu);
+//        Log.d(TAG, "onCreateOptionsMenu: all event create option menu");
+//    }
 
     @Override
     public void onStart() {
         super.onStart();
+
         setRecycerViewListener();
         Log.d(TAG, "onStart: All event on start");
     }
@@ -109,6 +115,7 @@ public class AllEventFragment extends Fragment implements SwipeRefreshLayout.OnR
         super.onPause();
         Log.d(TAG, "onPause: All event on pause");
     }
+
 
     private void getAllEvents() {
 
@@ -161,4 +168,6 @@ public class AllEventFragment extends Fragment implements SwipeRefreshLayout.OnR
             }
         });
     }
+
+
 }

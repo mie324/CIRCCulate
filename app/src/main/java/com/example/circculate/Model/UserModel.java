@@ -7,6 +7,7 @@ public class UserModel implements Serializable {
     private String username;
     private String email;
     private int colorCode;
+    private String tokenId;
 //    private ArrayList<EventModel> events;
 
     public UserModel(String email, String username, int colorCode){
@@ -24,4 +25,12 @@ public class UserModel implements Serializable {
     }
 
     public String getEmail(){return  this.email;}
+
+    public void setTokenId(String tokenId){
+        this.tokenId = tokenId;
+    }
+
+    public String getTokenId(){
+        return this.tokenId;
+    }
 }

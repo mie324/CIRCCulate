@@ -117,7 +117,8 @@ dependencies {
     api 'com.google.firebase:firebase-firestore:18.0.0'
     implementation 'com.google.firebase:firebase-storage:16.0.5'       // storage
     implementation 'com.google.firebase:firebase-core:16.0.6'
-//    implementation 'com.google.firebase:firebase-messaging:17.3.4'
+    implementation 'com.google.firebase:firebase-messaging:17.3.4'
+    implementation 'com.firebase:firebase-jobdispatcher:0.8.5'
 
 //    implementation 'com.google.gms:google-services:4.2.0'
     implementation 'com.google.android.libraries.places:places:1.0.0'
