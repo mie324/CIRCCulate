@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.circculate.Adapter.LibraryAdapter;
+import com.example.circculate.HomePage;
 import com.example.circculate.Model.AudioModel;
 import com.example.circculate.Model.RecordingModel;
 import com.example.circculate.R;
@@ -59,6 +60,33 @@ public class LibraryFrament extends Fragment implements SwipeRefreshLayout.OnRef
     public void onRefresh() {
         Toast.makeText(getActivity(), "Library Fragment", Toast.LENGTH_SHORT).show();
         getRecordings();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        setRecycerViewListener();
+        Log.d(TAG, "onStart: All event on start");
+    }
+
+    private void setRecycerViewListener() {
+        RecyclerView rv = getView().findViewById(R.id.recyclerView_library);
+        final HomePage hostActivity = (HomePage)getActivity();
+        rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy < 0) { // up
+                    hostActivity.animateNavigation(false);
+
+                }
+                if (dy > 0) { // down
+                    hostActivity.animateNavigation(true);
+
+                }
+            }
+        });
     }
 
     private void getRecordings() {
