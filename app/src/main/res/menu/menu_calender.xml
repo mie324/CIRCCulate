@@ -23,6 +23,7 @@
         android:title="Notifications"
         android:icon="@drawable/ic_notifications_outline"
         app:actionLayout="@layout/custom_notification_fragment"
+        android:enabled="true"
         app:showAsAction="always" />
 
 

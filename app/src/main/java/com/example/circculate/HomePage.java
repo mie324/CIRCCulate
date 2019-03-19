@@ -115,13 +115,23 @@ public class HomePage extends AppCompatActivity {
         inflater.inflate(R.menu.menu_calender, menu);
 //        Tools.changeMenuIconColor(menu, getResources().getColor(R.color.grey_60));
         final MenuItem notificationItem = menu.findItem(R.id.action_notify);
-        View actionView = MenuItemCompat.getActionView(notificationItem);
+        View actionView = notificationItem.getActionView();
         if(actionView == null){
             Log.d(TAG, "onCreateOptionsMenu: action view null");
         }
         notificationNumHolder = (TextView)actionView.findViewById(R.id.notification_badge);
         
         notificationNumHolder.setVisibility(View.INVISIBLE);
+
+        notificationItem.getActionView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("select", "to notification activity");
+                Intent intent = new Intent(getApplication(), Notification.class);
+                intent.putExtra("notifications", notifications);
+                startActivity(intent);
+            }
+        });
         return super.onCreateOptionsMenu(menu);
     }
 
