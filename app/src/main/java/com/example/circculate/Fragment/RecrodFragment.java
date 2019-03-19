@@ -4,7 +4,9 @@ package com.example.circculate.Fragment;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
@@ -23,6 +25,7 @@ import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
@@ -36,6 +39,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.circculate.HomePage;
 import com.example.circculate.Model.AudioModel;
 import com.example.circculate.Model.UserModel;
 import com.example.circculate.R;
@@ -73,6 +77,7 @@ public class RecrodFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private boolean recordFlag = false;
     private Handler updateTimeTaskHandler = new Handler();
     private boolean startRecordFlag = false;
+    private boolean transFlag = false;
     private long startTime = 0;
     private long beforePauseTime = 0;
     private static final String TAG = "RECORDER";
@@ -84,14 +89,14 @@ public class RecrodFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
     private String[] permissions = {Manifest.permission.RECORD_AUDIO};
     private String filename;
-
+    private HomePage hostActivity;
     private static final int SAMPLE_RATE = 16000;//16k for emulater, change to 44.1k for device use
     private static final int AUDIO_SOURCE = MediaRecorder.AudioSource.MIC;
     private static final int CHANNEL_IN_CONFIG = AudioFormat.CHANNEL_IN_MONO;
     private static final int AUDIO_FORMAT = AudioFormat.ENCODING_PCM_16BIT;
     private static final int BUFFER_SIZE = AudioRecord.getMinBufferSize(SAMPLE_RATE, CHANNEL_IN_CONFIG, AUDIO_FORMAT);
     private String translatedText = "";
-
+    private ProgressDialog waitDialog;
     private SpeechService mSpeechService;
 
     private UserModel currentUser;
@@ -106,6 +111,10 @@ public class RecrodFragment extends Fragment implements SwipeRefreshLayout.OnRef
     @Override
     public void onRefresh() {
         Toast.makeText(getActivity(), "Recording Fragment.", Toast.LENGTH_SHORT).show();
+//        hostActivity = (HomePage)getActivity();
+//        if(hostActivity != null){
+//            Log.d(TAG, "onRefresh: host not null");
+//        }
     }
 
     @Override
@@ -126,7 +135,7 @@ public class RecrodFragment extends Fragment implements SwipeRefreshLayout.OnRef
         View root = inflater.inflate(R.layout.fragment_recrod, container, false);
         initComponent(root);
         mAuth = FirebaseAuth.getInstance();
-
+        waitDialog = new ProgressDialog(getActivity());
 
         return root;
     }
@@ -172,22 +181,44 @@ public class RecrodFragment extends Fragment implements SwipeRefreshLayout.OnRef
                     if(isFinal){
                         if(!text.equals("not recognize")){
                             translatedText = translatedText + text;
+                            transFlag = true;
 //                            Looper.prepare();
 //                            Toast.makeText(getActivity(), "Speech translate succeed.", Toast.LENGTH_SHORT).show();
 //                            Looper.loop();
-                        }else {
-//                            Looper.prepare();
-//                            Toast.makeText(getActivity(), "Translation failed.", Toast.LENGTH_SHORT).show();
-//                            Looper.loop();
+                            Log.d(TAG, "onSpeechRecognized: " + transFlag);
                         }
                         Log.d(TAG, "onSpeechRecognized: audio file recognize: " + text);
 //                        Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
+
+                        if(hostActivity == null){
+                            Log.d(TAG, "onSpeechRecognized: host activity null");
+                        }else {
+
+                            hostActivity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if(text.equals("not recognize")){
+                                        Toast.makeText(getActivity(), "not recognized", Toast.LENGTH_SHORT).show();
+                                    }else {
+                                        Toast.makeText(getActivity(), "text recognized.", Toast.LENGTH_SHORT).show();
+                                    }
+                                    waitDialog.hide();
+                                    showConfirmDialog();
+                                }
+                            });
+                        }
+
+
+
+
+
                     }
                 }
             };
 
 
     private void initComponent(final View root){
+        hostActivity = (HomePage)getActivity();
         final FloatingActionButton recordButton = root.findViewById(R.id.record_bt);
         FloatingActionButton stopButton = root.findViewById(R.id.stop_bt);
         filename = getContext().getExternalCacheDir().getAbsolutePath();
@@ -300,7 +331,10 @@ public class RecrodFragment extends Fragment implements SwipeRefreshLayout.OnRef
                     recordButton.setImageResource(R.drawable.ic_mic_white_large);
                     updateTimeTaskHandler.removeCallbacks(updateRecordTimeTask);
                     File localRecordFile = new File(filename);
+
                     try {
+                        waitDialog.setMessage("Translating, this may take some time.");
+                        waitDialog.show();
                         FileInputStream testInpuStream = new FileInputStream(localRecordFile);
                         Log.d(TAG, "onClick: get record file input stream");
                         mSpeechService.recognizeInputStream(testInpuStream);
@@ -312,7 +346,7 @@ public class RecrodFragment extends Fragment implements SwipeRefreshLayout.OnRef
 //                    mSpeechService.recognizeInputStream(getResources().openRawResource(R.raw.audio20190315094703));
 //                    FileInputStream testInpuStream = new FileInputStream(localRecordFile);
 //                    mSpeechService.recognizeInputStream(testInpuStream);
-                    showConfirmDialog();
+//                    showConfirmDialog();
                 }else {
                     Toast.makeText(getActivity(), "You haven't started recording yet", Toast.LENGTH_SHORT).show();
                 }
@@ -366,7 +400,7 @@ public class RecrodFragment extends Fragment implements SwipeRefreshLayout.OnRef
         final Dialog dialog = new Dialog(getActivity());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_add_recording);
-
+        Log.d(TAG, "showConfirmDialog: " + transFlag);
         dialog.setCancelable(true);
         WindowManager.LayoutParams params = new WindowManager.LayoutParams();
         params.copyFrom(dialog.getWindow().getAttributes());
@@ -393,6 +427,9 @@ public class RecrodFragment extends Fragment implements SwipeRefreshLayout.OnRef
                 if(TextUtils.isEmpty(recordTitleText)){
                     Toast.makeText(getActivity(), "You must fill in title.", Toast.LENGTH_SHORT).show();
                 }else {
+                    waitDialog.setMessage("Uploading...");
+                    waitDialog.show();
+                    dialog.dismiss();
                     Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("America/Toronto"));
                     SimpleDateFormat currentTime = new SimpleDateFormat("yyyyMMddHHmmss");
                     currentTime.setTimeZone(cal.getTimeZone());
@@ -424,8 +461,9 @@ public class RecrodFragment extends Fragment implements SwipeRefreshLayout.OnRef
                 if(task.isSuccessful()){
                     Toast.makeText(getActivity(), "Upload Successed.", Toast.LENGTH_SHORT).show();
 //                    transRecordToText();
-
-                    addRefToDb(recordTitle, dialog);
+//                    if(!transFlag){
+//                        addRefToDb(recordTitle, dialog);
+//                    }
 //                    Log.d(TAG, "onComplete: filepath: " + fileRef.getPath());
                 }else {
                     Log.d(TAG, "onComplete: " + task.getException().toString());
@@ -433,7 +471,9 @@ public class RecrodFragment extends Fragment implements SwipeRefreshLayout.OnRef
                 }
             }
         });
-        if(!translatedText.equals("")){
+
+        Log.d(TAG, "uploadFileToStorage: " + transFlag);
+        if(transFlag){
             String textPath = getContext().getExternalCacheDir().getAbsolutePath();
             textPath += "/audiotrans.txt";
             File textFile = null;
@@ -458,11 +498,15 @@ public class RecrodFragment extends Fragment implements SwipeRefreshLayout.OnRef
                 @Override
                 public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                     if(task.isSuccessful()){
-                        addRefToDb(recordTitle, dialog);
+//                        if(transFlag){
+//                            addRefToDb(recordTitle, dialog);
+//                        }
                     }
                 }
             });
         }
+
+        addRefToDb(recordTitle, dialog);
 
 
 
@@ -674,10 +718,12 @@ public class RecrodFragment extends Fragment implements SwipeRefreshLayout.OnRef
         String audioRef = mAuth.getUid() + "/" + timestamp + ".wav";
         String textRef = mAuth.getUid() + "/" + timestamp + ".txt";
         AudioModel newRecording = null;
-        if(translatedText.equals("")){
+        Log.d(TAG, "addRefToDb: " + transFlag);
+        if(!transFlag){
             newRecording = new AudioModel(timestamp, recordTitle, audioRef, null);
         }else {
             newRecording = new AudioModel(timestamp, recordTitle, audioRef, textRef);
+            transFlag = false;
         }
 
         db.collection("recordings").document(timestamp).set(newRecording)
@@ -687,7 +733,8 @@ public class RecrodFragment extends Fragment implements SwipeRefreshLayout.OnRef
                         if(task.isSuccessful()){
                             Toast.makeText(getActivity(), "Add Ref to db", Toast.LENGTH_SHORT).show();
                             translatedText = "";
-                            dialog.dismiss();
+//                            dialog.dismiss();
+                            waitDialog.dismiss();
                         }else {
                             Log.d(TAG, "onComplete: " + task.getException().toString());
                         }

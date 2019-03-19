@@ -73,6 +73,7 @@ public class HomePage extends AppCompatActivity {
         super.onStart();
         LocalBroadcastManager.getInstance(this).registerReceiver(msgReceiver,
                 new IntentFilter("Data"));
+
     }
 
     private BroadcastReceiver msgReceiver = new BroadcastReceiver() {
