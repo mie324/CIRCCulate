@@ -3,8 +3,10 @@ package com.example.circculate.Adapter;
 import android.content.Context;
 import android.media.AudioManager;
 import android.net.Uri;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.support.v7.widget.RecyclerView;
@@ -15,12 +17,18 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
 
 import com.example.circculate.R;
+import com.example.circculate.utils.Helper;
 import com.example.circculate.utils.MusicUtils;
 import com.example.circculate.utils.Tools;
 import com.example.circculate.utils.ViewAnimation;
@@ -28,23 +36,33 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.example.circculate.Model.RecordingModel;
 import android.media.MediaPlayer;
 import com.example.circculate.Model.AudioModel;
 import android.util.Log;
+import android.app.Dialog;
+import android.view.Window;
+import java.net.URLConnection;
+import java.net.URL;
+import java.net.HttpURLConnection;
+
 
 public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.audioViewHolder>{
 
     public LibraryAdapter() {}
     private List<AudioModel> recordList;
     private StorageReference firebaseref;
+    private FirebaseFirestore db;
     private Context context;
+    private ProgressBar progress_bar;
     public LibraryAdapter(Context context, List<AudioModel> recordList){
         this.context = context;
         this.recordList = recordList;
         this.firebaseref = FirebaseStorage.getInstance().getReference();
+        this.db = FirebaseFirestore.getInstance();
 
     }
 
@@ -62,6 +80,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.audioVie
         Button bt_hide_text;
         View lyt_expand_text;
         View parent_view;
+        private android.os.Handler mHandler = new Handler();
 
         public audioViewHolder(View itemView) {
             super(itemView);
@@ -105,21 +124,29 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.audioVie
         holder.player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mediaPlayer) {
+                holder.player.stop();
+                holder.player.release();
                 holder.bt_play.setImageResource(R.drawable.ic_arrow);
 
             }
         });
-        StorageReference audioRef = firebaseref.child(newRecording.getAudioRef());
+        final StorageReference audioRef = firebaseref.child(newRecording.getAudioRef());
         audioRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
                 Log.d("uri", uri.toString());
-                prepareAudio(uri.toString());
+                if(uri!=null){
+                    prepareAudio(uri.toString());
+
+                }
+
 
             }
 
             private void prepareAudio(String uri) {
                 try{
+                    Log.d("uri", uri);
+                    holder.player.reset();
                     holder.player.setDataSource(uri);
                     holder.player.prepare();
                 }catch (IOException e){
@@ -138,15 +165,19 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.audioVie
 
 
         holder.recordingText.setText(newRecording.getTitle());
-//        holder.toggle_button.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                toggleSectionText(holder.toggle_button, holder.lyt_expand_text);
-//
-//            }
-//        });
+        holder.bt_translate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(newRecording.getTextRef()==null){
+                    showNoticeDialog();
 
-        //toggle button animation
+
+                }else{
+                    showFullScreenDialog(view, newRecording);
+                }
+
+            }
+        });
 
         holder.toggle_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -167,15 +198,64 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.audioVie
         holder.bt_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                try {
+                    holder.player.stop();
+                    holder.player.release();
+                    holder.player = null;
+                }catch (IllegalStateException e){
+                    Log.d("delete", "onClick: " + e.toString());
+                }
+                deleteRecording(newRecording);
+
 
             }
         });
 
-        //play button listener
         buttonPlayerAction(holder.bt_play, holder.player);
 
 
 
+    }
+
+    private void showNoticeDialog() {
+        final Dialog nagDialog = new Dialog(context,android.R.style.Theme_Light_NoTitleBar_Fullscreen);
+        nagDialog.setCancelable(true);
+        nagDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        nagDialog.setContentView(R.layout.dialog_notification);
+        FloatingActionButton close_btn = nagDialog.findViewById(R.id.del_fab);
+        close_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                nagDialog.dismiss();
+            }
+        });
+        nagDialog.show();
+
+    }
+
+    private void showFullScreenDialog(View view, AudioModel newRecording) {
+        final Dialog nagDialog = new Dialog(context,android.R.style.Theme_Light_NoTitleBar_Fullscreen);
+        nagDialog.setCancelable(true);
+        nagDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        nagDialog.setContentView(R.layout.full_screen_text);
+        Log.d("title", newRecording.getTitle());
+        TextView text_title = nagDialog.findViewById(R.id.text_title);
+        TextView text_time = nagDialog.findViewById(R.id.text_time);
+        text_title.setText(newRecording.getTitle());
+        text_time.setText(Helper.MonthDayTime(newRecording.getTimestamp()));
+        StorageReference textRef = firebaseref.child(newRecording.getTextRef());
+        final long ONE_MEGABYTE = 1024 * 1024;
+        textRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                String s = new String(bytes);
+                Log.d("test", s);
+                TextView text_content = nagDialog.findViewById(R.id.text_content);
+                text_content.setText(s);
+                nagDialog.show();
+
+            }
+        });
     }
 
     private void buttonPlayerAction(final ImageView bt_play, final MediaPlayer player) {
@@ -233,7 +313,70 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.audioVie
     }
 
 
-    private void deleteRecording() {
+
+    private void deleteRecording(final AudioModel newRecording) {
+//        recordList.remove(newRecording);
+//        notifyDataSetChanged();
+
+        if(newRecording.getTextRef()!=null){
+            firebaseref.child(newRecording.getTextRef()).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    Log.d("delete", "text success");
+                    deleteDbRef(newRecording);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.d("delele", "text Delete failed.");
+                }
+            });
+        }
+        firebaseref.child(newRecording.getAudioRef()).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d("delete", "audio delete success");
+                deleteDbRef(newRecording);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("delete", "audio Delete failed.");
+            }
+        });
+
+
+//        db.collection("recordings").document(newRecording.getTimestamp()).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+//            @Override
+//            public void onComplete(@NonNull Task<Void> task) {
+//                if(task.isSuccessful()){
+//                    Log.d("delete", "onComplete: delete db refs");
+//                    recordList.remove(newRecording);
+//                    notifyDataSetChanged();
+//                }else {
+//                    Log.d("delete", "onComplete: " + task.getException().toString());
+//                }
+//            }
+//        });
+
+
+
+    }
+
+    private void deleteDbRef(final AudioModel newRecording){
+        db.collection("recordings").document(newRecording.getTimestamp()).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    Log.d("delete", "onComplete: delete db refs");
+                    recordList.remove(newRecording);
+                    notifyDataSetChanged();
+
+                }else {
+                    Log.d("delete", "onComplete: " + task.getException().toString());
+                }
+            }
+        });
     }
 
 

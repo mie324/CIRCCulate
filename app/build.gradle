@@ -119,8 +119,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:16.0.6'
 //    implementation 'com.google.firebase:firebase-messaging:17.3.4'
 
-
-
 //    implementation 'com.google.gms:google-services:4.2.0'
     implementation 'com.google.android.libraries.places:places:1.0.0'
 //    implementation 'com.google.android.libraries.places:places-compat:1.0.0'
@@ -130,10 +128,9 @@ dependencies {
 
     implementation 'com.android.support:support-v4:27.1.1'
 
-
     /**
-    ***new dependencies
-    **/
+     *** new dependencies
+     **/
     //gPRC library
     // gRPC
     implementation "io.grpc:grpc-okhttp:1.19.0"
@@ -145,7 +142,6 @@ dependencies {
 //    implementation "io.grpc:grpc-okhttp:$grpcVersion"
 //    implementation "io.grpc:grpc-protobuf-lite:$grpcVersion"
 //    implementation "io.grpc:grpc-stub:$grpcVersion"
-
 
     // OAuth2 for Google API
     implementation('com.google.auth:google-auth-library-oauth2-http:0.7.0') {

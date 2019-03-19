@@ -1,4 +1,4 @@
-package com.example.circculate;
+package com.example.circculate.utils;
 //
 //import android.widget.Toast;
 //
@@ -166,6 +166,23 @@ public class Helper {
         return timestamp.substring(8, 10) + ":" + timestamp.substring(10)
                 + " " + timestamp.substring(4, 6) + "/" + timestamp.substring(6, 8)
                 + "/" + timestamp.substring(0, 4);
+    }
+
+    public static String MonthDayTime(String timestamp){
+        String month, day;
+        if(timestamp.charAt(4)=='0')
+        {
+            month = timestamp.substring(5,6);
+        }else{
+            month = timestamp.substring(4,6);
+        }
+
+        if(timestamp.charAt(6)=='0'){
+            day = timestamp.substring(7,8);
+        }else{
+            day = timestamp.substring(6,8);
+        }
+        return month+"/"+day;
     }
 
 }

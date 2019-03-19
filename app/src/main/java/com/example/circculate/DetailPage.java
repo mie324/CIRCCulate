@@ -16,6 +16,7 @@ import android.widget.ViewSwitcher;
 
 import com.example.circculate.Model.EventModel;
 import com.example.circculate.Model.UserModel;
+import com.example.circculate.utils.Helper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;

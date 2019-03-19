@@ -43,7 +43,6 @@
     <color name="grey_100_">#0d0d0d</color>
 
 
-
     <!--Material color list from https://material.io/guidelines/style/color.html-->
 
     <color name="red_50">#FFEBEE</color>
@@ -326,19 +325,21 @@
 
     <!--for random color generator -->
     <array name="mdcolor_random">
-     <item type="color">#e91e63</item>
-     <item type="color">#9c27b0</item>
-     <item type="color">#673ab7</item>
-     <item type="color">#E53935</item>
-     <item type="color">#5677fc</item>
-     <item type="color">#689F38</item>
-     <item type="color">#03a9f4</item>
-     <item type="color">#00bcd4</item>
-     <item type="color">#009688</item>
-     <item type="color">#259b24</item>
-     <item type="color">#ff5722</item>
-     <item type="color">#795548</item>
-     <item type="color">#607d8b</item>
-     <item type="color">#ff9800</item>
+        <item type="color">#e91e63</item>
+        <item type="color">#9c27b0</item>
+        <item type="color">#673ab7</item>
+        <item type="color">#E53935</item>
+        <item type="color">#5677fc</item>
+        <item type="color">#689F38</item>
+        <item type="color">#03a9f4</item>
+        <item type="color">#00bcd4</item>
+        <item type="color">#009688</item>
+        <item type="color">#259b24</item>
+        <item type="color">#ff5722</item>
+        <item type="color">#795548</item>
+        <item type="color">#607d8b</item>
+        <item type="color">#ff9800</item>
     </array>
+
+    <color name="black_overlay">#66000000</color>
 </resources>

@@ -1,7 +1,10 @@
 package com.example.circculate.Fragment;
 
 
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -44,7 +47,8 @@ public class LibraryFrament extends Fragment implements SwipeRefreshLayout.OnRef
     private static final String TAG = "LibraryLifeCycle";
     private LibraryAdapter libraryAdapter;
     private List<DocumentSnapshot> recordingDoc;
-
+    private MediaPlayer player;
+    private Handler mHandler;
 
     public LibraryFrament() {
         // Required empty public constructor
@@ -58,6 +62,7 @@ public class LibraryFrament extends Fragment implements SwipeRefreshLayout.OnRef
 
     private void getRecordings() {
         audioList = new ArrayList<AudioModel>();
+        player = new MediaPlayer();
         db.collection("recordings").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -115,5 +120,13 @@ public class LibraryFrament extends Fragment implements SwipeRefreshLayout.OnRef
         super.onPause();
         Log.d(TAG, "onPause: Calendar on pause");
     }
+
+    // stop player when destroy
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy: Calendar on destroy");
+    }
+
 
 }

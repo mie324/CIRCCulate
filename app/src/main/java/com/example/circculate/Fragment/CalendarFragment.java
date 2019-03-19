@@ -17,12 +17,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CalendarView;
 import android.widget.Toast;
 
 import com.example.circculate.Adapter.CalendarEventAdapter;
 import com.example.circculate.EventDecorator;
-import com.example.circculate.Helper;
+import com.example.circculate.utils.Helper;
 import com.example.circculate.HomePage;
 import com.example.circculate.Model.EventModel;
 import com.example.circculate.Model.UserModel;
@@ -35,7 +34,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
-import com.prolificinteractive.materialcalendarview.DayViewDecorator;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
