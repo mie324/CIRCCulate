@@ -2,29 +2,52 @@ package com.example.circculate;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.BottomSheetDialog;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.circculate.Model.UserModel;
+import com.example.circculate.utils.ViewAnimation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.mikhaellopez.circularimageview.CircularImageView;
+
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+
+import io.grpc.Context;
 
 public class SignUp extends AppCompatActivity {
     private FirebaseAuth mAuth;
@@ -34,6 +57,16 @@ public class SignUp extends AppCompatActivity {
     private TextInputEditText pickerColorResult;
     private int colorCode;
     private int currentRed = 127, currentGreen = 127, currentBlue = 118;
+    private CircularImageView pickIconButton;
+    private Bitmap selectedImg;
+    private static final int LOAD_IMG = 200;
+    private static final int OPEN_CAM = 201;
+    private static final String TAG = "SignUp";
+
+    private BottomSheetBehavior bottomBehavior;
+    private BottomSheetDialog bottomDialog;
+    private View bottomSheet;
+    private FirebaseStorage storage;
 
 
     @Override
@@ -45,6 +78,9 @@ public class SignUp extends AppCompatActivity {
         // setSupportActionBar(toolbar);
         mAuth = FirebaseAuth.getInstance();
         toHomePage(mAuth.getCurrentUser());
+        storage = FirebaseStorage.getInstance();
+        bottomSheet = findViewById(R.id.bottom_sheet);
+        bottomBehavior = BottomSheetBehavior.from(bottomSheet);
         pickerColorResult = findViewById(R.id.pick_color_text);
         initPicker();
         addButtonLisner();
@@ -200,7 +236,8 @@ public class SignUp extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if(task.isSuccessful()){
                                         //sign up succeed, create user in database.
-                                        addUserToDB(mAuth.getCurrentUser());
+                                        uploadIcon(selectedImg);
+//                                        addUserToDB(mAuth.getCurrentUser());
                                     }else{
                                         showToast("Fail to sign up.");
                                     }
@@ -210,7 +247,108 @@ public class SignUp extends AppCompatActivity {
                 }
             }
         });
+
+        pickIconButton = findViewById(R.id.bt_pick_icon);
+        pickIconButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                pickIcon();
+                showBottomSheetDialog();
+
+            }
+        });
         progressDialog.dismiss();
+    }
+
+    private void pickIcon(){
+        Intent photoPicker = new Intent(Intent.ACTION_PICK);
+        photoPicker.setType("image/*");
+        startActivityForResult(photoPicker, LOAD_IMG);
+    }
+
+    private void openCamera(){
+        Intent openCamera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if(openCamera.resolveActivity(getPackageManager()) != null){
+            startActivityForResult(openCamera, OPEN_CAM);
+        }
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == LOAD_IMG && resultCode == RESULT_OK){
+            try{
+                Uri imgUri = data.getData();
+                InputStream imgStream = getContentResolver().openInputStream(imgUri);
+                selectedImg = BitmapFactory.decodeStream(imgStream);
+                pickIconButton.setImageBitmap(selectedImg);
+            }catch (FileNotFoundException e){
+                Log.d(TAG, "onActivityResult: " + e.toString());
+            }
+        }else if(requestCode == OPEN_CAM && resultCode == RESULT_OK){
+            selectedImg = (Bitmap)data.getExtras().get("data");
+            pickIconButton.setImageBitmap(selectedImg);
+        }
+    }
+
+    private void showBottomSheetDialog(){
+        if(bottomBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED){
+            bottomBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        }
+
+        View view = getLayoutInflater().inflate(R.layout.sheet_list, null);
+
+        view.findViewById(R.id.open_gallery).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pickIcon();
+                bottomDialog.dismiss();
+            }
+        });
+
+        view.findViewById(R.id.open_camera).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showToast("open camera");
+                openCamera();
+                bottomDialog.dismiss();
+            }
+        });
+
+        bottomDialog = new BottomSheetDialog(this);
+        bottomDialog.setContentView(view);
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+            bottomDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
+
+        bottomDialog.show();
+        bottomDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                bottomDialog = null;
+            }
+        });
+    }
+
+    private void uploadIcon(Bitmap selectedImg){
+        StorageReference ref = storage.getReference();
+        StorageReference iconRef = ref.child(mAuth.getUid() + "/icon.jpg");
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        selectedImg.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
+
+        iconRef.putBytes(data).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                if(task.isSuccessful()){
+                    addUserToDB(mAuth.getCurrentUser());
+                }
+            }
+        });
+
     }
 
     private void addUserToDB(final FirebaseUser currentUser){
@@ -218,7 +356,7 @@ public class SignUp extends AppCompatActivity {
             return;
         }
 
-        UserModel newUser = new UserModel(emailText, usernameText, colorCode);
+        UserModel newUser = new UserModel(emailText, usernameText, colorCode , currentUser.getUid() + "/icon.jpg");
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("users").document(currentUser.getUid())
                 .set(newUser).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -241,7 +379,11 @@ public class SignUp extends AppCompatActivity {
         password = findViewById(R.id.password_text);
         username = findViewById(R.id.username_text);
         confirmPsd = findViewById(R.id.confirm_text);
-
+        Bitmap selectedIcon = ((BitmapDrawable)pickIconButton.getDrawable()).getBitmap();
+        if(!selectedIcon.sameAs(selectedImg)){
+            showToast("Select an icon.");
+            return false;
+        }
         if(TextUtils.isEmpty(email.getText().toString())){
             email.setError("Required");
             return false;

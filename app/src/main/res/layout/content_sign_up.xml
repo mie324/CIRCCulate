@@ -42,14 +42,16 @@
             android:orientation="vertical"
             android:padding="15dp">
 
-            <android.support.design.widget.FloatingActionButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+
+            <com.mikhaellopez.circularimageview.CircularImageView
+                android:id="@+id/bt_pick_icon"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:layout_gravity="center"
-                android:clickable="true"
-                app:backgroundTint="@android:color/white"
-                app:elevation="2dp"
-                app:fabCustomSize="80dp"
+                android:foreground="@color/overlay_light_20"
+                app:civ_border="false"
+                app:civ_shadow="true"
+                app:civ_shadow_radius="0"
                 app:srcCompat="@drawable/ic_photo"/>
 
             <View
@@ -68,9 +70,9 @@
                 <!--android:textStyle="bold" />-->
 
             <android.support.design.widget.TextInputEditText
+                android:id="@+id/email_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/email_text"
                 android:layout_marginLeft="-4dp"
                 android:layout_marginRight="-4dp"
                 android:hint="Enter your email"
@@ -95,9 +97,9 @@
                 <!--android:textStyle="bold" />-->
 
             <android.support.design.widget.TextInputEditText
+                android:id="@+id/password_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/password_text"
                 android:layout_marginLeft="-4dp"
                 android:layout_marginRight="-4dp"
                 android:hint="Enter your password"
@@ -113,9 +115,9 @@
                 android:layout_height="@dimen/spacing_mlarge" />
 
             <android.support.design.widget.TextInputEditText
+                android:id="@+id/confirm_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/confirm_text"
                 android:layout_marginLeft="-4dp"
                 android:layout_marginRight="-4dp"
                 android:hint="Confirm your password"
@@ -141,9 +143,9 @@
                 <!--android:textStyle="bold" />-->
 
             <android.support.design.widget.TextInputEditText
+                android:id="@+id/username_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/username_text"
                 android:layout_marginLeft="-4dp"
                 android:layout_marginRight="-4dp"
                 android:hint="Enter your username"
@@ -159,20 +161,20 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
 
                 <android.support.design.widget.TextInputEditText
+                    android:id="@+id/pick_color_text"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:id="@+id/pick_color_text"
                     android:layout_marginLeft="-4dp"
                     android:layout_marginRight="-4dp"
+                    android:layout_weight="2"
+                    android:focusableInTouchMode="false"
                     android:hint="Pick your color"
                     android:inputType="text"
-                    android:focusableInTouchMode="false"
                     android:maxLength="50"
                     android:maxLines="1"
                     android:singleLine="true"
@@ -184,10 +186,10 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Pick"
                     android:background="@drawable/btn_purple_a400"
-                    android:textColor="@color/grey_3"
-                    android:gravity="center" />
+                    android:gravity="center"
+                    android:text="Pick"
+                    android:textColor="@color/grey_3" />
             </LinearLayout>
 
             <View
@@ -198,11 +200,11 @@
 
 
             <Button
+                android:id="@+id/signup_bt"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:layout_marginLeft="-4dp"
                 android:layout_marginRight="-4dp"
-                android:id="@+id/signup_bt"
                 android:background="@drawable/btn_purple_a400"
                 android:text="Signup"
                 android:textAllCaps="false"
@@ -232,11 +234,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:clickable="true"
+                    android:onClick="toSignIn"
                     android:text="Sign In"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
                     android:textColor="@color/purple_A400"
-                    android:textStyle="bold"
-                    android:onClick="toSignIn"/>
+                    android:textStyle="bold"/>
 
             </LinearLayout>
 
