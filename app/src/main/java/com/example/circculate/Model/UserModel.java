@@ -8,12 +8,14 @@ public class UserModel implements Serializable {
     private String email;
     private int colorCode;
     private String tokenId;
+    private String iconRef;
 //    private ArrayList<EventModel> events;
 
-    public UserModel(String email, String username, int colorCode){
+    public UserModel(String email, String username, int colorCode, String iconRef){
         this.email = email;
         this.username = username;
         this.colorCode = colorCode;
+        this.iconRef = iconRef;
     }
 
     public UserModel(){}
@@ -32,5 +34,14 @@ public class UserModel implements Serializable {
 
     public String getTokenId(){
         return this.tokenId;
+    }
+
+
+    public String getIconRef() {
+        return iconRef;
+    }
+
+    public void setIconRef(String iconRef) {
+        this.iconRef = iconRef;
     }
 }
