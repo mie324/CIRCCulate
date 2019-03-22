@@ -8,7 +8,15 @@ public class RecordingModel implements Serializable {
     private String audioRef;
     private String textRef;
     public boolean expanded = false;
+    public boolean shouldBeExpanded = false;
 
+    public boolean isShouldBeExpanded() {
+        return shouldBeExpanded;
+    }
+
+    public void setShouldBeExpanded(boolean shouldBeExpanded) {
+        this.shouldBeExpanded = shouldBeExpanded;
+    }
 
     public RecordingModel(String timestamp, String title, String audioRef, String textRef) {
         this.timestamp = timestamp;

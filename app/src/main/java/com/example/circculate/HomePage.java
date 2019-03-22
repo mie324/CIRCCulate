@@ -19,8 +19,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListPopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 //import com.material.components.utils.Tools;
@@ -53,6 +56,7 @@ public class HomePage extends AppCompatActivity {
     private FirebaseFirestore db;
     private UserModel user;
     private TextView notificationNumHolder;
+    private ListPopupWindow lpw;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -313,4 +317,17 @@ public class HomePage extends AppCompatActivity {
     }
 
 
+//    @Override
+//    public boolean onTouch(View view, MotionEvent motionEvent) {
+//        final int DRAWABLE_RIGHT = 2;
+//
+//        if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+//            if (motionEvent.getX() >= (view.getWidth() - ((EditText) view)
+//                    .getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+//                lpw.show();
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
 }

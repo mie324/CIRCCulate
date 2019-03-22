@@ -4,8 +4,26 @@ package com.example.circculate.utils;
 //
 //import com.google.firebase.auth.FirebaseAuth;
 //import com.google.firebase.firestore.FirebaseFirestore;
+import android.support.annotation.NonNull;
+
+import com.example.circculate.Model.EventModel;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.TimeZone;
+import android.util.Log;
 
 public class Helper {
+    private static final String TAG = "Helper";
     public static String getTimedate(String timestamp){
         int len = timestamp.length();
         String timedate = timestamp.substring(0,8);
@@ -183,6 +201,35 @@ public class Helper {
             day = timestamp.substring(6,8);
         }
         return month+"/"+day;
+    }
+
+    public static ArrayList<String> getAllTitles(){
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("America/Toronto"));
+        SimpleDateFormat currentTime = new SimpleDateFormat("yyyyMMdd");
+        currentTime.setTimeZone(cal.getTimeZone());
+        String timestamp = currentTime.format(cal.getTime());
+        String min_time = timestamp + "0000";
+        String max_time = timestamp + "2400";
+        final ArrayList<String> titleList = new ArrayList<>();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        List<DocumentSnapshot> eventsDoc;
+        db.collection("events").whereGreaterThan("timestamp", min_time).whereLessThan("timestamp",max_time).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                List<DocumentSnapshot> eventDoc = task.getResult().getDocuments();
+                for(DocumentSnapshot doc:eventDoc){
+                    titleList.add(doc.toObject(EventModel.class).getTitle());
+                }
+                Log.d(TAG, "onComplete: " + titleList.size());
+
+
+            }
+        });
+
+        Log.d(TAG, "getAllTitles: " + titleList.size());
+        return titleList;
+
+
     }
 
 }

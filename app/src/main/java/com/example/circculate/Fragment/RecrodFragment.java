@@ -3,8 +3,10 @@ package com.example.circculate.Fragment;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
@@ -29,17 +31,24 @@ import android.support.v7.widget.AppCompatEditText;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ListPopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.circculate.HomePage;
 import com.example.circculate.Model.AudioModel;
 import com.example.circculate.Model.UserModel;
 import com.example.circculate.R;
 import com.example.circculate.service.SpeechService;
+import com.example.circculate.utils.Helper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -59,6 +68,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.TimeZone;
 import java.io.DataInputStream;
@@ -69,7 +79,7 @@ import java.io.DataOutputStream;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RecrodFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class RecrodFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, View.OnTouchListener, AdapterView.OnItemClickListener {
     private boolean recordFlag = false;
     private Handler updateTimeTaskHandler = new Handler();
     private boolean startRecordFlag = false;
@@ -84,6 +94,7 @@ public class RecrodFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
     private String[] permissions = {Manifest.permission.RECORD_AUDIO};
     private String filename;
+    private ArrayList<String> title_list;
 
     private static final int SAMPLE_RATE = 16000;//16k for emulater, change to 44.1k for device use
     private static final int AUDIO_SOURCE = MediaRecorder.AudioSource.MIC;
@@ -98,6 +109,8 @@ public class RecrodFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
     private FirebaseAuth mAuth;
     private String filenameNew;
+    private ListPopupWindow lpw;
+    private TextView recordTitle;
 
     public RecrodFragment() {
         // Required empty public constructor
@@ -362,6 +375,28 @@ public class RecrodFragment extends Fragment implements SwipeRefreshLayout.OnRef
         }
     }
 
+    @Override
+    public boolean onTouch(View v, MotionEvent event){
+        final int DRAWABLE_RIGHT = 2;
+
+        if (event.getAction() == MotionEvent.ACTION_UP) {
+            if (event.getX() >= (v.getWidth() - ((EditText) v)
+                    .getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                lpw.show();
+                return true;
+            }
+        }
+        return false;
+
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long l) {
+        String item = title_list.get(position);
+        recordTitle.setText(item);
+        lpw.dismiss();
+
+    }
     private void showConfirmDialog(){
         final Dialog dialog = new Dialog(getActivity());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -372,10 +407,21 @@ public class RecrodFragment extends Fragment implements SwipeRefreshLayout.OnRef
         params.copyFrom(dialog.getWindow().getAttributes());
         params.width = WindowManager.LayoutParams.WRAP_CONTENT;
         params.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        recordTitle = (EditText)dialog.findViewById(R.id.record_title);
 
         ((TextView)dialog.findViewById(R.id.username)).setText(currentUser.getUsername());
 
-        final AppCompatEditText recordTitle = dialog.findViewById(R.id.record_title);
+        recordTitle.setOnTouchListener((View.OnTouchListener)this);
+        title_list = Helper.getAllTitles();
+        Log.d(TAG, "showConfirmDialog: " + title_list.size());
+
+//        list = new String[] { "item1", "item2", "item3", "item4" };
+        lpw = new ListPopupWindow(getActivity());
+        lpw.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, title_list));
+        lpw.setAnchorView(recordTitle);
+        lpw.setModal(true);
+        lpw.setOnItemClickListener(this);
+
         AppCompatEditText rerordDesc = dialog.findViewById(R.id.record_desc);
 
         ((AppCompatButton)dialog.findViewById(R.id.bt_cancel)).setOnClickListener(new View.OnClickListener() {
@@ -406,6 +452,7 @@ public class RecrodFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
         dialog.show();
     }
+
 
     private void uploadFileToStorage(final String recordTitle, final Dialog dialog){
         FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -583,6 +630,7 @@ public class RecrodFragment extends Fragment implements SwipeRefreshLayout.OnRef
             output.write(value.charAt(i));
         }
     }
+
 
     public static class WaveHeader{
         private int byteNumber;

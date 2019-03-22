@@ -27,6 +27,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.example.circculate.R;
@@ -128,7 +129,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.audioVie
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final LibraryAdapter.audioViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final LibraryAdapter.audioViewHolder holder, final int position) {
         final AudioModel newRecording = recordList.get(position);
         holder.seek_song_progressbar.setProgress(0);
         holder.seek_song_progressbar.setMax(MusicUtils.MAX_PROGRESS);
@@ -189,7 +190,21 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.audioVie
         holder.toggle_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                boolean isExpanded = toggleLayoutExpand(!newRecording.expanded, view, holder.lyt_expand_text);
+//                List<Integer> positionList = new ArrayList<>();
+//                recordList.get(position).setShouldBeExpanded(true);
+//                for(int i=0;i<recordList.size();i++){
+//                    if(recordList.get(i).getTimestamp()!=recordList.get(position).getTimestamp()){
+//                        if(recordList.get(i).isShouldBeExpanded()==true){
+//                            recordList.get(i).setShouldBeExpanded(false);
+//                            positionList.add(i);
+//                            notifyDataSetChanged();
+//                        }
+//
+//                    }
+//                }
+//
+
+                boolean isExpanded = toggleLayoutExpand(!newRecording.expanded, view, holder.lyt_expand_text, position);
                 newRecording.expanded = isExpanded;
                 if(newRecording.expanded == true){
                     if(holder.isFirstTouch) {
@@ -230,6 +245,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.audioVie
             }
         });
 
+
         //void recycling view
         if(newRecording.expanded){
             Log.d("expanded_test","uri");
@@ -256,37 +272,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.audioVie
                     holder.bt_play.setImageResource(R.drawable.ic_pause);
                     holder.isFirstTouch = false;
                     holder.mHandler.post(holder.mUpdateTimeTask);
-//                    audioRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-//                        @Override
-//                        public void onSuccess(Uri uri) {
-//                            Log.d("uri", uri.toString());
-//                            if(uri!=null){
-//                                prepareAudio(uri.toString());
-//                                holder.isFirstTouch = false;
-//                            }
-//
-//
-//                        }
-//
-//                        private void prepareAudio(String uri) {
-//                            try{
-//                                player.reset();
-//                                player.setDataSource(uri);
-//                                player.prepare();
-//                                player.start();
-//                                Log.d("test", "1");
-//                                holder.mHandler.post(holder.mUpdateTimeTask);
-//                                holder.bt_play.setImageResource(R.drawable.ic_pause);
-//                            }catch (IOException e){
-//                                Snackbar.make(holder.parent_view, "Cannot load audio file", Snackbar.LENGTH_SHORT).show();
-//                            }
-//                        }
-//                    }).addOnFailureListener(new OnFailureListener() {
-//                        @Override
-//                        public void onFailure(@NonNull Exception e) {
-//                            Log.d("download","failed");
-//                        }
-//                    });
+
                 }else {
                     if(player.isPlaying()){
                         player.pause();
@@ -431,9 +417,11 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.audioVie
     }
 
 
-    private boolean toggleLayoutExpand(boolean b, View view, View lyt_expand_text) {
+    private boolean toggleLayoutExpand(boolean b, View view, View lyt_expand_text, int position) {
         Tools.toggleArrow(b, view);
+
         if(b){
+
             ViewAnimation.expand(lyt_expand_text);
         }else{
             ViewAnimation.collapse(lyt_expand_text);

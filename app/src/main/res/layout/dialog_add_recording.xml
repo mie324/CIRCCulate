@@ -68,11 +68,14 @@
                 android:paddingEnd="@dimen/spacing_large"
                 android:textColorHint="@color/grey_40">
 
-                <android.support.v7.widget.AppCompatEditText
+                <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:drawableRight="@drawable/ic_unfold"
+                    android:hint="Recording Title"
                     android:id="@+id/record_title"
-                    android:hint="Recording Title" />
+                    />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -95,11 +98,11 @@
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
                 android:gravity="top"
-                android:id="@+id/record_desc"
                 android:hint="Brief Description"
                 android:inputType="textMultiLine|textCapSentences"
                 android:maxLines="12"
-                android:minLines="4" />
+                android:minLines="4"
+                android:id="@+id/record_desc"/>
 
         </android.support.design.widget.TextInputLayout>
 
@@ -133,5 +136,6 @@
             android:text="SUBMIT" />
 
     </LinearLayout>
+
 
 </LinearLayout>
