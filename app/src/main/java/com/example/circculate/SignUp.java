@@ -284,6 +284,8 @@ public class SignUp extends AppCompatActivity {
                 InputStream imgStream = getContentResolver().openInputStream(imgUri);
                 selectedImg = BitmapFactory.decodeStream(imgStream);
                 pickIconButton.setImageBitmap(selectedImg);
+//                Log.d(TAG, "onActivityResult: " + selectedImg.getHeight());
+//                Log.d(TAG, "onActivityResult: " + selectedImg.getWidth());
             }catch (FileNotFoundException e){
                 Log.d(TAG, "onActivityResult: " + e.toString());
             }
@@ -291,6 +293,7 @@ public class SignUp extends AppCompatActivity {
             selectedImg = (Bitmap)data.getExtras().get("data");
             pickIconButton.setImageBitmap(selectedImg);
         }
+
     }
 
     private void showBottomSheetDialog(){

@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/spacing_middle"
                 android:layout_marginRight="@dimen/spacing_middle"
-                android:text="Choose From Album"
+                android:text="Choose From Gallery"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/grey_90" />
 

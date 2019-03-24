@@ -4,7 +4,6 @@ package com.example.circculate.Fragment;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -18,11 +17,9 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.example.circculate.Adapter.CalendarEventAdapter;
 import com.example.circculate.Adapter.LibraryAdapter;
 import com.example.circculate.HomePage;
 import com.example.circculate.Model.AudioModel;
-import com.example.circculate.Model.RecordingModel;
 import com.example.circculate.R;
 
 import java.io.IOException;

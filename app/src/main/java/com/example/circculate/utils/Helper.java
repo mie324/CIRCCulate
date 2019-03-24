@@ -232,4 +232,39 @@ public class Helper {
 
     }
 
+
+    public static String getCurrentTimestamp(){
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("America/Toronto"));
+        SimpleDateFormat currentTime = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+        currentTime.setTimeZone(cal.getTimeZone());
+        String timestamp = currentTime.format(cal.getTime());
+        return timestamp;
+    }
+
+    public static String getRelativePostTime(String postTime){
+        String currentTime = getCurrentTimestamp();
+        currentTime = currentTime.substring(0, 12);
+        String postTimeShort = postTime.substring(0, 12);
+        long currentTimeLong = Long.parseLong(currentTime);
+        long postTimeLong = Long.parseLong(postTimeShort);
+
+        if(currentTimeLong - postTimeLong >= 10000){
+            int month = Integer.parseInt(postTimeShort.substring(4, 6));
+            int dayOfMonth = Integer.parseInt(postTimeShort.substring(6, 8));
+            int year = Integer.parseInt(postTimeShort.substring(0, 4));
+
+            return transformDate(year, month, dayOfMonth);
+        }else if(currentTimeLong - postTimeLong >= 100){
+                int hours = (int)(currentTimeLong - postTimeLong)/100;
+                String result = hours == 1 ? "an hour ago" : hours + "h ago";
+                return result;
+        }else {
+            return "Posted just now";
+        }
+
+
+
+
+    }
+
 }

@@ -97,7 +97,7 @@ public class RecrodFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
     private String[] permissions = {Manifest.permission.RECORD_AUDIO};
     private String filename;
-    private ArrayList<String> title_list;
+    private ArrayList<String> titleList;
 
     private HomePage hostActivity;
     private static final int SAMPLE_RATE = 16000;//16k for emulater, change to 44.1k for device use
@@ -425,7 +425,7 @@ public class RecrodFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long l) {
-        String item = title_list.get(position);
+        String item = titleList.get(position);
         recordTitle.setText(item);
         lpw.dismiss();
 
@@ -445,12 +445,12 @@ public class RecrodFragment extends Fragment implements SwipeRefreshLayout.OnRef
         ((TextView)dialog.findViewById(R.id.username)).setText(currentUser.getUsername());
 
         recordTitle.setOnTouchListener((View.OnTouchListener)this);
-        title_list = Helper.getAllTitles();
-        Log.d(TAG, "showConfirmDialog: " + title_list.size());
+        titleList = Helper.getAllTitles();
+        Log.d(TAG, "showConfirmDialog: " + titleList.size());
 
 //        list = new String[] { "item1", "item2", "item3", "item4" };
         lpw = new ListPopupWindow(getActivity());
-        lpw.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, title_list));
+        lpw.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, titleList));
         lpw.setAnchorView(recordTitle);
         lpw.setModal(true);
         lpw.setOnItemClickListener(this);

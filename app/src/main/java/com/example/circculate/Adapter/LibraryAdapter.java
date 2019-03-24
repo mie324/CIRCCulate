@@ -1,11 +1,9 @@
 package com.example.circculate.Adapter;
 
 import android.content.Context;
-import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Handler;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -17,17 +15,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.example.circculate.R;
@@ -42,17 +34,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.example.circculate.Model.RecordingModel;
+
 import android.media.MediaPlayer;
 import com.example.circculate.Model.AudioModel;
 import android.util.Log;
 import android.app.Dialog;
 import android.view.Window;
-import java.net.URLConnection;
-import java.net.URL;
-import java.net.HttpURLConnection;
-import android.os.Handler;
-import java.util.concurrent.TimeUnit;
 
 public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.audioViewHolder>{
 

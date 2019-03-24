@@ -313,8 +313,13 @@ public class HomePage extends AppCompatActivity {
     public void switchToNearby(){
 
         getSupportActionBar().setTitle("Timeline");
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("LoggedUser",user);
+        NearbyFragment fragment = new NearbyFragment();
+        fragment.setArguments(bundle);
+
         FragmentManager manager = getSupportFragmentManager();
-        manager.beginTransaction().replace(R.id.fragment_container, new NearbyFragment()).commit();
+        manager.beginTransaction().replace(R.id.fragment_container, fragment).commit();
     }
 
 
