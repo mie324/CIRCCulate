@@ -123,7 +123,9 @@ public class AlleventsAdapter extends RecyclerView.Adapter<AlleventsAdapter.Even
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if(task.isSuccessful()){
-
+                                        Helper.addNotificationToDb(currentUser,
+                                                currentUser.getUsername() + " has cancel the sign up for " + newEvent.getTitle()
+                                        + " at " + newEvent.getLocation());
                                         Toast.makeText(ctx, "You have cancel the sign up.", Toast.LENGTH_SHORT).show();
                                         holder.personName.setText("No one signed up yet.");
                                         holder.calendarBG.setBackgroundColor(ctx.getColor(R.color.colorAccent));
@@ -150,6 +152,8 @@ public class AlleventsAdapter extends RecyclerView.Adapter<AlleventsAdapter.Even
                                     Toast.makeText(ctx, "You have signed up for the event.", Toast.LENGTH_SHORT).show();
                                     holder.personName.setText(currentUser.getUsername());
                                     holder.calendarBG.setBackgroundColor(currentUser.getColorCode());
+                                    Helper.addNotificationToDb(currentUser, currentUser.getUsername()
+                                    + " has signed up for " + newEvent.getTitle() + " at " + newEvent.getLocation());
                                 }
                             }
                         });

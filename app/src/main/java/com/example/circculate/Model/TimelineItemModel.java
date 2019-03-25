@@ -11,29 +11,32 @@ public class TimelineItemModel implements Serializable {
     private String imgRef;
     private ArrayList<String> listOfComment;
     private String timestamp;
+    private boolean isNotification;
 
     public TimelineItemModel(){}
 
     //with img ref
     public TimelineItemModel(String userIconRef, String userName, String content,
-                             String imgRef, String timestamp){
+                             String imgRef, String timestamp, Boolean isNotification){
         this.userIconRef = userIconRef;
         this.userName = userName;
         this.content = content;
         this.imgRef = imgRef;
         this.timestamp = timestamp;
         this.listOfComment = new ArrayList<>();
+        this.isNotification = isNotification;
     }
 
     //with no img ref
     public TimelineItemModel(String userIconRef, String userName, String content,
-                             String timestamp){
+                             String timestamp, Boolean isNotification){
         this.userIconRef = userIconRef;
         this.userName = userName;
         this.content = content;
         this.timestamp = timestamp;
         this.listOfComment = new ArrayList<>();
         this.imgRef = null;
+        this.isNotification = isNotification;
     }
 
 
@@ -100,4 +103,12 @@ public class TimelineItemModel implements Serializable {
 
         }
     };
+
+    public boolean isNotification() {
+        return isNotification;
+    }
+
+    public void setNotification(boolean notification) {
+        isNotification = notification;
+    }
 }

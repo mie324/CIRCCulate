@@ -163,7 +163,7 @@ public class HomePage extends AppCompatActivity {
             case R.id.action_notify:{
                 Log.d("select", "to notification activity");
                 Intent intent = new Intent(this, Notification.class);
-                intent.putExtra("notifications", notifications);
+//                intent.putExtra("notifications", notifications);
                 startActivity(intent);
             }
             default:

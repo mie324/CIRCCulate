@@ -7,8 +7,11 @@ package com.example.circculate.utils;
 import android.support.annotation.NonNull;
 
 import com.example.circculate.Model.EventModel;
+import com.example.circculate.Model.TimelineItemModel;
+import com.example.circculate.Model.UserModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -24,6 +27,7 @@ import android.util.Log;
 
 public class Helper {
     private static final String TAG = "Helper";
+    private boolean addNotificationFlag = false;
     public static String getTimedate(String timestamp){
         int len = timestamp.length();
         String timedate = timestamp.substring(0,8);
@@ -262,9 +266,36 @@ public class Helper {
             return "Posted just now";
         }
 
+    }
 
+    public static void addNotificationToDb(UserModel user, String content){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        TimelineItemModel newNotification = new TimelineItemModel(user.getIconRef(),
+                user.getUsername(), content, getCurrentTimestamp(), true);
 
-
+//        db.collection("timelines").add(newNotification).addOnCompleteListener(
+//                new OnCompleteListener<DocumentReference>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<DocumentReference> task) {
+//                        if(task.isSuccessful()){
+//                            return;
+//                        }else {
+//                            Log.d(TAG, "onComplete: cannot add notification to db.");
+//                        }
+//                    }
+//                }
+//        );
+        db.collection("timelines").document(newNotification.getTimestamp())
+                .set(newNotification).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    return;
+                }else {
+                    Log.d(TAG, "onComplete: cannot add notification to db.");
+                }
+            }
+        });
     }
 
 }

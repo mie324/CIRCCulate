@@ -148,7 +148,8 @@ public class CalendarEventAdapter extends RecyclerView.Adapter<RecyclerView.View
 //                                eventViewHolder.detailButton.setTextColor(context.getColor(R.color.colorAccent));
 
                                 //end of change style
-
+                                Helper.addNotificationToDb(user, user.getUsername()
+                                        + " has signed up for " + event.getTitle() + " at " + event.getLocation());
                                 Toast.makeText(context, "You have signed for the event.",
                                         Toast.LENGTH_SHORT).show();
                             }else {
