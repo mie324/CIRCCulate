@@ -9,9 +9,17 @@ public class TimelineItemModel implements Serializable {
     private String userName;
     private String content;
     private String imgRef;
-    private ArrayList<String> listOfComment;
+    private ArrayList<CommentModel> listOfComment;
     private String timestamp;
     private boolean isNotification;
+
+    public ArrayList<CommentModel> getListOfComment() {
+        return listOfComment;
+    }
+
+    public void setListOfComment(ArrayList<CommentModel> listOfComment) {
+        this.listOfComment = listOfComment;
+    }
 
     public TimelineItemModel(){}
 
@@ -72,13 +80,7 @@ public class TimelineItemModel implements Serializable {
         this.imgRef = imgRef;
     }
 
-    public ArrayList<String> getListOfComment() {
-        return listOfComment;
-    }
 
-    public void setListOfComment(ArrayList<String> listOfComment) {
-        this.listOfComment = listOfComment;
-    }
 
     public String getTimestamp() {
         return timestamp;
@@ -112,3 +114,4 @@ public class TimelineItemModel implements Serializable {
         isNotification = notification;
     }
 }
+

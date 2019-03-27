@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal">
+
+
+    <com.mikhaellopez.circularimageview.CircularImageView
+        android:layout_margin="15dp"
+        android:id="@+id/user_icon"
+        android:layout_width="@dimen/spacing_xxlarge"
+        android:layout_height="@dimen/spacing_xxlarge"
+        android:foreground="@color/overlay_light_20"
+        android:src="@drawable/photo_male_7"
+        app:civ_border="false"
+        app:civ_shadow="true"
+        app:civ_shadow_radius="0" />
+
+    <LinearLayout
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/my_border"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="Han"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:textAppearance="@style/TextAppearance.Subhead.Black" />
+        <TextView
+            android:layout_marginLeft="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Hey han, I hope you will have a good day. Wish you the best luck. Maybe I can go with you next time."
+            />
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,234 @@
+package com.example.circculate;
+
+import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.os.Build;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.BottomSheetDialog;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
+import android.content.Intent;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.example.circculate.Adapter.TimelineAdapter;
+import com.example.circculate.Model.CommentModel;
+import com.example.circculate.Model.TimelineItemModel;
+import com.example.circculate.Model.UserModel;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.auth.FirebaseUser;
+import com.mikhaellopez.circularimageview.CircularImageView;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+
+public class commentPage extends AppCompatActivity {
+    TimelineItemModel timeline;
+    FirebaseStorage storage;
+    static final String TAG = "commentPage";
+    private View bottom_sheet;
+    private BottomSheetBehavior mBehavior;
+    private BottomSheetDialog mBottomSheetDialog;
+    private EditText commentCon;
+    private AppCompatButton post_btn;
+    private FirebaseAuth mAuth;
+    private FirebaseUser currentUser;
+    private FirebaseFirestore db;
+    private UserModel user_c;
+    private String timeStamp;
+    ArrayList<CommentModel> commentList;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        commentList = new ArrayList<>();
+        mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();
+        storage = FirebaseStorage.getInstance();
+        db = FirebaseFirestore.getInstance();
+        setContentView(R.layout.activity_comment_page);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), HomePage.class);
+                Bundle bundle = new Bundle();
+                startActivity(intent);
+            }
+        });
+        Intent intent = getIntent();
+        timeline = (TimelineItemModel) intent.getSerializableExtra("TimeLine");
+        if(timeline == null){
+            Log.d(TAG, "nothing");
+        }
+        bottom_sheet = findViewById(R.id.bottom_sheet);
+        mBehavior = BottomSheetBehavior.from(bottom_sheet);
+
+//        FloatingActionButton fab = findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
+        InitPage();
+        commentCon = findViewById(R.id.comment_content);
+        post_btn = (AppCompatButton)findViewById(R.id.post_btn);
+
+        commentCon.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                Log.d(TAG, "changed");
+                post_btn.setEnabled(!charSequence.toString().trim().isEmpty());
+
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        post_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                post_btn.setEnabled(false);
+                final DocumentReference docRef = db.collection("users").document(currentUser.getUid());
+                docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if(task.isSuccessful()){
+                            DocumentSnapshot doc = task.getResult();
+                            if(doc.exists()){
+                                Log.d("USER_ACCESS", "success" + doc.getData());
+                                user_c = doc.toObject(UserModel.class);
+                                updateComment(user_c);
+                            }
+
+                        }
+                    }
+                });
+
+            }
+        });
+
+
+
+    }
+
+    private void updateComment(UserModel user_c) {
+        timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+        CommentModel newComment = new CommentModel(user_c, commentCon.getText().toString(), timeStamp);
+        commentList.add(commentList.size(), newComment);
+        db.collection("timelines").document(timeline.getTimestamp()).update("listOfComment", FieldValue.arrayUnion(newComment));
+
+
+
+    }
+
+    private void showBottomSheetDialog() {
+        if (mBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+            mBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        }
+        final View view = getLayoutInflater().inflate(R.layout.sheet_floating, null);
+        mBottomSheetDialog = new BottomSheetDialog(this);
+        mBottomSheetDialog.setContentView(view);
+        mBottomSheetDialog.setCancelable(false);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mBottomSheetDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
+        mBottomSheetDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        mBottomSheetDialog.show();
+        mBottomSheetDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                mBottomSheetDialog = null;
+            }
+        });
+        mBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        EditText commentContent = mBottomSheetDialog.findViewById(R.id.comment_content);
+//        commentContent.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Log.d(TAG, "edit");
+//
+//
+//            }
+//        });
+
+    }
+
+    private void InitPage() {
+        TextView usernameText, contentText, commentNumText, postTimeText;
+        final ImageView commentImage, timelineImg;
+        CircularImageView userIconImage;
+        usernameText = findViewById(R.id.username);
+        contentText = findViewById(R.id.timeline_content);
+        commentNumText = findViewById(R.id.comment_num);
+        postTimeText = findViewById(R.id.post_time);
+        commentImage = findViewById(R.id.comment_bt);
+        userIconImage = findViewById(R.id.user_icon);
+        timelineImg = findViewById(R.id.time_img);
+        if(timeline.getImgRef() == null){
+            ViewGroup.LayoutParams params = timelineImg.getLayoutParams();
+            params.height = 0;
+            timelineImg.setLayoutParams(params);
+        }else {
+            try {
+                StorageReference imgRef = storage.getReference().child(timeline.getImgRef());
+                final File localImg = File.createTempFile(timeline.getTimestamp(), "jpg");
+                imgRef.getFile(localImg).addOnCompleteListener(new OnCompleteListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<FileDownloadTask.TaskSnapshot> task) {
+                        if(task.isSuccessful()){
+                            Bitmap image = BitmapFactory.decodeFile(localImg.getAbsolutePath());
+                            timelineImg.setImageBitmap(image);
+                        }
+                    }
+                });
+            }catch (IOException e){
+                Log.d(TAG, "onBindViewHolder: " + e.toString());
+            }
+
+        }
+
+    }
+
+}

@@ -27,7 +27,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
+import android.content.Intent;
+import com.example.circculate.commentPage;
+import android.os.Bundle;
 public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.TimelineViewHolder> {
     private Context ctx;
     private List<TimelineItemModel> timelineList;
@@ -67,7 +69,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
 
     @Override
     public void onBindViewHolder(@NonNull final TimelineAdapter.TimelineViewHolder holder, int position) {
-        TimelineItemModel timeline = timelineList.get(position);
+        final TimelineItemModel timeline = timelineList.get(position);
         if(timeline.getImgRef() == null){
             ViewGroup.LayoutParams params = holder.timelineImg.getLayoutParams();
             params.height = 0;
@@ -107,7 +109,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
 
         holder.usernameText.setText(timeline.getUserName());
         holder.contentText.setText(timeline.getContent());
-        String commentString = timeline.getListOfComment().size() == 0 ? "No comments" :
+        final String commentString = timeline.getListOfComment().size() == 0 ? "No comments" :
                 timeline.getListOfComment().size() + " comment(s)";
         holder.commentNumText.setText(commentString);
         String relativePostTime = Helper.getRelativePostTime(timeline.getTimestamp());
@@ -117,6 +119,11 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
             @Override
             public void onClick(View view) {
                 Toast.makeText(ctx, "Now will go to all comments", Toast.LENGTH_SHORT).show();
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("TimeLine", timeline);
+                Intent intent = new Intent(ctx, commentPage.class);
+                intent.putExtras(bundle);
+                ctx.startActivity(intent);
             }
         });
 
@@ -124,6 +131,11 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
             @Override
             public void onClick(View view) {
                 Toast.makeText(ctx, "Now will go to all comments", Toast.LENGTH_SHORT).show();
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("TimeLine", timeline);
+                Intent intent = new Intent(ctx, commentPage.class);
+                intent.putExtras(bundle);
+                ctx.startActivity(intent);
             }
         });
     }
