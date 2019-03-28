@@ -29,15 +29,19 @@
         >
 
         <TextView
+            android:id="@+id/username_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
             android:text="Han"
             android:textStyle="bold"
             android:textSize="20dp"
             android:textAppearance="@style/TextAppearance.Subhead.Black" />
         <TextView
+            android:id="@+id/content_text"
             android:layout_marginLeft="10dp"
+            android:layout_marginBottom="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Hey han, I hope you will have a good day. Wish you the best luck. Maybe I can go with you next time."

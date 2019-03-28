@@ -251,19 +251,27 @@ public class Helper {
         String postTimeShort = postTime.substring(0, 12);
         long currentTimeLong = Long.parseLong(currentTime);
         long postTimeLong = Long.parseLong(postTimeShort);
+        int current_month = Integer.parseInt(currentTime.substring(4, 6));
+        int current_day = Integer.parseInt(currentTime.substring(6, 8));
 
         if(currentTimeLong - postTimeLong >= 10000){
             int month = Integer.parseInt(postTimeShort.substring(4, 6));
             int dayOfMonth = Integer.parseInt(postTimeShort.substring(6, 8));
             int year = Integer.parseInt(postTimeShort.substring(0, 4));
+            if(month == current_month){
+                String result = Integer.toString(current_month-dayOfMonth)+"d";
+                return result;
+            }else{
+                int days = (current_month - month -1) * 30 + 31 - dayOfMonth + current_day;
+                return (Integer.toString(days)+"d");
 
-            return transformDate(year, month, dayOfMonth);
+            }
         }else if(currentTimeLong - postTimeLong >= 100){
                 int hours = (int)(currentTimeLong - postTimeLong)/100;
-                String result = hours == 1 ? "an hour ago" : hours + "h ago";
+                String result = hours == 1 ? "1h" : hours + "h";
                 return result;
         }else {
-            return "Posted just now";
+            return "now";
         }
 
     }

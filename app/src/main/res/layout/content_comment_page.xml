@@ -17,15 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/spacing_middle"
-                android:layout_marginTop="@dimen/spacing_middle"
-                android:layout_marginRight="@dimen/spacing_middle"
-                android:visibility="visible"
-                app:cardCornerRadius="0dp"
-                app:cardElevation="4dp">
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -77,10 +69,11 @@
                                 android:orientation="horizontal">
 
                                 <TextView
+                                    android:id="@+id/post_time"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:gravity="center_vertical"
-                                    android:text="Help take care of the family"
+                                    android:text="time"
                                     android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                                     android:textColor="@color/grey_40" />
 
@@ -152,7 +145,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="end|right"
-                            android:text="12h ago"
+                            android:text="Sort by Current"
                             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                             android:textColor="@color/grey_40" />
 
@@ -161,7 +154,6 @@
                 </LinearLayout>
 
 
-            </android.support.v7.widget.CardView>
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rv_comment"
                 android:layout_width="match_parent"
@@ -176,11 +168,13 @@
     </android.support.v4.widget.NestedScrollView>
 
     <FrameLayout
+        android:background="@color/mdtp_white"
         android:id="@+id/bottom_sheet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        app:layout_behavior="@string/bottom_sheet_behavior">
+        app:layout_behavior="@string/bottom_sheet_behavior"
+        >
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

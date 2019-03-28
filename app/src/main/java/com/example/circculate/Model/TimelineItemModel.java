@@ -9,15 +9,15 @@ public class TimelineItemModel implements Serializable {
     private String userName;
     private String content;
     private String imgRef;
-    private ArrayList<CommentModel> listOfComment;
+    private ArrayList<String> listOfComment;
     private String timestamp;
     private boolean isNotification;
 
-    public ArrayList<CommentModel> getListOfComment() {
+    public ArrayList<String> getListOfComment() {
         return listOfComment;
     }
 
-    public void setListOfComment(ArrayList<CommentModel> listOfComment) {
+    public void setListOfComment(ArrayList<String> listOfComment) {
         this.listOfComment = listOfComment;
     }
 

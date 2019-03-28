@@ -13,6 +13,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -26,10 +28,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.circculate.Adapter.CommentAdapter;
 import com.example.circculate.Adapter.TimelineAdapter;
 import com.example.circculate.Model.CommentModel;
 import com.example.circculate.Model.TimelineItemModel;
 import com.example.circculate.Model.UserModel;
+import com.example.circculate.utils.Helper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,6 +41,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -47,7 +52,9 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 public class commentPage extends AppCompatActivity {
     TimelineItemModel timeline;
@@ -63,16 +70,25 @@ public class commentPage extends AppCompatActivity {
     private FirebaseFirestore db;
     private UserModel user_c;
     private String timeStamp;
+    private RecyclerView rv_comment;
+    private CommentAdapter commentAdapter;
+    private CommentModel thisComment;
+    private TextView comment_num;
+    private TextView post_time;
     ArrayList<CommentModel> commentList;
+//    CommentModel thisComment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_comment_page);
+        rv_comment = (RecyclerView) findViewById(R.id.rv_comment);
+        post_time = findViewById(R.id.post_time);
+        comment_num = findViewById(R.id.comment_num);
         commentList = new ArrayList<>();
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
         storage = FirebaseStorage.getInstance();
         db = FirebaseFirestore.getInstance();
-        setContentView(R.layout.activity_comment_page);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
@@ -103,6 +119,7 @@ public class commentPage extends AppCompatActivity {
 //            }
 //        });
         InitPage();
+        getPreviousComments();
         commentCon = findViewById(R.id.comment_content);
         post_btn = (AppCompatButton)findViewById(R.id.post_btn);
 
@@ -153,11 +170,106 @@ public class commentPage extends AppCompatActivity {
 
     }
 
+    private void getPreviousComments() {
+        ArrayList<String> com_time_list = timeline.getListOfComment();
+        if(com_time_list.size() == 0)
+            return;
+        db.collection("comments").whereEqualTo("timeline_ref", timeline.getTimestamp()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.getResult()!=null){
+                    List<DocumentSnapshot> docs = task.getResult().getDocuments();
+                    for(DocumentSnapshot doc:docs){
+                        thisComment = doc.toObject(CommentModel.class);
+                        commentList.add(thisComment);
+                    }
+                    comment_num.setText(Integer.toString(commentList.size())+" comments");
+                    Log.d("display", Integer.toString(commentList.size()));
+                    Collections.sort(commentList, CommentModel.commentComparator);
+                    displayComments(commentList);
+
+                }else{
+
+                }
+
+            }
+        });
+        Log.d("display", "out " + Integer.toString(commentList.size()));
+
+
+//        db.collection("comments").document(timeline.getTimestamp()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                if(task.isSuccessful()){
+//                    if(task.getResult()!=null){
+//                        List<DocumentSnapshot> docs = task.getResult().getDocuments();
+//                        for(DocumentSnapshot doc:docs){
+//
+//                        }
+//
+//                    }else{
+//
+//                    }
+//
+//                }else{
+//
+//                }
+//
+//            }
+//        });
+//        for(int i = 0;i<com_time_list.size();i++){
+//            db.collection("comments").document(com_time_list.get(i)).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                @Override
+//                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                    if(task.isSuccessful()){
+//                        if(task.getResult()!=null){
+//                            Log.d("task","not null");
+//                            CommentModel thisComment = task.getResult().toObject(CommentModel.class);
+//                            commentList.add(thisComment);
+//                        }
+//                    }
+//
+//                }
+//            });
+////            commentList.add(thisComment);
+//        }
+        //display
+//        Log.d("display", Integer.toString(commentList.size()));
+//        Collections.sort(commentList, CommentModel.commentComparator);
+//        if(commentList != null){
+//            Log.d("commentList", "not null" + commentList.size());
+//            rv_comment.setLayoutManager(new LinearLayoutManager(this));
+//            commentAdapter = new CommentAdapter(this, commentList);
+//            rv_comment.setAdapter(commentAdapter);
+//
+//        }
+
+    }
+
+    private void displayComments(ArrayList<CommentModel> commentList) {
+        rv_comment.setLayoutManager(new LinearLayoutManager(this));
+        commentAdapter = new CommentAdapter(this, commentList);
+        rv_comment.setAdapter(commentAdapter);
+    }
+
     private void updateComment(UserModel user_c) {
         timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-        CommentModel newComment = new CommentModel(user_c, commentCon.getText().toString(), timeStamp);
-        commentList.add(commentList.size(), newComment);
-        db.collection("timelines").document(timeline.getTimestamp()).update("listOfComment", FieldValue.arrayUnion(newComment));
+        final CommentModel newComment = new CommentModel(user_c.getIconRef(), user_c.getUsername(), commentCon.getText().toString(), timeStamp, timeline.getTimestamp());
+
+        db.collection("timelines").document(timeline.getTimestamp()).update("listOfComment", FieldValue.arrayUnion(newComment.getTimestamp()));
+        db.collection("comments").document(newComment.getTimestamp()).set(newComment).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    commentList.add(commentList.size(), newComment);
+//                    commentAdapter.notifyDataSetChanged();
+                    Log.d("newcomment", "succeed");
+
+                }
+
+            }
+        });
+        Log.d("size1", Integer.toString(commentList.size()));
 
 
 
@@ -206,6 +318,9 @@ public class commentPage extends AppCompatActivity {
         commentImage = findViewById(R.id.comment_bt);
         userIconImage = findViewById(R.id.user_icon);
         timelineImg = findViewById(R.id.time_img);
+        String relativePostTime = Helper.getRelativePostTime(timeline.getTimestamp());
+        postTimeText.setText(relativePostTime);
+        contentText.setText(timeline.getContent());
         if(timeline.getImgRef() == null){
             ViewGroup.LayoutParams params = timelineImg.getLayoutParams();
             params.height = 0;
