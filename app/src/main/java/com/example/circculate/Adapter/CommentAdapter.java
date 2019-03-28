@@ -14,12 +14,14 @@ import com.example.circculate.Model.CommentModel;
 import com.example.circculate.Model.EventModel;
 import com.example.circculate.Model.UserModel;
 import com.example.circculate.R;
+import com.example.circculate.utils.Helper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.rpc.Help;
 import com.mikhaellopez.circularimageview.CircularImageView;
 
 import java.util.List;
@@ -31,6 +33,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
     private UserModel currentUser;
     private FirebaseAuth mAuth;
     private StorageReference storageReference;
+
 
 
     public CommentAdapter(Context ctx, List<CommentModel> commentList){
@@ -78,6 +81,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         //set up username and content
         holder.username_text.setText(thisComment.getUserName());
         holder.content_text.setText(thisComment.getContent());
+        holder.commentTime.setText(Helper.getRelativePostTime(thisComment.getTimestamp()));
 
     }
 
@@ -87,13 +91,16 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
     }
 
     public class CommentViewHolder extends RecyclerView.ViewHolder {
+        TextView commentTime;
         CircularImageView user_icon;
         TextView username_text, content_text;
+
         public CommentViewHolder(View itemView) {
             super(itemView);
             user_icon = itemView.findViewById(R.id.user_icon);
             username_text = itemView.findViewById(R.id.username_text);
             content_text = itemView.findViewById(R.id.content_text);
+            commentTime = itemView.findViewById(R.id.comment_time);
         }
     }
 }

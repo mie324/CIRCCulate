@@ -107,6 +107,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
             }
         });
 
+
         holder.usernameText.setText(timeline.getUserName());
         holder.contentText.setText(timeline.getContent());
         final String commentString = timeline.getListOfComment().size() == 0 ? "No comments" :

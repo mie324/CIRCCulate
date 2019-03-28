@@ -27,25 +27,45 @@
         android:orientation="vertical"
         android:background="@drawable/my_border"
         >
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/username_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:text="Han"
+                android:textAppearance="@style/TextAppearance.Subhead.Black"
+                android:textColor="@color/quantum_black_text"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+            <View
+                android:layout_width="230dp"
+                android:layout_height="0dp"
+                />
+            <TextView
+                android:layout_marginTop="5dp"
+                android:id="@+id/comment_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="now"/>
+
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/username_text"
+            android:id="@+id/content_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="5dp"
-            android:text="Han"
-            android:textStyle="bold"
-            android:textSize="20dp"
-            android:textAppearance="@style/TextAppearance.Subhead.Black" />
-        <TextView
-            android:id="@+id/content_text"
-            android:layout_marginLeft="10dp"
             android:layout_marginBottom="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:textColor="@color/quantum_black_text"
             android:text="Hey han, I hope you will have a good day. Wish you the best luck. Maybe I can go with you next time."
-            />
+            android:textAppearance="@style/TextAppearance.AppCompat.Small" />
     </LinearLayout>
 
 </LinearLayout>
