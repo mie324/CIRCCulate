@@ -61,6 +61,7 @@ public class HomePage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
+
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 //        Bundle b = getIntent().getExtras();
@@ -69,12 +70,36 @@ public class HomePage extends AppCompatActivity {
 
         initToolbar();
         initComponent();
+
+        if(getIntent().hasExtra("openFragment")){
+            db.collection("users").document(mAuth.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    UserModel user = task.getResult().toObject(UserModel.class);
+
+                    FragmentManager manager = getSupportFragmentManager();
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("LoggedUser",user);
+                    Log.d("user", user.toString());
+                    RecentFragment recentFragment = new RecentFragment();
+                    recentFragment.setArguments(bundle);
+
+                    manager.beginTransaction().replace(R.id.fragment_container, recentFragment).commit();
+
+                }
+            });
+
+
+        }
+
 //        switchToFavorites();
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+
         LocalBroadcastManager.getInstance(this).registerReceiver(msgReceiver,
                 new IntentFilter("Data"));
 
@@ -94,11 +119,7 @@ public class HomePage extends AppCompatActivity {
             if(notifications.size() > 0){
                 notificationNumHolder.setVisibility(View.VISIBLE);
             }
-            //next steps:
-            //1 create a list of notification objects
-            //2 when received a notification, create an obj and push into the list
-            //3 when notification button is clicked, start the notification display activity
-            //4 add all the notification object into the intent and start the intent
+
         }
     };
 
@@ -171,15 +192,7 @@ public class HomePage extends AppCompatActivity {
         }
     }
 
-//    private void gotoYourEvents() {
-//        Intent intent = new Intent(this, YourEvents.class);
-//        startActivity(intent);
-//    }
-//
-//    private void gotoAllEvents() {
-//        Intent intent = new Intent(this, AllEvents.class);
-//        startActivity(intent);
-//    }
+
 
     private void Logout() {
         mAuth.signOut();

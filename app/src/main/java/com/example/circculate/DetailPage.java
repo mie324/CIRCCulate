@@ -1,7 +1,10 @@
 package com.example.circculate;
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -14,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
+import com.example.circculate.Fragment.RecrodFragment;
 import com.example.circculate.Model.EventModel;
 import com.example.circculate.Model.UserModel;
 import com.example.circculate.utils.Helper;
@@ -42,6 +46,19 @@ public class DetailPage extends AppCompatActivity {
         currentUser = (UserModel) getIntent().getSerializableExtra("loggedUser");
         initToolbar();
         initPage();
+        FloatingActionButton fab = findViewById(R.id.micro_button);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                RecrodFragment newFragment = new RecrodFragment();
+//                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+//                transaction.replace(R.id.record_page, newFragment);
+//                transaction.commit();
+                Intent intent = new Intent(getApplicationContext(), HomePage.class);
+                intent.putExtra("openFragment", "record");
+                startActivity(intent);
+            }
+        });
 
     }
 
