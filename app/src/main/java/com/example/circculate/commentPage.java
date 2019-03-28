@@ -1,6 +1,9 @@
 package com.example.circculate;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -11,6 +14,7 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.LinearLayoutManager;
@@ -127,6 +131,18 @@ public class commentPage extends AppCompatActivity {
         rv_comment.setLayoutManager(new LinearLayoutManager(this));
         InitPage();
         getPreviousComments();
+        rv_comment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("rv","clicked");
+            }
+        });
+//        rv_comment.findViewById(R.id.buttonViewOption).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                comment_num.setText(timeline.getListOfComment());
+//            }
+//        });
         commentCon = findViewById(R.id.comment_content);
         post_btn = (AppCompatButton)findViewById(R.id.post_btn);
 
@@ -173,9 +189,25 @@ public class commentPage extends AppCompatActivity {
             }
         });
 
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, new IntentFilter("custom-message"));
+
 
 
     }
+    public BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String size = intent.getStringExtra("size");
+            if(size == "0"){
+                comment_num.setText("0 comments");
+            }else{
+                comment_num.setText(size+"comments");
+
+            }
+
+
+        }
+    };
 
     private void getPreviousComments() {
 //        ArrayList<String> com_time_list = timeline.getListOfComment();
@@ -222,6 +254,7 @@ public class commentPage extends AppCompatActivity {
                 if(task.isSuccessful()){
                     commentList.add(0, newComment);
                     commentAdapter.notifyItemInserted(0);
+                    comment_num.setText(Integer.toString(commentList.size())+" comments");
                     Log.d("newcomment", "succeed");
 
                 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -32,6 +33,7 @@ import com.mikhaellopez.circularimageview.CircularImageView;
 import android.util.Log;
 
 import java.util.List;
+import android.content.Intent;
 
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentViewHolder> {
     private Context ctx;
@@ -108,6 +110,9 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                                                  commentList.remove(position);
                                                  db.collection("timelines").document(thisComment.getTimeline_ref()).update("listOfComment", commentList.size());
                                                  notifyDataSetChanged();
+                                                 Intent intent = new Intent("custom-message");
+                                                 intent.putExtra("size", Integer.toString(commentList.size()));
+                                                 LocalBroadcastManager.getInstance(ctx).sendBroadcast(intent);
 
                                             }
                                         });
