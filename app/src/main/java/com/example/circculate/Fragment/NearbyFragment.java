@@ -302,7 +302,7 @@ public class NearbyFragment extends Fragment {
                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                         if(task.isSuccessful()){
                             TimelineItemModel newTimeline = new TimelineItemModel(user.getIconRef(),
-                                    user.getUsername(), content, imgRef, timestamp, false);
+                                    user.getUsername(), content, imgRef, timestamp, false, user.getColorCode());
                             addTimelineToDb(newTimeline);
                         }
                     }
@@ -314,17 +314,19 @@ public class NearbyFragment extends Fragment {
 
         }else {
             TimelineItemModel newTimeline = new TimelineItemModel(user.getIconRef(), user.getUsername(),
-                    content, timestamp, false);
+                    content, timestamp, false, user.getColorCode());
             addTimelineToDb(newTimeline);
         }
     }
 
-    private void addTimelineToDb(TimelineItemModel newTimeline){
+    private void addTimelineToDb(final TimelineItemModel newTimeline){
         db.collection("timelines").document(newTimeline.getTimestamp()).set(newTimeline)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful()){
+                            timelineList.add(0, newTimeline);
+                            timelineAdapter.notifyItemChanged(0);
                             Log.d(TAG, "onComplete: upload to db");
                             Toast.makeText(getActivity(), "succeed add to db", Toast.LENGTH_SHORT).show();
                         }else {

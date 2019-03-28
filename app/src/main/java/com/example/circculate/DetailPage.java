@@ -50,10 +50,6 @@ public class DetailPage extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                RecrodFragment newFragment = new RecrodFragment();
-//                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-//                transaction.replace(R.id.record_page, newFragment);
-//                transaction.commit();
                 Intent intent = new Intent(getApplicationContext(), HomePage.class);
                 intent.putExtra("openFragment", "record");
                 startActivity(intent);

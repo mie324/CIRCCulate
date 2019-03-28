@@ -71,27 +71,6 @@ public class HomePage extends AppCompatActivity {
         initToolbar();
         initComponent();
 
-        if(getIntent().hasExtra("openFragment")){
-            db.collection("users").document(mAuth.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    UserModel user = task.getResult().toObject(UserModel.class);
-
-                    FragmentManager manager = getSupportFragmentManager();
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("LoggedUser",user);
-                    Log.d("user", user.toString());
-                    RecentFragment recentFragment = new RecentFragment();
-                    recentFragment.setArguments(bundle);
-
-                    manager.beginTransaction().replace(R.id.fragment_container, recentFragment).commit();
-
-                }
-            });
-
-
-        }
-
 //        switchToFavorites();
 
     }
@@ -255,7 +234,28 @@ public class HomePage extends AppCompatActivity {
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if(task.isSuccessful()){
                     reconstructUser(task.getResult());
-                    switchToFavorites();
+                    if(getIntent().hasExtra("openFragment")){
+                        switchToRecent();
+//                        db.collection("users").document(mAuth.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                            @Override
+//                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                                UserModel user = task.getResult().toObject(UserModel.class);
+//
+//                                FragmentManager manager = getSupportFragmentManager();
+//                                Bundle bundle = new Bundle();
+//                                bundle.putSerializable("LoggedUser",user);
+//                                Log.d("user", user.toString());
+//                                RecentFragment recentFragment = new RecentFragment();
+//                                recentFragment.setArguments(bundle);
+//
+//                                manager.beginTransaction().replace(R.id.fragment_container, recentFragment).commit();
+//
+//                            }
+//                        });
+                    }else{
+                        switchToFavorites();
+
+                    }
                     return;
                 }else {
                     Intent intent = new Intent(getApplication(), LogIn.class);
@@ -333,6 +333,7 @@ public class HomePage extends AppCompatActivity {
 
         FragmentManager manager = getSupportFragmentManager();
         manager.beginTransaction().replace(R.id.fragment_container, fragment).commit();
+
     }
 
 

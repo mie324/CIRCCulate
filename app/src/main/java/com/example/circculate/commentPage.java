@@ -79,6 +79,7 @@ public class commentPage extends AppCompatActivity {
     private TextView post_time;
     ItemTouchHelper itemTouchHelper;
     ArrayList<CommentModel> commentList;
+    private int listSize;
 //    CommentModel thisComment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,6 +123,8 @@ public class commentPage extends AppCompatActivity {
 //                        .setAction("Action", null).show();
 //            }
 //        });
+        commentAdapter = new CommentAdapter();
+        rv_comment.setLayoutManager(new LinearLayoutManager(this));
         InitPage();
         getPreviousComments();
         commentCon = findViewById(R.id.comment_content);
@@ -175,13 +178,14 @@ public class commentPage extends AppCompatActivity {
     }
 
     private void getPreviousComments() {
-        ArrayList<String> com_time_list = timeline.getListOfComment();
-        if(com_time_list.size() == 0)
-            return;
+//        ArrayList<String> com_time_list = timeline.getListOfComment();
+//        if(com_time_list.size() == 0)
+//            return;
+        listSize = timeline.getListOfComment();
         db.collection("comments").whereEqualTo("timeline_ref", timeline.getTimestamp()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.getResult()!=null){
+                if(task.isSuccessful()){
                     List<DocumentSnapshot> docs = task.getResult().getDocuments();
                     for(DocumentSnapshot doc:docs){
                         thisComment = doc.toObject(CommentModel.class);
@@ -195,7 +199,6 @@ public class commentPage extends AppCompatActivity {
                 }else{
 
                 }
-
             }
         });
         Log.d("display", "out " + Integer.toString(commentList.size()));
@@ -204,7 +207,6 @@ public class commentPage extends AppCompatActivity {
     }
 
     private void displayComments(ArrayList<CommentModel> commentList) {
-        rv_comment.setLayoutManager(new LinearLayoutManager(this));
         commentAdapter = new CommentAdapter(this, commentList);
         rv_comment.setAdapter(commentAdapter);
     }
@@ -213,13 +215,13 @@ public class commentPage extends AppCompatActivity {
         timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
         final CommentModel newComment = new CommentModel(user_c.getIconRef(), user_c.getUsername(), commentCon.getText().toString(), timeStamp, timeline.getTimestamp());
 
-        db.collection("timelines").document(timeline.getTimestamp()).update("listOfComment", FieldValue.arrayUnion(newComment.getTimestamp()));
+        db.collection("timelines").document(timeline.getTimestamp()).update("listOfComment", listSize+1);
         db.collection("comments").document(newComment.getTimestamp()).set(newComment).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
                     commentList.add(0, newComment);
-                    commentAdapter.notifyDataSetChanged();
+                    commentAdapter.notifyItemInserted(0);
                     Log.d("newcomment", "succeed");
 
                 }

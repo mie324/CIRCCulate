@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
@@ -22,6 +23,7 @@ import com.example.circculate.utils.SwipeItemTouchHelper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -39,7 +41,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
     private FirebaseAuth mAuth;
     private StorageReference storageReference;
 
-
+    public CommentAdapter(){}
 
     public CommentAdapter(Context ctx, List<CommentModel> commentList){
         this.ctx = ctx;
@@ -104,10 +106,13 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                  commentList.remove(position);
+                                                 db.collection("timelines").document(thisComment.getTimeline_ref()).update("listOfComment", commentList.size());
                                                  notifyDataSetChanged();
 
                                             }
                                         });
+
+//                                db.collection("timelines").whereArrayContains("listOfComment", thisComment.getTimestamp()).
 
                         }
                         return false;

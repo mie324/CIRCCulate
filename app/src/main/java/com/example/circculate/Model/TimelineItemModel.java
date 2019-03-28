@@ -9,15 +9,24 @@ public class TimelineItemModel implements Serializable {
     private String userName;
     private String content;
     private String imgRef;
-    private ArrayList<String> listOfComment;
+    private int listOfComment;
     private String timestamp;
     private boolean isNotification;
+    private int colorCode;
 
-    public ArrayList<String> getListOfComment() {
+    public int getColorCode() {
+        return colorCode;
+    }
+
+    public void setColorCode(int colorCode) {
+        this.colorCode = colorCode;
+    }
+
+    public int getListOfComment() {
         return listOfComment;
     }
 
-    public void setListOfComment(ArrayList<String> listOfComment) {
+    public void setListOfComment(int listOfComment) {
         this.listOfComment = listOfComment;
     }
 
@@ -25,26 +34,28 @@ public class TimelineItemModel implements Serializable {
 
     //with img ref
     public TimelineItemModel(String userIconRef, String userName, String content,
-                             String imgRef, String timestamp, Boolean isNotification){
+                             String imgRef, String timestamp, Boolean isNotification, int colorCode){
         this.userIconRef = userIconRef;
         this.userName = userName;
         this.content = content;
         this.imgRef = imgRef;
         this.timestamp = timestamp;
-        this.listOfComment = new ArrayList<>();
+        this.listOfComment = 0;
         this.isNotification = isNotification;
+        this.colorCode = colorCode;
     }
 
     //with no img ref
     public TimelineItemModel(String userIconRef, String userName, String content,
-                             String timestamp, Boolean isNotification){
+                             String timestamp, Boolean isNotification, int colorCode){
         this.userIconRef = userIconRef;
         this.userName = userName;
         this.content = content;
         this.timestamp = timestamp;
-        this.listOfComment = new ArrayList<>();
+        this.listOfComment = 0;
         this.imgRef = null;
         this.isNotification = isNotification;
+        this.colorCode = colorCode;
     }
 
 

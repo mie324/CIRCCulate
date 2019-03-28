@@ -279,7 +279,7 @@ public class Helper {
     public static void addNotificationToDb(UserModel user, String content){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         TimelineItemModel newNotification = new TimelineItemModel(user.getIconRef(),
-                user.getUsername(), content, getCurrentTimestamp(), true);
+                user.getUsername(), content, getCurrentTimestamp(), true, user.getColorCode());
 
 //        db.collection("timelines").add(newNotification).addOnCompleteListener(
 //                new OnCompleteListener<DocumentReference>() {

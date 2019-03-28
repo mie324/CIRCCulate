@@ -45,7 +45,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
 
     public class TimelineViewHolder extends RecyclerView.ViewHolder{
         public TextView usernameText, contentText, commentNumText, postTimeText;
-        public ImageView commentImage, timelineImg;
+        public ImageView commentImage, timelineImg, colorful_dots;
         public CircularImageView userIconImage;
         public TimelineViewHolder(View itemView){
             super(itemView);
@@ -56,6 +56,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
             commentImage = itemView.findViewById(R.id.comment_bt);
             userIconImage = itemView.findViewById(R.id.user_icon);
             timelineImg = itemView.findViewById(R.id.time_img);
+            colorful_dots = itemView.findViewById(R.id.colorful_dots);
         }
     }
 
@@ -93,6 +94,8 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
 
         }
 
+        holder.colorful_dots.setColorFilter(timeline.getColorCode());
+
         StorageReference iconRef = storage.getReference().child(timeline.getUserIconRef());
         iconRef.getBytes(ONE_MB).addOnCompleteListener(new OnCompleteListener<byte[]>() {
             @Override
@@ -110,8 +113,8 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
 
         holder.usernameText.setText(timeline.getUserName());
         holder.contentText.setText(timeline.getContent());
-        final String commentString = timeline.getListOfComment().size() == 0 ? "No comments" :
-                timeline.getListOfComment().size() + " comment(s)";
+        final String commentString = timeline.getListOfComment() == 0 ? "No comments" :
+                timeline.getListOfComment() + " comment(s)";
         holder.commentNumText.setText(commentString);
         String relativePostTime = Helper.getRelativePostTime(timeline.getTimestamp());
         holder.postTimeText.setText(relativePostTime);
