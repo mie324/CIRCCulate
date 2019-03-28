@@ -44,7 +44,7 @@
                 android:textSize="14sp"
                 android:textStyle="bold" />
             <View
-                android:layout_width="230dp"
+                android:layout_width="210dp"
                 android:layout_height="0dp"
                 />
             <TextView
@@ -53,6 +53,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="now"/>
+            <ImageButton
+                android:id="@+id/buttonViewOption"
+                android:backgroundTint="@color/transparent"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="5dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/ic_more_horiz_black_24dp"/>
+
 
         </LinearLayout>
 

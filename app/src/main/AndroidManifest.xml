@@ -21,10 +21,21 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".LogIn"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".commentPage"
             android:label="@string/title_activity_comment_page"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustResize"></activity>
+            android:windowSoftInputMode="adjustResize">
+        </activity>
         <activity android:name=".Notification" />
 
         <service
@@ -49,16 +60,6 @@
 
         <activity android:name=".AddEvent" />
         <activity android:name=".HomePage" />
-        <activity
-            android:name=".LogIn"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
         <activity
             android:name=".SignUp"
             android:label="@string/title_activity_sign_up"

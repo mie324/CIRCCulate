@@ -16,6 +16,7 @@ import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -34,6 +35,7 @@ import com.example.circculate.Model.CommentModel;
 import com.example.circculate.Model.TimelineItemModel;
 import com.example.circculate.Model.UserModel;
 import com.example.circculate.utils.Helper;
+import com.example.circculate.utils.SwipeItemTouchHelper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -75,12 +77,14 @@ public class commentPage extends AppCompatActivity {
     private CommentModel thisComment;
     private TextView comment_num;
     private TextView post_time;
+    ItemTouchHelper itemTouchHelper;
     ArrayList<CommentModel> commentList;
 //    CommentModel thisComment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment_page);
+
         rv_comment = (RecyclerView) findViewById(R.id.rv_comment);
         post_time = findViewById(R.id.post_time);
         comment_num = findViewById(R.id.comment_num);
@@ -197,53 +201,6 @@ public class commentPage extends AppCompatActivity {
         Log.d("display", "out " + Integer.toString(commentList.size()));
 
 
-//        db.collection("comments").document(timeline.getTimestamp()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                if(task.isSuccessful()){
-//                    if(task.getResult()!=null){
-//                        List<DocumentSnapshot> docs = task.getResult().getDocuments();
-//                        for(DocumentSnapshot doc:docs){
-//
-//                        }
-//
-//                    }else{
-//
-//                    }
-//
-//                }else{
-//
-//                }
-//
-//            }
-//        });
-//        for(int i = 0;i<com_time_list.size();i++){
-//            db.collection("comments").document(com_time_list.get(i)).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//                @Override
-//                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                    if(task.isSuccessful()){
-//                        if(task.getResult()!=null){
-//                            Log.d("task","not null");
-//                            CommentModel thisComment = task.getResult().toObject(CommentModel.class);
-//                            commentList.add(thisComment);
-//                        }
-//                    }
-//
-//                }
-//            });
-////            commentList.add(thisComment);
-//        }
-        //display
-//        Log.d("display", Integer.toString(commentList.size()));
-//        Collections.sort(commentList, CommentModel.commentComparator);
-//        if(commentList != null){
-//            Log.d("commentList", "not null" + commentList.size());
-//            rv_comment.setLayoutManager(new LinearLayoutManager(this));
-//            commentAdapter = new CommentAdapter(this, commentList);
-//            rv_comment.setAdapter(commentAdapter);
-//
-//        }
-
     }
 
     private void displayComments(ArrayList<CommentModel> commentList) {
@@ -261,8 +218,8 @@ public class commentPage extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
-                    commentList.add(commentList.size(), newComment);
-//                    commentAdapter.notifyDataSetChanged();
+                    commentList.add(0, newComment);
+                    commentAdapter.notifyDataSetChanged();
                     Log.d("newcomment", "succeed");
 
                 }
@@ -296,14 +253,6 @@ public class commentPage extends AppCompatActivity {
         });
         mBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         EditText commentContent = mBottomSheetDialog.findViewById(R.id.comment_content);
-//        commentContent.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Log.d(TAG, "edit");
-//
-//
-//            }
-//        });
 
     }
 
