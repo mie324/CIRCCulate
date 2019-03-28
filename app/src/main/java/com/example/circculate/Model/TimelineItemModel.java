@@ -12,15 +12,8 @@ public class TimelineItemModel implements Serializable {
     private int listOfComment;
     private String timestamp;
     private boolean isNotification;
-    private int colorCode;
 
-    public int getColorCode() {
-        return colorCode;
-    }
 
-    public void setColorCode(int colorCode) {
-        this.colorCode = colorCode;
-    }
 
     public int getListOfComment() {
         return listOfComment;
@@ -34,7 +27,7 @@ public class TimelineItemModel implements Serializable {
 
     //with img ref
     public TimelineItemModel(String userIconRef, String userName, String content,
-                             String imgRef, String timestamp, Boolean isNotification, int colorCode){
+                             String imgRef, String timestamp, Boolean isNotification){
         this.userIconRef = userIconRef;
         this.userName = userName;
         this.content = content;
@@ -42,12 +35,11 @@ public class TimelineItemModel implements Serializable {
         this.timestamp = timestamp;
         this.listOfComment = 0;
         this.isNotification = isNotification;
-        this.colorCode = colorCode;
     }
 
     //with no img ref
     public TimelineItemModel(String userIconRef, String userName, String content,
-                             String timestamp, Boolean isNotification, int colorCode){
+                             String timestamp, Boolean isNotification){
         this.userIconRef = userIconRef;
         this.userName = userName;
         this.content = content;
@@ -55,7 +47,6 @@ public class TimelineItemModel implements Serializable {
         this.listOfComment = 0;
         this.imgRef = null;
         this.isNotification = isNotification;
-        this.colorCode = colorCode;
     }
 
 

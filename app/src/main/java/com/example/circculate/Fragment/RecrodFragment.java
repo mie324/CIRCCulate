@@ -115,6 +115,7 @@ public class RecrodFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private String filenameNew;
     private ListPopupWindow lpw;
     private TextView recordTitle;
+    private AppCompatEditText recordDesc;
 
     public RecrodFragment() {
         // Required empty public constructor
@@ -455,7 +456,7 @@ public class RecrodFragment extends Fragment implements SwipeRefreshLayout.OnRef
         lpw.setModal(true);
         lpw.setOnItemClickListener(this);
 
-        AppCompatEditText rerordDesc = dialog.findViewById(R.id.record_desc);
+        recordDesc = dialog.findViewById(R.id.record_desc);
 
         ((AppCompatButton)dialog.findViewById(R.id.bt_cancel)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -760,7 +761,7 @@ public class RecrodFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
 
 
-    private void addRefToDb(String recordTitle, final Dialog dialog){
+    private void addRefToDb(final String recordTitle, final Dialog dialog){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         String audioRef = mAuth.getUid() + "/" + timestamp + ".wav";
         String textRef = mAuth.getUid() + "/" + timestamp + ".txt";
@@ -779,6 +780,9 @@ public class RecrodFragment extends Fragment implements SwipeRefreshLayout.OnRef
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful()){
                             Toast.makeText(getActivity(), "Add Ref to db", Toast.LENGTH_SHORT).show();
+                            String content = "A new recording has been uploaded.\nTitle: ";
+                            content = content + recordTitle;
+                            Helper.addRecordingToTL(currentUser, content);
                             translatedText = "";
 //                            dialog.dismiss();
                             waitDialog.dismiss();

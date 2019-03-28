@@ -6,6 +6,7 @@ package com.example.circculate.utils;
 //import com.google.firebase.firestore.FirebaseFirestore;
 import android.support.annotation.NonNull;
 
+import com.example.circculate.Model.AudioModel;
 import com.example.circculate.Model.EventModel;
 import com.example.circculate.Model.TimelineItemModel;
 import com.example.circculate.Model.UserModel;
@@ -15,6 +16,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -276,23 +278,43 @@ public class Helper {
 
     }
 
+    public static void addRecordingToTL(UserModel user, String content){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        TimelineItemModel newRecording = new TimelineItemModel(user.getIconRef(), user.getUsername(), content, getCurrentTimestamp(), false);
+        db.collection("timelines").document(newRecording.getTimestamp()).set(newRecording).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+
+                }else{
+
+                }
+
+            }
+        });
+    }
+
+    public static void addEventToTL(UserModel user, String content){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        TimelineItemModel newEvent = new TimelineItemModel(user.getIconRef(), user.getUsername(), content, getCurrentTimestamp(), false);
+        db.collection("timelines").document(newEvent.getTimestamp()).set(newEvent).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+
+                }else{
+
+                }
+
+            }
+        });
+
+    }
+
     public static void addNotificationToDb(UserModel user, String content){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         TimelineItemModel newNotification = new TimelineItemModel(user.getIconRef(),
-                user.getUsername(), content, getCurrentTimestamp(), true, user.getColorCode());
-
-//        db.collection("timelines").add(newNotification).addOnCompleteListener(
-//                new OnCompleteListener<DocumentReference>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<DocumentReference> task) {
-//                        if(task.isSuccessful()){
-//                            return;
-//                        }else {
-//                            Log.d(TAG, "onComplete: cannot add notification to db.");
-//                        }
-//                    }
-//                }
-//        );
+                user.getUsername(), content, getCurrentTimestamp(), true);
         db.collection("timelines").document(newNotification.getTimestamp())
                 .set(newNotification).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

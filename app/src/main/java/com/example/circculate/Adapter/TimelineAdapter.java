@@ -94,7 +94,6 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
 
         }
 
-        holder.colorful_dots.setColorFilter(timeline.getColorCode());
 
         StorageReference iconRef = storage.getReference().child(timeline.getUserIconRef());
         iconRef.getBytes(ONE_MB).addOnCompleteListener(new OnCompleteListener<byte[]>() {

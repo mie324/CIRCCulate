@@ -13,6 +13,7 @@ import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.rpc.Help;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
@@ -143,7 +144,7 @@ public class AddEvent extends AppCompatActivity {
     }
 
     private void addEventToDb() {
-        EventModel newEvent;
+        final EventModel newEvent;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(R.layout.progressdialog);
         builder.setTitle("Adding event");
@@ -166,6 +167,10 @@ public class AddEvent extends AppCompatActivity {
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful()){
                             showToast("Create a new event.");
+                            String content = "A new event has been created.\nTitle: ";
+                            content = content + title;
+
+                            Helper.addEventToTL(currentUser, content);
                             Intent intent = new Intent(getApplicationContext(), HomePage.class);
                             intent.putExtra("loggedUser", currentUser);
                             startActivity(intent);
