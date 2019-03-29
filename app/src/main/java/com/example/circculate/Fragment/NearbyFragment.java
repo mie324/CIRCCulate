@@ -13,6 +13,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -94,7 +95,12 @@ public class NearbyFragment extends Fragment {
     }
 
     private void initComponent(View root){
-        //add listener
+//        setSupportActionBar(myToolbar);
+//        if (getSupportActionBar() != null) {
+//            getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE);
+//        }
+
+                //add listener
         root.findViewById(R.id.add_post).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -104,6 +110,7 @@ public class NearbyFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
         timelineRecycler = root.findViewById(R.id.timeline_recyclerview);
         timelineRecycler.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+
 
         getAllTimelines();
         setRecyclerViewListener();
