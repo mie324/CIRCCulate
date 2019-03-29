@@ -12,8 +12,15 @@ public class TimelineItemModel implements Serializable {
     private int listOfComment;
     private String timestamp;
     private boolean isNotification;
+    private String type;
 
+    public String getType() {
+        return type;
+    }
 
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public int getListOfComment() {
         return listOfComment;
@@ -27,7 +34,7 @@ public class TimelineItemModel implements Serializable {
 
     //with img ref
     public TimelineItemModel(String userIconRef, String userName, String content,
-                             String imgRef, String timestamp, Boolean isNotification){
+                             String imgRef, String timestamp, Boolean isNotification, String type){
         this.userIconRef = userIconRef;
         this.userName = userName;
         this.content = content;
@@ -35,11 +42,12 @@ public class TimelineItemModel implements Serializable {
         this.timestamp = timestamp;
         this.listOfComment = 0;
         this.isNotification = isNotification;
+        this.type = type;
     }
 
     //with no img ref
     public TimelineItemModel(String userIconRef, String userName, String content,
-                             String timestamp, Boolean isNotification){
+                             String timestamp, Boolean isNotification, String type){
         this.userIconRef = userIconRef;
         this.userName = userName;
         this.content = content;
@@ -47,6 +55,7 @@ public class TimelineItemModel implements Serializable {
         this.listOfComment = 0;
         this.imgRef = null;
         this.isNotification = isNotification;
+        this.type = type;
     }
 
 

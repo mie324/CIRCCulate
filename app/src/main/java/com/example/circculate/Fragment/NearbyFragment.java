@@ -302,7 +302,7 @@ public class NearbyFragment extends Fragment {
                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                         if(task.isSuccessful()){
                             TimelineItemModel newTimeline = new TimelineItemModel(user.getIconRef(),
-                                    user.getUsername(), content, imgRef, timestamp, false);
+                                    user.getUsername(), content, imgRef, timestamp, false, "photo");
                             addTimelineToDb(newTimeline);
                         }
                     }
@@ -314,7 +314,7 @@ public class NearbyFragment extends Fragment {
 
         }else {
             TimelineItemModel newTimeline = new TimelineItemModel(user.getIconRef(), user.getUsername(),
-                    content, timestamp, false);
+                    content, timestamp, false, "note");
             addTimelineToDb(newTimeline);
         }
     }

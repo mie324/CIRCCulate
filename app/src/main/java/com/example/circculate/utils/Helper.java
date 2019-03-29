@@ -264,7 +264,8 @@ public class Helper {
                 String result = Integer.toString(current_month-dayOfMonth)+"d";
                 return result;
             }else{
-                int days = (current_month - month -1) * 30 + 31 - dayOfMonth + current_day;
+                int interval = current_month - month -1 == -1? 0: (current_month-month-1);
+                int days = interval * 30 + 31 - dayOfMonth + current_day;
                 return (Integer.toString(days)+"d");
 
             }
@@ -280,7 +281,7 @@ public class Helper {
 
     public static void addRecordingToTL(UserModel user, String content){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        TimelineItemModel newRecording = new TimelineItemModel(user.getIconRef(), user.getUsername(), content, getCurrentTimestamp(), false);
+        TimelineItemModel newRecording = new TimelineItemModel(user.getIconRef(), user.getUsername(), content, getCurrentTimestamp(), false, "recording");
         db.collection("timelines").document(newRecording.getTimestamp()).set(newRecording).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -296,7 +297,7 @@ public class Helper {
 
     public static void addEventToTL(UserModel user, String content){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        TimelineItemModel newEvent = new TimelineItemModel(user.getIconRef(), user.getUsername(), content, getCurrentTimestamp(), false);
+        TimelineItemModel newEvent = new TimelineItemModel(user.getIconRef(), user.getUsername(), content, getCurrentTimestamp(), false, "event");
         db.collection("timelines").document(newEvent.getTimestamp()).set(newEvent).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -314,7 +315,7 @@ public class Helper {
     public static void addNotificationToDb(UserModel user, String content){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         TimelineItemModel newNotification = new TimelineItemModel(user.getIconRef(),
-                user.getUsername(), content, getCurrentTimestamp(), true);
+                user.getUsername(), content, getCurrentTimestamp(), true, "notification");
         db.collection("timelines").document(newNotification.getTimestamp())
                 .set(newNotification).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -45,7 +46,8 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
 
     public class TimelineViewHolder extends RecyclerView.ViewHolder{
         public TextView usernameText, contentText, commentNumText, postTimeText;
-        public ImageView commentImage, timelineImg, colorful_dots;
+        ImageView color_code, function_icon;
+        public ImageView commentImage, timelineImg;
         public CircularImageView userIconImage;
         public TimelineViewHolder(View itemView){
             super(itemView);
@@ -56,7 +58,9 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
             commentImage = itemView.findViewById(R.id.comment_bt);
             userIconImage = itemView.findViewById(R.id.user_icon);
             timelineImg = itemView.findViewById(R.id.time_img);
-            colorful_dots = itemView.findViewById(R.id.colorful_dots);
+            color_code = itemView.findViewById(R.id.color_code);
+            function_icon = itemView.findViewById(R.id.function_icon);
+
         }
     }
 
@@ -108,7 +112,30 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
                 }
             }
         });
+        String type = timeline.getType();
+        if(type.equals("photo")){
+            holder.color_code.setColorFilter(ContextCompat.getColor(ctx, R.color.pink_400));
 
+//            holder.color_code.setBackgroundColor(R.color.pink_400);
+            holder.function_icon.setImageResource(R.drawable.ic_photo_camera);
+        }
+        if(type.equals("event")){
+            holder.color_code.setColorFilter(ContextCompat.getColor(ctx, R.color.red_500));
+//            holder.color_code.setColorFilter(R.color.light_blue_400);
+            holder.function_icon.setImageResource(R.drawable.ic_event);
+        }
+
+        if(type.equals("note")){
+            holder.color_code.setColorFilter(ContextCompat.getColor(ctx, R.color.light_green_400));
+//            holder.color_code.setColorFilter(R.color.light_green_400);
+            holder.function_icon.setImageResource(R.drawable.ic_chat);
+
+        }
+        if(type.equals("recording")){
+            holder.color_code.setColorFilter(ContextCompat.getColor(ctx, R.color.amber_500));
+//            holder.color_code.setColorFilter(R.color.amber_500);
+            holder.function_icon.setImageResource(R.drawable.ic_mic_white_large);
+        }
 
         holder.usernameText.setText(timeline.getUserName());
         holder.contentText.setText(timeline.getContent());

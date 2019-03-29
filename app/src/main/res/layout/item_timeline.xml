@@ -20,13 +20,25 @@
             android:layout_centerHorizontal="true"
             android:background="@color/grey_20" />
 
-        <ImageView
-            android:id="@+id/colorful_dots"
-            android:layout_width="@dimen/spacing_middle"
-            android:layout_height="@dimen/spacing_middle"
-            android:layout_marginTop="30dp"
-            android:tint="@color/light_green_400"
-            app:srcCompat="@drawable/shape_round_solid" />
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp">
+
+            <ImageView
+                android:id="@+id/color_code"
+                android:layout_width="@dimen/spacing_mlarge"
+                android:layout_height="@dimen/spacing_mlarge"
+                app:srcCompat="@drawable/shape_round_solid" />
+
+            <ImageView
+                android:id="@+id/function_icon"
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:layout_centerInParent="true"
+                 />
+
+        </RelativeLayout>
 
     </RelativeLayout>
 
