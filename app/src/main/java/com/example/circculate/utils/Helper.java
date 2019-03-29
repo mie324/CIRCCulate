@@ -270,7 +270,7 @@ public class Helper {
 
             }
         }else if(currentTimeLong - postTimeLong >= 100){
-                int hours = (int)(currentTimeLong - postTimeLong)/100;
+                int hours = (int)(currentTimeLong - postTimeLong)*24/10000;
                 String result = hours == 1 ? "1h" : hours + "h";
                 return result;
         }else {
