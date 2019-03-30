@@ -1,12 +1,6 @@
 <resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="actionBarSize">56dp</dimen>
-
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
-    <dimen name="nav_header_vertical_spacing">16dp</dimen>
-    <dimen name="nav_header_height">200dp</dimen>
-    <dimen name="fab_margin">16dp</dimen>
     <dimen name="viewpager_margin_overlap">-60dp</dimen>
     <dimen name="viewpager_margin_overlap_payment">-30dp</dimen>
 
@@ -25,4 +19,15 @@
     <dimen name="spacing_xxlarge">50dp</dimen>
     <dimen name="spacing_xxxlarge">55dp</dimen>
     <dimen name="appbar_padding_top">8dp</dimen>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="nav_header_vertical_spacing">16dp</dimen>
+    <dimen name="nav_header_height">160dp</dimen>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="profile_width">75dp</dimen>
+    <dimen name="profile_height">75dp</dimen>
 </resources>

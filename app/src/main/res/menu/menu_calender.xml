@@ -2,13 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
-        android:id="@+id/action_logout"
-        android:icon="@drawable/ic_open_in_new"
-        android:orderInCategory="100"
+    <!--<item-->
+        <!--android:id="@+id/action_logout"-->
+        <!--android:icon="@drawable/ic_open_in_new"-->
+        <!--android:orderInCategory="100"-->
 
-        android:title="Logout"
-        app:showAsAction="never" />
+        <!--android:title="Logout"-->
+        <!--app:showAsAction="never" />-->
 
     <item
         android:id="@+id/action_addevent"

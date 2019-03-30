@@ -81,6 +81,7 @@ import java.io.FileInputStream;
 import java.io.DataOutputStream;
 
 
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -235,6 +236,7 @@ public class RecrodFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
 
     private void initComponent(final View root){
+
         hostActivity = (HomePage)getActivity();
         final FloatingActionButton recordButton = root.findViewById(R.id.record_bt);
         FloatingActionButton stopButton = root.findViewById(R.id.stop_bt);
