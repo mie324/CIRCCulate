@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group
+        android:id="@+id/grp_1"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_home_black_24dp"
+            android:title="Home" />
+
+        <item
+            android:id="@+id/nav_profile"
+            android:icon="@drawable/ic_account_box_black_24dp"
+            android:title="Profile" />
+
+    </group>
+    <!--<group-->
+
+        <!--android:id="@+id/grp_2"-->
+        <!--android:checkableBehavior="none">-->
+    <!--</group>-->
+    <item android:title="ACP">
+        <menu>
+            <item
+                android:id="@+id/nav_choice"
+                android:title="Choice Maker" />
+            <item
+                android:id="@+id/nav_pref"
+                android:title="Preferences" />
+            <item
+                android:id="@+id/nav_display"
+                android:title="Display" />
+        </menu>
+    </item>
+
+    <group
+
+    android:id="@+id/grp_3"
+    android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_out"
+            android:icon="@drawable/ic_log_out_1"
+            android:title="Log Out" />
+
+    </group>
+
+</menu>

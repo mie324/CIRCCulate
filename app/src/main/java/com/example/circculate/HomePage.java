@@ -4,15 +4,22 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -40,6 +47,9 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.mikhaellopez.circularimageview.CircularImageView;
 
 import java.util.ArrayList;
 //import com.material.components.utils.Tools;
@@ -49,6 +59,7 @@ import java.util.ArrayList;
 public class HomePage extends AppCompatActivity {
 
 
+    private static final long ONE_MB = 1024*1024 ;
     private BottomNavigationView navigation;
     private ArrayList<NotificationModel> notifications;
     private FirebaseAuth mAuth;
@@ -57,23 +68,61 @@ public class HomePage extends AppCompatActivity {
     private UserModel user;
     private TextView notificationNumHolder;
     private ListPopupWindow lpw;
+    Toolbar toolbar;
+    NavigationView nav_view;
+    DrawerLayout drawer;
+    CircularImageView drawer_icon;
+    TextView drawer_email, drawer_username;
+    FirebaseStorage storage;
+    private View navigation_header;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
-
         mAuth = FirebaseAuth.getInstance();
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        storage = FirebaseStorage.getInstance();
+        nav_view = (NavigationView) findViewById(R.id.nav_view);
+        navigation_header = nav_view.getHeaderView(0);
+        drawer_icon = navigation_header.findViewById(R.id.drawer_icon);
+        drawer_email = navigation_header.findViewById(R.id.drawer_email);
+        drawer_username = navigation_header.findViewById(R.id.drawer_username);
         db = FirebaseFirestore.getInstance();
 //        Bundle b = getIntent().getExtras();
         Log.d(TAG, "onCreate: home page create");
         notifications = new ArrayList<>();
 
+
         initToolbar();
         initComponent();
+        initNavigationMenu();
 
 //        switchToFavorites();
 
     }
+
+    private void initNavigationMenu() {
+
+
+        nav_view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                // set item as selected to persist highlight
+                item.setChecked(true);
+                // close drawer when item is tapped
+                drawer.closeDrawers();
+                switch (item.getItemId()){
+                    case R.id.nav_out:
+                        Logout();
+                        return true;
+
+                }
+                return false;
+            }
+        });
+    }
+
 
     @Override
     protected void onStart() {
@@ -125,7 +174,7 @@ public class HomePage extends AppCompatActivity {
             Log.d(TAG, "onCreateOptionsMenu: action view null");
         }
         notificationNumHolder = (TextView)actionView.findViewById(R.id.notification_badge);
-        
+
         notificationNumHolder.setVisibility(View.INVISIBLE);
 
         notificationItem.getActionView().setOnClickListener(new View.OnClickListener() {
@@ -143,15 +192,10 @@ public class HomePage extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         switch(item.getItemId()){
-            case R.id.action_logout:
-                Logout();
+            case android.R.id.home:
+                drawer.openDrawer(GravityCompat.START);
+
                 return true;
-//            case R.id.action_allevents:
-//                gotoAllEvents();
-//                return true;
-//            case R.id.action_yourevents:
-//                gotoYourEvents();
-//                return true;
             case R.id.action_addevent: {
                 Log.d("select", "onOptionsItemSelected: click add event.");
                 Intent intent = new Intent(this, AddEvent.class);
@@ -190,12 +234,16 @@ public class HomePage extends AppCompatActivity {
     }
 
     private void initToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        toolbar.setNavigationIcon(R.drawable.ic_menu);
 //        toolbar.getNavigationIcon().setColorFilter(getResources().getColor(R.color.grey_60), PorterDuff.Mode.SRC_ATOP);
         setSupportActionBar(toolbar);
 //        getSupportActionBar().setTitle("Home Care");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        ActionBar actionbar = getSupportActionBar();
+        actionbar.setDisplayHomeAsUpEnabled(true);
+        actionbar.setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);
+        actionbar.setHomeButtonEnabled(true);
+
 //        Tools.setSystemBarColor(this, R.color.grey_5);
 //        Tools.setSystemBarLight(this);
     }
@@ -270,6 +318,26 @@ public class HomePage extends AppCompatActivity {
 
     private void reconstructUser(DocumentSnapshot result){
         this.user = result.toObject(UserModel.class);
+        if(user!=null){
+            Log.d("user", "not null");
+        }
+        drawer_username.setText(user.getUsername());
+        drawer_email.setText(user.getEmail());
+        StorageReference iconRef = storage.getReference().child(user.getIconRef());
+        iconRef.getBytes(ONE_MB).addOnCompleteListener(new OnCompleteListener<byte[]>() {
+            @Override
+            public void onComplete(@NonNull Task<byte[]> task) {
+                if(task.isSuccessful()){
+                    Bitmap userIcon = BitmapFactory.decodeByteArray(task.getResult(),
+                            0, task.getResult().length);
+                    drawer_icon.setImageBitmap(userIcon);
+
+                }else{
+
+                }
+
+            }
+        });
         FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
             @Override
             public void onComplete(@NonNull Task<InstanceIdResult> task) {

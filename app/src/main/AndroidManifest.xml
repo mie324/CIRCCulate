@@ -21,6 +21,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".navagation"
+            android:label="@string/title_activity_navagation"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
             android:name=".LogIn"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
@@ -34,8 +38,7 @@
             android:name=".commentPage"
             android:label="@string/title_activity_comment_page"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustResize">
-        </activity>
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".Notification" />
 
         <service
