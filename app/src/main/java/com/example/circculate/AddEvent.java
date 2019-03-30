@@ -171,6 +171,8 @@ public class AddEvent extends AppCompatActivity {
                             content = content + title;
 
                             Helper.addEventToTL(currentUser, content);
+                            Helper.addNotificationToDb(currentUser,
+                                    currentUser.getUsername() + " has created a new event", "EventCreated");
                             Intent intent = new Intent(getApplicationContext(), HomePage.class);
                             intent.putExtra("loggedUser", currentUser);
                             startActivity(intent);

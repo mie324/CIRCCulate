@@ -15,7 +15,7 @@
         <com.mikhaellopez.circularimageview.CircularImageView
             android:layout_width="@dimen/spacing_xmlarge"
             android:layout_height="@dimen/spacing_xmlarge"
-            android:src="@drawable/photo_female_6"
+            android:id="@+id/user_icon"
             app:civ_shadow="true"
             app:civ_shadow_radius="0"
             app:civ_border="false" />

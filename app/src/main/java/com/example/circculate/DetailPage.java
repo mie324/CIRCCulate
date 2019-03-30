@@ -131,6 +131,9 @@ public class DetailPage extends AppCompatActivity {
                                 isTitleEditable = false;
                                 ((TextView)findViewById(R.id.title)).setText(eventToDisplay.getTitle());
                                 titleSwitcher.showPrevious();
+//                                String content = currentUser.getUsername() + " has changed event " +
+//
+//                                Helper.addNotificationToDb(currentUser, );
                                 showToast("Update successfully.");
                             }else {
                                 titleSwitcher.showPrevious();
@@ -250,6 +253,9 @@ public class DetailPage extends AppCompatActivity {
                                     if(task.isSuccessful()){
                                         appointPerson.setText("No one sign up for this event.");
                                         showToast("Cancel the sign up.");
+                                        Helper.addNotificationToDb(currentUser,
+                                                currentUser.getUsername() + " has cancel the sign up for " + eventToDisplay.getTitle()
+                                                        + " at " + eventToDisplay.getLocation(), "EventUpdated");
                                     }else {
                                         showToast("Fail to cancel the signing up");
                                     }
@@ -272,6 +278,9 @@ public class DetailPage extends AppCompatActivity {
                                 if(task.isSuccessful()){
                                     showToast("You have signed up for this event.");
                                     appointPerson.setText(eventToDisplay.getUserName());
+                                    Helper.addNotificationToDb(currentUser,
+                                            currentUser.getUsername() + " has signed up for " + eventToDisplay.getTitle()
+                                                    + " at " + eventToDisplay.getLocation(), "EventUpdated");
                                 }else {
                                     showToast("Fail to sign up for the event");
                                 }

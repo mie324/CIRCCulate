@@ -7,6 +7,7 @@ package com.example.circculate.utils;
 import android.support.annotation.NonNull;
 
 import com.example.circculate.Model.AudioModel;
+import com.example.circculate.Model.DbNotificationModel;
 import com.example.circculate.Model.EventModel;
 import com.example.circculate.Model.TimelineItemModel;
 import com.example.circculate.Model.UserModel;
@@ -247,6 +248,15 @@ public class Helper {
         return timestamp;
     }
 
+    public static String getCurrentTimestampShort(){
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("America/Toronto"));
+        SimpleDateFormat currentTime = new SimpleDateFormat("yyyyMMdd");
+        currentTime.setTimeZone(cal.getTimeZone());
+        String timestamp = currentTime.format(cal.getTime());
+        timestamp += "0000";
+        return timestamp;
+    }
+
     public static String getRelativePostTime(String postTime){
         String currentTime = getCurrentTimestamp();
         currentTime = currentTime.substring(0, 12);
@@ -312,15 +322,16 @@ public class Helper {
 
     }
 
-    public static void addNotificationToDb(UserModel user, String content){
+    public static void addNotificationToDb(UserModel user, String content, String type){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        TimelineItemModel newNotification = new TimelineItemModel(user.getIconRef(),
-                user.getUsername(), content, getCurrentTimestamp(), true, "notification");
-        db.collection("timelines").document(newNotification.getTimestamp())
+        DbNotificationModel newNotification = new DbNotificationModel(user.getIconRef(),
+                user.getUsername(), content, getCurrentTimestamp(), type);
+        db.collection("notifications").document(newNotification.getTimestamp())
                 .set(newNotification).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
+                    Log.d(TAG, "onComplete: Add new notificfation");
                     return;
                 }else {
                     Log.d(TAG, "onComplete: cannot add notification to db.");

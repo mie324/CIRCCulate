@@ -335,6 +335,8 @@ public class NearbyFragment extends Fragment {
                             timelineList.add(0, newTimeline);
                             timelineAdapter.notifyItemChanged(0);
                             Log.d(TAG, "onComplete: upload to db");
+                            Helper.addNotificationToDb(user, user.getUsername() + " has created a new timeline.",
+                                    "TimelineCreated");
                             Toast.makeText(getActivity(), "succeed add to db", Toast.LENGTH_SHORT).show();
                         }else {
                             Log.d(TAG, "onComplete: " + task.getException().toString());

@@ -143,7 +143,7 @@ public class yourEventsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                     notifyDataSetChanged();
                                     Helper.addNotificationToDb(currentUser,
                                             currentUser.getUsername() + " has cancel the sign up for " + newEvent.getTitle()
-                                                    + " at " + newEvent.getLocation());
+                                                    + " at " + newEvent.getLocation(), "EventUpdated");
                                     Toast.makeText(ctx, "You have cancel the sign up.", Toast.LENGTH_SHORT).show();
 //                                    ((EventViewHolder) holder).personName.setText("No one signed up yet.");
                                 }else {

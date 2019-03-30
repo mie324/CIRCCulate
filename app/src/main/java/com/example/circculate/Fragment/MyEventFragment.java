@@ -22,6 +22,7 @@ import com.example.circculate.HomePage;
 import com.example.circculate.Model.EventModel;
 import com.example.circculate.Model.UserModel;
 import com.example.circculate.R;
+import com.example.circculate.utils.Helper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -117,7 +118,8 @@ public class MyEventFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private void getYourEvents() {
 //        progressDialog.setMessage("Loading your events...");
 //        progressDialog.show();
-        db.collection("events").whereEqualTo("userId", mAuth.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        db.collection("events").whereEqualTo("userId", mAuth.getCurrentUser().getUid()).
+                whereGreaterThan("timestamp", Helper.getCurrentTimestampShort()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful()){

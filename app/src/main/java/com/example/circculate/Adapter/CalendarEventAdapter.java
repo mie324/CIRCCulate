@@ -149,7 +149,7 @@ public class CalendarEventAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                                 //end of change style
                                 Helper.addNotificationToDb(user, user.getUsername()
-                                        + " has signed up for " + event.getTitle() + " at " + event.getLocation());
+                                        + " has signed up for " + event.getTitle() + " at " + event.getLocation(), "EventUpdated");
                                 Toast.makeText(context, "You have signed for the event.",
                                         Toast.LENGTH_SHORT).show();
                             }else {

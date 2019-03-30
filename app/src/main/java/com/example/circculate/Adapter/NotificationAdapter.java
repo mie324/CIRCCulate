@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.circculate.Model.DbNotificationModel;
 import com.example.circculate.Model.NotificationModel;
 import com.example.circculate.Model.TimelineItemModel;
 import com.example.circculate.Model.UserModel;
@@ -92,16 +93,16 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     @Override
     public void onBindViewHolder(@NonNull final NotificationViewHolder holder, final int position) {
-        db.collection("timelines").document(notifications.get(position))
+        db.collection("notifications").document(notifications.get(position))
                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if(task.isSuccessful()){
-                    TimelineItemModel timeline = task.getResult().toObject(TimelineItemModel.class);
+                    DbNotificationModel newNotice = task.getResult().toObject(DbNotificationModel.class);
 
-                    holder.notifTitle.setText(timeline.getUserName());
-                    holder.notifBody.setText(timeline.getContent());
-                    StorageReference iconRef = storage.getReference().child(timeline.getUserIconRef());
+                    holder.notifTitle.setText(newNotice.getUserName());
+                    holder.notifBody.setText(newNotice.getContent());
+                    StorageReference iconRef = storage.getReference().child(newNotice.getUserIconRef());
                     iconRef.getBytes(ONE_MB).addOnCompleteListener(new OnCompleteListener<byte[]>() {
                         @Override
                         public void onComplete(@NonNull Task<byte[]> task) {

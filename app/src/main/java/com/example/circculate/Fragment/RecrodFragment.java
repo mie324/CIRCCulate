@@ -11,6 +11,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
@@ -58,6 +60,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.mikhaellopez.circularimageview.CircularImageView;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -116,6 +119,7 @@ public class RecrodFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private ListPopupWindow lpw;
     private TextView recordTitle;
     private AppCompatEditText recordDesc;
+    private static final int ONE_MB = 1024*1024;
 
     public RecrodFragment() {
         // Required empty public constructor
@@ -442,6 +446,16 @@ public class RecrodFragment extends Fragment implements SwipeRefreshLayout.OnRef
         params.width = WindowManager.LayoutParams.WRAP_CONTENT;
         params.height = WindowManager.LayoutParams.WRAP_CONTENT;
         recordTitle = (EditText)dialog.findViewById(R.id.record_title);
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference iconRef = storage.getReference().child(currentUser.getIconRef());
+        iconRef.getBytes(ONE_MB).addOnCompleteListener(new OnCompleteListener<byte[]>() {
+            @Override
+            public void onComplete(@NonNull Task<byte[]> task) {
+                Bitmap userIcon = BitmapFactory.decodeByteArray(task.getResult(),
+                        0, task.getResult().length);
+                ((CircularImageView)dialog.findViewById(R.id.user_icon)).setImageBitmap(userIcon);
+            }
+        });
 
         ((TextView)dialog.findViewById(R.id.username)).setText(currentUser.getUsername());
 
@@ -783,6 +797,9 @@ public class RecrodFragment extends Fragment implements SwipeRefreshLayout.OnRef
                             String content = "A new recording has been uploaded.\nTitle: ";
                             content = content + recordTitle;
                             Helper.addRecordingToTL(currentUser, content);
+                            Helper.addNotificationToDb(currentUser,
+                                    currentUser.getUsername() + " has uploaded a new recording about appointment " + recordTitle,
+                                    "RecordCreated");
                             translatedText = "";
 //                            dialog.dismiss();
                             waitDialog.dismiss();
