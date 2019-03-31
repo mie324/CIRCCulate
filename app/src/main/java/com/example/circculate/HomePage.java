@@ -123,6 +123,11 @@ public class HomePage extends AppCompatActivity {
                     case R.id.nav_pref:
                         Intent prefIntent = new Intent(getApplicationContext(), CarePreference.class);
                         startActivity(prefIntent);
+                        return true;
+                    case R.id.nav_display:
+                        Intent displayIntent = new Intent(getApplicationContext(), AcpResultDisplay.class);
+                        startActivity(displayIntent);
+                        return true;
 
                 }
                 return false;
