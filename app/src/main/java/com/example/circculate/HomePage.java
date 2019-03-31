@@ -122,6 +122,7 @@ public class HomePage extends AppCompatActivity {
                         return true;
                     case R.id.nav_pref:
                         Intent prefIntent = new Intent(getApplicationContext(), CarePreference.class);
+                        prefIntent.putExtra("username", user.getUsername());
                         startActivity(prefIntent);
                         return true;
                     case R.id.nav_display:

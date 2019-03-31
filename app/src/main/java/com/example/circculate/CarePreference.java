@@ -23,8 +23,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.circculate.Model.CarePreferenceAnswerModel;
 import com.example.circculate.utils.Tools;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class CarePreference extends AppCompatActivity {
     private static final int MAX_STEP = 6;
@@ -42,7 +48,8 @@ public class CarePreference extends AppCompatActivity {
             "What concerns do I have about how my health may change in the future?",
             "Other thoughts:"
     };
-
+    private FirebaseAuth mAuth;
+    private String username;
     private String[] desArray = {
             "",
             "e.g. time with family or friends, faith, love for garden, music, art, work, hobbies, pet",
@@ -59,6 +66,8 @@ public class CarePreference extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_care_preference);
 
+        username = getIntent().getStringExtra("username");
+        mAuth = FirebaseAuth.getInstance();
         initComponents();
         Tools.setSystemBarColor(this, R.color.grey_5);
         Tools.setSystemBarLight(this);
@@ -125,7 +134,8 @@ public class CarePreference extends AppCompatActivity {
                         for (String answer: answers){
                             Log.d(TAG, "onClick: " + answer);
                         }
-                        finish();
+                        submitNewPreference();
+//                        finish();
                     }
                 }
 
@@ -146,6 +156,26 @@ public class CarePreference extends AppCompatActivity {
         });
     }
 
+
+    private void submitNewPreference(){
+        CarePreferenceAnswerModel carePreferenceAnswer = new CarePreferenceAnswerModel(mAuth.getUid(),
+                username, answers);
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("carepreferences").document(carePreferenceAnswer.getUserId()).set(carePreferenceAnswer)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful()){
+                            Toast.makeText(getApplication(), "Successfully submit care preference.", Toast.LENGTH_SHORT).show();
+                            finish();
+                        }else {
+                            Log.d(TAG, "onComplete: " + task.getException().toString());
+                            Toast.makeText(getApplication(), "Something is wrong.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
 
     ViewPager.OnPageChangeListener viewPagerPageChangeListener = new ViewPager.OnPageChangeListener() {
         @Override
