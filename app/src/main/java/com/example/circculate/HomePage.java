@@ -117,9 +117,12 @@ public class HomePage extends AppCompatActivity {
                         Logout();
                         return true;
                     case R.id.nav_choice:
-                        Intent intent = new Intent(getApplicationContext(), ChoiceMaker.class);
-                        startActivity(intent);
-
+                        Intent choiceIntent = new Intent(getApplicationContext(), ChoiceMaker.class);
+                        startActivity(choiceIntent);
+                        return true;
+                    case R.id.nav_pref:
+                        Intent prefIntent = new Intent(getApplicationContext(), CarePreference.class);
+                        startActivity(prefIntent);
 
                 }
                 return false;

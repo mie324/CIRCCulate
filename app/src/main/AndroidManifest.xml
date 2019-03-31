@@ -20,7 +20,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ChoiceMaker"></activity>
+        <activity android:name=".CarePreference"
+            android:windowSoftInputMode="adjustResize">
+
+        </activity>
+        <activity android:name=".ChoiceMaker" />
         <activity
             android:name=".navagation"
             android:label="@string/title_activity_navagation"
