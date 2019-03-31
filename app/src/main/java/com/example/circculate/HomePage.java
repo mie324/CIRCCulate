@@ -118,6 +118,7 @@ public class HomePage extends AppCompatActivity {
                         return true;
                     case R.id.nav_choice:
                         Intent choiceIntent = new Intent(getApplicationContext(), ChoiceMaker.class);
+                        choiceIntent.putExtra("username", user.getUsername());
                         startActivity(choiceIntent);
                         return true;
                     case R.id.nav_pref:

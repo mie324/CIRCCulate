@@ -71,6 +71,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
                 <EditText
+                    android:id="@+id/first_name"
                     android:layout_marginTop="5dp"
                     style="@style/EditText.Flat.Grey"
                     android:layout_width="160dp"
@@ -85,6 +86,7 @@
                     android:layout_height="0dp"/>
 
                 <EditText
+                    android:id="@+id/last_name"
                     android:hint="last name"
                     android:layout_weight="1"
                     android:layout_marginTop="5dp"
@@ -106,6 +108,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 />
             <EditText
+                android:id="@+id/relation_ship"
                 android:layout_marginTop="5dp"
                 style="@style/EditText.Flat.Grey"
                 android:layout_width="match_parent"
@@ -124,6 +127,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 />
             <EditText
+                android:id="@+id/phone_number"
                 android:layout_marginTop="5dp"
                 style="@style/EditText.Flat.Grey"
                 android:layout_width="180dp"
@@ -143,6 +147,7 @@
 
 
             <EditText
+                android:id="@+id/address_1"
                 style="@style/EditText.Flat.Grey"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
@@ -153,6 +158,7 @@
                 android:paddingRight="@dimen/spacing_middle" />
 
             <EditText
+                android:id="@+id/address_2"
                 style="@style/EditText.Flat.Grey"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
@@ -167,6 +173,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
                 <EditText
+                    android:id="@+id/city_box"
                     android:layout_marginTop="5dp"
                     style="@style/EditText.Flat.Grey"
                     android:layout_width="160dp"
@@ -181,6 +188,7 @@
                     android:layout_height="0dp"/>
 
                 <EditText
+                    android:id="@+id/province_box"
                     android:hint="Province"
                     android:layout_weight="1"
                     android:layout_marginTop="5dp"
@@ -195,6 +203,7 @@
 
 
             <EditText
+                android:id="@+id/zip_code"
                 style="@style/EditText.Flat.Grey"
                 android:layout_width="180dp"
                 android:layout_height="40dp"
@@ -214,6 +223,7 @@
                 />
 
             <EditText
+                android:id="@+id/email_address"
                 style="@style/EditText.Flat.Grey"
                 android:layout_width="180dp"
                 android:layout_height="40dp"
@@ -231,20 +241,24 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 />
 
-            <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+            <RadioGroup
+                android:id="@+id/radio_group"
+                xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-                <RadioButton android:id="@+id/radio_pirates"
+                <RadioButton
+                    android:id="@+id/radio_pirates"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Yes"
-                    android:onClick="onRadioButtonClicked"/>
-                <RadioButton android:id="@+id/radio_ninjas"
+                    />
+                <RadioButton
+                    android:id="@+id/radio_ninjas"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="No"
-                    android:onClick="onRadioButtonClicked"/>
+                    />
             </RadioGroup>
 
             <TextView
@@ -257,6 +271,7 @@
                 />
 
             <EditText
+                android:id="@+id/location_box"
                 style="@style/EditText.Flat.Grey"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
