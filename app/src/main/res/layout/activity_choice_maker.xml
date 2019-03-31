@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!--<android.support.v7.widget.Toolbar-->
+            <!--android:id="@+id/toolbar"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="?attr/actionBarSize"-->
+            <!--android:background="?attr/colorPrimary"-->
+            <!--app:popupTheme="@style/AppTheme.PopupOverlay" >-->
+        <!--</android.support.v7.widget.Toolbar>-->
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/grey_5"
+        android:clipToPadding="false"
+        android:padding="@dimen/spacing_mlarge"
+        android:scrollbars="none"
+        android:scrollingCache="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="My substitute decision maker"
+                android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
+
+            <TextView
+                android:layout_marginTop="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="I have discussed/or will discuss my wishes for future health care with my SDM(s) named below. Based on the hierarchy of SDM in Ontario Law:"
+                android:textAppearance="@android:style/TextAppearance.Small" />
+
+            <TextView
+                android:layout_marginTop="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="My substitute decision maker is:"
+                android:textStyle="bold"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                />
+
+            <TextView
+                android:layout_marginTop="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Full Name:"
+                android:textStyle="bold"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <EditText
+                    android:layout_marginTop="5dp"
+                    style="@style/EditText.Flat.Grey"
+                    android:layout_width="160dp"
+                    android:layout_weight="1"
+                    android:layout_height="40dp"
+                    android:hint="first name"
+                    android:background="@drawable/edit_text_round_big_white"
+                    android:paddingLeft="@dimen/spacing_middle"
+                    android:paddingRight="@dimen/spacing_middle" />
+                <View
+                    android:layout_width="15dp"
+                    android:layout_height="0dp"/>
+
+                <EditText
+                    android:hint="last name"
+                    android:layout_weight="1"
+                    android:layout_marginTop="5dp"
+                    style="@style/EditText.Flat.Grey"
+                    android:layout_width="160dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/edit_text_round_big_white"
+                    android:paddingLeft="@dimen/spacing_middle"
+                    android:paddingRight="@dimen/spacing_middle" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_marginTop="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Relationship of this substitute decision maker to me:"
+                android:textStyle="bold"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                />
+            <EditText
+                android:layout_marginTop="5dp"
+                style="@style/EditText.Flat.Grey"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/edit_text_round_big_white"
+                android:minHeight="45dp"
+                android:paddingLeft="@dimen/spacing_middle"
+                android:paddingRight="@dimen/spacing_middle" />
+
+            <TextView
+                android:layout_marginTop="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Phone Number:"
+                android:textStyle="bold"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                />
+            <EditText
+                android:layout_marginTop="5dp"
+                style="@style/EditText.Flat.Grey"
+                android:layout_width="180dp"
+                android:layout_height="40dp"
+                android:background="@drawable/edit_text_round_big_white"
+                android:minHeight="45dp"
+                android:paddingLeft="@dimen/spacing_middle"
+                android:paddingRight="@dimen/spacing_middle" />
+            <TextView
+                android:layout_marginTop="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Address:"
+                android:textStyle="bold"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                />
+
+
+            <EditText
+                style="@style/EditText.Flat.Grey"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/edit_text_round_big_white"
+                android:hint="Address Line 1"
+                android:paddingLeft="@dimen/spacing_middle"
+                android:paddingRight="@dimen/spacing_middle" />
+
+            <EditText
+                style="@style/EditText.Flat.Grey"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="@dimen/spacing_large"
+                android:background="@drawable/edit_text_round_big_white"
+                android:hint="Address Line 2"
+                android:paddingLeft="@dimen/spacing_middle"
+                android:paddingRight="@dimen/spacing_middle" />
+            <LinearLayout
+                android:layout_marginTop="@dimen/spacing_large"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <EditText
+                    android:layout_marginTop="5dp"
+                    style="@style/EditText.Flat.Grey"
+                    android:layout_width="160dp"
+                    android:layout_weight="1"
+                    android:layout_height="40dp"
+                    android:hint="City"
+                    android:background="@drawable/edit_text_round_big_white"
+                    android:paddingLeft="@dimen/spacing_middle"
+                    android:paddingRight="@dimen/spacing_middle" />
+                <View
+                    android:layout_width="15dp"
+                    android:layout_height="0dp"/>
+
+                <EditText
+                    android:hint="Province"
+                    android:layout_weight="1"
+                    android:layout_marginTop="5dp"
+                    style="@style/EditText.Flat.Grey"
+                    android:layout_width="160dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/edit_text_round_big_white"
+                    android:paddingLeft="@dimen/spacing_middle"
+                    android:paddingRight="@dimen/spacing_middle" />
+
+            </LinearLayout>
+
+
+            <EditText
+                style="@style/EditText.Flat.Grey"
+                android:layout_width="180dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="@dimen/spacing_large"
+                android:background="@drawable/edit_text_round_big_white"
+                android:hint="Zip/Postal Code"
+                android:paddingLeft="@dimen/spacing_middle"
+                android:paddingRight="@dimen/spacing_middle" />
+
+            <TextView
+                android:layout_marginTop="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Email Address:"
+                android:textStyle="bold"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                />
+
+            <EditText
+                style="@style/EditText.Flat.Grey"
+                android:layout_width="180dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="@dimen/spacing_large"
+                android:background="@drawable/edit_text_round_big_white"
+                android:paddingLeft="@dimen/spacing_middle"
+                android:paddingRight="@dimen/spacing_middle" />
+
+            <TextView
+                android:layout_marginTop="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="This person was appointed through a Power of Attorney for Personal Care"
+                android:textStyle="bold"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                />
+
+            <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <RadioButton android:id="@+id/radio_pirates"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Yes"
+                    android:onClick="onRadioButtonClicked"/>
+                <RadioButton android:id="@+id/radio_ninjas"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="No"
+                    android:onClick="onRadioButtonClicked"/>
+            </RadioGroup>
+
+            <TextView
+                android:layout_marginTop="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Location of the current Power of Attorney for Personal Care:"
+                android:textStyle="bold"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                />
+
+            <EditText
+                style="@style/EditText.Flat.Grey"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="@dimen/spacing_large"
+                android:background="@drawable/edit_text_round_big_white"
+                android:paddingLeft="@dimen/spacing_middle"
+                android:paddingRight="@dimen/spacing_middle" />
+
+
+            <Button
+                android:id="@+id/bt_submit"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_marginLeft="-4dp"
+                android:layout_marginRight="-4dp"
+                android:layout_marginTop="@dimen/spacing_large"
+                android:background="@drawable/btn_pink"
+                android:text="SUBMIT"
+                android:textAllCaps="false"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                android:textColor="@android:color/white" />
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+</LinearLayout>
