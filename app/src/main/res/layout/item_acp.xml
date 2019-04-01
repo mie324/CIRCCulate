@@ -9,43 +9,104 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/spacing_medium"
-        android:layout_marginLeft="@dimen/spacing_middle"
-        android:layout_marginRight="@dimen/spacing_middle"
+        android:layout_marginLeft="@dimen/spacing_large"
+        android:layout_marginRight="@dimen/spacing_large"
         android:layout_marginTop="@dimen/spacing_medium"
-        android:visibility="visible"
-        app:cardCornerRadius="2dp"
-        app:cardElevation="1dp">
+        android:clipToPadding="true"
+        app:cardCornerRadius="4dp"
+        app:cardElevation="2dp"
+        app:cardPreventCornerOverlap="false"
+        app:cardUseCompatPadding="true">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/parent_layout"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="@dimen/spacing_large">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
 
 
 
             <TextView
-                android:layout_width="wrap_content"
+                android:id="@+id/title"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:id="@+id/username"
-                android:text="Han"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="@color/light_blue_400"
-                android:textStyle="bold" />
+                android:layout_marginLeft="@dimen/spacing_large"
+                android:layout_marginRight="@dimen/spacing_large"
+                android:layout_marginTop="@dimen/spacing_large"
+                android:text="Question Title"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                android:textColor="@color/grey_80"
+                app:fontFamily="sans-serif-medium" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:id="@+id/description"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:id="@+id/type_indicator"
-                android:text="'s care preference"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                android:layout_marginLeft="@dimen/spacing_large"
+                android:layout_marginRight="@dimen/spacing_large"
+                android:layout_marginTop="@dimen/spacing_large"
+                android:text=""
 
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                android:textColor="@color/grey_60" />
 
+            <ViewSwitcher
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/spacing_large"
+                android:layout_marginRight="@dimen/spacing_large"
+                android:id="@+id/switcher"
+                android:layout_marginTop="@dimen/spacing_large">
+                <TextView
+                    android:id="@+id/answer_textview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="A1 answer"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                    android:textColor="@color/grey_60" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="vertical"
+                    android:layout_height="wrap_content">
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="4"
+                        android:layout_gravity="center"
+                        android:background="@drawable/txt_area_white"
+                        android:padding="@dimen/spacing_middle"
+                        android:textColorHint="@color/grey_40">
+                        <android.support.v7.widget.AppCompatEditText
+                            android:id="@+id/answer_edittext"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_xlarge"
+                            android:background="@android:color/transparent"
+                            android:gravity="top"
+                            android:inputType="textMultiLine|textCapSentences"
+                            android:maxLines="12" />
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.v7.widget.AppCompatButton
+                        android:id="@+id/answer_submit_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/Button.Accent.Borderless"
+                        android:gravity="center"
+                        android:layout_gravity="end|right"
+                        android:text="Done"
+                        android:minWidth="0dp"
+                        android:paddingLeft="@dimen/spacing_middle"
+                        android:paddingRight="@dimen/spacing_middle"
+                        />
+
+                </LinearLayout>
+
+            </ViewSwitcher>
 
         </LinearLayout>
 

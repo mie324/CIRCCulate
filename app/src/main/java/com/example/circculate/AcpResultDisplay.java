@@ -28,12 +28,14 @@ public class AcpResultDisplay extends AppCompatActivity {
     private Toolbar toolbar;
     private DecisionMakerFragment decisionMaker;
     private CarePreferenceFragment carePreference;
+    private String username;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_acp_result_display);
+        username = getIntent().getStringExtra("username");
         initToolbar();
         initComponent();
     }

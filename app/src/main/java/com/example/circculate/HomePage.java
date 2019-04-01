@@ -128,6 +128,7 @@ public class HomePage extends AppCompatActivity {
                         return true;
                     case R.id.nav_display:
                         Intent displayIntent = new Intent(getApplicationContext(), AcpResultDisplay.class);
+                        displayIntent.putExtra("username", user.getUsername());
                         startActivity(displayIntent);
                         return true;
 
