@@ -3,6 +3,7 @@ package com.example.circculate.Adapter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -12,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 
 import com.example.circculate.Model.DbNotificationModel;
 import com.example.circculate.Model.NotificationModel;
@@ -27,6 +30,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.type.Color;
 import com.mikhaellopez.circularimageview.CircularImageView;
 
 import java.util.ArrayList;
@@ -99,7 +103,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if(task.isSuccessful()){
                     DbNotificationModel newNotice = task.getResult().toObject(DbNotificationModel.class);
-
+                    final String type = newNotice.getType();
                     holder.notifTitle.setText(newNotice.getUserName());
                     holder.notifBody.setText(newNotice.getContent());
                     StorageReference iconRef = storage.getReference().child(newNotice.getUserIconRef());
@@ -109,6 +113,20 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                             if(task.isSuccessful()){
                                 Bitmap userIcon = BitmapFactory.decodeByteArray(task.getResult(),
                                         0, task.getResult().length);
+                                if(type.equals("EventCreated")) {
+                                    holder.userIcon.setBorderColor(ctx.getResources().getColor(R.color.red_500));
+                                }else if(type.equals("EventUpdated")){
+                                    holder.userIcon.setBorderColor(ctx.getResources().getColor(R.color.red_500));
+
+                                }else if(type.equals("RecordCreated")){
+                                    holder.userIcon.setBorderColor(ctx.getResources().getColor(R.color.amber_500));
+
+                                }else if(type.equals("TimelineCreated")){
+                                    holder.userIcon.setBorderColor(ctx.getResources().getColor(R.color.light_green_400));
+
+                                }
+
+
                                 holder.userIcon.setImageBitmap(userIcon);
 
                             }
