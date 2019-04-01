@@ -9,14 +9,19 @@
 
     <item
         android:id="@+id/navigation_recent"
-        android:icon="@drawable/ic_recent"
+        android:icon="@drawable/ic_mic"
 
         android:title="Record" />
 
 
     <item
         android:id="@+id/navigation_nearby"
-        android:icon="@drawable/ic_nearby"
+        android:icon="@drawable/ic_timeline_icon"
         android:title="Timeline" />
+
+    <item
+        android:id="@+id/navigation_acp"
+        android:icon="@drawable/ic_acp_icon"
+        android:title="ACP" />
 
 </menu>

@@ -1,27 +1,27 @@
-package com.example.circculate;
+package com.example.circculate.Fragment;
 
-import android.graphics.PorterDuff;
+
+import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.Toast;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
-import com.example.circculate.Fragment.CarePreferenceFragment;
-import com.example.circculate.Fragment.DecisionMakerFragment;
-import com.example.circculate.utils.Tools;
+import com.example.circculate.AcpResultDisplay;
+import com.example.circculate.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AcpResultDisplay extends AppCompatActivity {
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class AcpFragment extends Fragment {
 
     private ViewPager viewPager;
     private TabLayout tabLayout;
@@ -30,38 +30,31 @@ public class AcpResultDisplay extends AppCompatActivity {
     private CarePreferenceFragment carePreference;
     private String username;
 
+    public AcpFragment() {
+        // Required empty public constructor
+    }
+
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_acp_result_display);
-        username = getIntent().getStringExtra("username");
-        initToolbar();
-        initComponent();
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View root = inflater.inflate(R.layout.fragment_acp, container, false);
+        initComponent(root);
+        return root;
     }
 
-    private void initToolbar() {
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        toolbar.setNavigationIcon(R.drawable.ic_menu);
-//        toolbar.getNavigationIcon().setColorFilter(getResources().getColor(R.color.grey_60), PorterDuff.Mode.SRC_ATOP);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("ACP Results");
-        ActionBar actionbar = getSupportActionBar();
-        actionbar.setDisplayHomeAsUpEnabled(true);
-        actionbar.setHomeButtonEnabled(true);
-
-    }
-
-    private void initComponent() {
-        viewPager = (ViewPager) findViewById(R.id.view_pager);
+    private void initComponent(View root) {
+        viewPager = (ViewPager) root.findViewById(R.id.view_pager);
         setupViewPager(viewPager);
 
-        tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        tabLayout = (TabLayout) root.findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
     }
 
+
     private void setupViewPager(ViewPager viewPager) {
-        SectionsPagerAdapter adapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        AcpFragment.SectionsPagerAdapter adapter = new AcpFragment.SectionsPagerAdapter(getChildFragmentManager());
         decisionMaker = new DecisionMakerFragment();
         carePreference = new CarePreferenceFragment();
         adapter.addFragment(decisionMaker, "Decision Maker");
@@ -87,24 +80,6 @@ public class AcpResultDisplay extends AppCompatActivity {
 
             }
         });
-    }
-
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.menu_search_setting, menu);
-//        Tools.changeMenuIconColor(menu, getResources().getColor(R.color.grey_60));
-//        return true;
-//    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-        } else {
-            Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     private class SectionsPagerAdapter extends FragmentPagerAdapter {
