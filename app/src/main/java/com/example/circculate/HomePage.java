@@ -63,7 +63,7 @@ public class HomePage extends AppCompatActivity {
     private BottomNavigationView navigation;
     private ArrayList<NotificationModel> notifications;
     private FirebaseAuth mAuth;
-    private static final String TAG = "HomePage";
+    private static final String TAG = "HomePageTag";
     private FirebaseFirestore db;
     private UserModel user;
     private TextView notificationNumHolder;
@@ -100,6 +100,8 @@ public class HomePage extends AppCompatActivity {
 
 //        switchToFavorites();
 
+        LocalBroadcastManager.getInstance(this).registerReceiver(msgReceiver,
+                new IntentFilter("Data"));
     }
 
     private void initNavigationMenu() {
@@ -142,10 +144,11 @@ public class HomePage extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
-        LocalBroadcastManager.getInstance(this).registerReceiver(msgReceiver,
-                new IntentFilter("Data"));
-
+        Log.d(TAG, "onStart: Home page start" + notifications.size());
+//        LocalBroadcastManager.getInstance(this).registerReceiver(msgReceiver,
+//                new IntentFilter("Data"));
+        notifications.clear();
+        Log.d(TAG, "onStart: after clear" + notifications.size());
     }
 
     private BroadcastReceiver msgReceiver = new BroadcastReceiver() {
@@ -169,7 +172,9 @@ public class HomePage extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        Log.d(TAG, "onStop: homepage stop");
+        notifications.clear();
+        notificationNumHolder.setVisibility(View.INVISIBLE);
+        Log.d(TAG, "onStop: homepage stop" + notifications.size());
     }
 
     @Override

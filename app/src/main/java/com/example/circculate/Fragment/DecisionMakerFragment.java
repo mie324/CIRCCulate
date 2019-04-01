@@ -46,7 +46,7 @@ public class DecisionMakerFragment extends Fragment implements SwipeRefreshLayou
     private String userId;
     private Dialog dialog;
     private ViewSwitcher viewSwitcher;
-
+    private static final String PATIENT_ID = "rUSzZ8NTnthxkk36ItXBRGWRkRr2";
     private EditText first_name_e, last_name_e, relation_ship_e, phone_number_e, address_1_e, address_2_e, city_box_e, province_box_e, zip_code_e, location_box_e, email_address_e;
     private RadioGroup radio_group_e;
     private RadioButton radio_pirates_e;
@@ -64,7 +64,7 @@ public class DecisionMakerFragment extends Fragment implements SwipeRefreshLayou
     }
 
     private void displayDocument() {
-        db.collection("choicemakers").document("rUSzZ8NTnthxkk36ItXBRGWRkRr2").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        db.collection("choicemakers").document(PATIENT_ID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if(task.isSuccessful()){
@@ -146,7 +146,7 @@ public class DecisionMakerFragment extends Fragment implements SwipeRefreshLayou
             @Override
             public void onClick(View v) {
                 if(isText){
-                    if(!mAuth.getUid().equals("yNzxH6iEWrObxudQonPfqlES7Ze2")){
+                    if(!mAuth.getUid().equals(PATIENT_ID)){
                         dialog = new Dialog(getActivity());
                         dialog.setContentView(R.layout.dialog_no_rights);
                         dialog.setCancelable(true);
@@ -176,20 +176,20 @@ public class DecisionMakerFragment extends Fragment implements SwipeRefreshLayou
 
                     }
                     if(address_2_e.getText().toString().trim().length()==0){
-                        newChoice= new ChoicemakerModel("Han", "rUSzZ8NTnthxkk36ItXBRGWRkRr2", first_name_e.getText().toString(), last_name_e.getText().toString(), relation_ship_e.getText().toString(), phone_number_e.getText().toString(),
+                        newChoice= new ChoicemakerModel("Han", PATIENT_ID, first_name_e.getText().toString(), last_name_e.getText().toString(), relation_ship_e.getText().toString(), phone_number_e.getText().toString(),
                                 address_1_e.getText().toString(), city_box_e.getText().toString(), province_box_e.getText().toString(), zip_code_e.getText().toString(),location_box_e.getText().toString(), email_address_e.getText().toString(),
                                 isAppointed);
 
 
                     }else{
                         String address2= address_2_e.getText().toString();
-                        newChoice= new ChoicemakerModel("Han", "rUSzZ8NTnthxkk36ItXBRGWRkRr2", first_name_e.getText().toString(), last_name_e.getText().toString(), relation_ship_e.getText().toString(), phone_number_e.getText().toString(),
+                        newChoice= new ChoicemakerModel("Han", PATIENT_ID, first_name_e.getText().toString(), last_name_e.getText().toString(), relation_ship_e.getText().toString(), phone_number_e.getText().toString(),
                                 address_1_e.getText().toString(), address2, city_box_e.getText().toString(), province_box_e.getText().toString(), zip_code_e.getText().toString(),location_box_e.getText().toString(), email_address_e.getText().toString(),
                                 isAppointed);
 
                     }
                     Log.d("test", first_name_e.getText().toString());
-                    db.collection("choicemakers").document("rUSzZ8NTnthxkk36ItXBRGWRkRr2").set(newChoice).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    db.collection("choicemakers").document(PATIENT_ID).set(newChoice).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if(task.isSuccessful()){

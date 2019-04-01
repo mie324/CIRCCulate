@@ -56,10 +56,10 @@ public class Notification extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                notifications.clear();
-                Intent intent = new Intent(getApplication(), HomePage.class);
-                startActivity(intent);
-//                finish();
+//                notifications.clear();
+//                Intent intent = new Intent(getApplication(), HomePage.class);
+//                startActivity(intent);
+                finish();
             }
         });
         Tools.setSystemBarColor(this);

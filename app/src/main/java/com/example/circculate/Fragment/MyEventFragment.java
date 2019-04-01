@@ -45,7 +45,7 @@ public class MyEventFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private yourEventsAdapter myEventsAdapter;
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
-    private static final String TAG = "FragmentLifeCycle";
+    private static final String TAG = "MyEvents";
     private List<DocumentSnapshot> EventsDoc;
     private UserModel currentUser;
 //    private ProgressDialog progressDialog;
@@ -118,6 +118,7 @@ public class MyEventFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private void getYourEvents() {
 //        progressDialog.setMessage("Loading your events...");
 //        progressDialog.show();
+        Log.d(TAG, "getYourEvents: inside get events");
         db.collection("events").whereEqualTo("userId", mAuth.getCurrentUser().getUid()).
                 whereGreaterThan("timestamp", Helper.getCurrentTimestampShort()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -129,7 +130,7 @@ public class MyEventFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     displayEvents(EventsDoc);
 
                 }else{
-
+                    Log.d(TAG, "onComplete: fail " + task.getException().toString());
                 }
 
             }
@@ -160,6 +161,7 @@ public class MyEventFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private void displayEvents(List<DocumentSnapshot> eventsDoc) {
 //        progressDialog.hide();
         eventList = new ArrayList<>();
+        Log.d(TAG, "displayEvents: " + eventsDoc.size());
         for(DocumentSnapshot doc:eventsDoc){
             eventList.add(doc.toObject(EventModel.class));
         }

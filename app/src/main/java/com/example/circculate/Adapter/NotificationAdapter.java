@@ -137,36 +137,36 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         }
     }
 
-    @Override
-    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
-        super.onAttachedToRecyclerView(recyclerView);
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                for(String notificationId : notificationSwiped){
-                    final int indexRemoved = notifications.indexOf(notificationId);
-                    if(indexRemoved != -1){
-                        notifications.remove(indexRemoved);
-                        swipeMark.remove(indexRemoved);
-                        currentUser.setListOfNotification((ArrayList<String>) notifications);
-                        db.collection("users").document(mAuth.getUid())
-                                .set(currentUser).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if(task.isSuccessful()){
-                                    notifyItemRemoved(indexRemoved);
-                                }
-                            }
-                        });
-                    }
-                }
-
-                notificationSwiped.clear();
-
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-        });
-    }
+//    @Override
+//    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
+//        super.onAttachedToRecyclerView(recyclerView);
+//        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+//                for(String notificationId : notificationSwiped){
+//                    final int indexRemoved = notifications.indexOf(notificationId);
+//                    if(indexRemoved != -1){
+//                        notifications.remove(indexRemoved);
+//                        swipeMark.remove(indexRemoved);
+//                        currentUser.setListOfNotification((ArrayList<String>) notifications);
+//                        db.collection("users").document(mAuth.getUid())
+//                                .set(currentUser).addOnCompleteListener(new OnCompleteListener<Void>() {
+//                            @Override
+//                            public void onComplete(@NonNull Task<Void> task) {
+//                                if(task.isSuccessful()){
+//                                    notifyItemRemoved(indexRemoved);
+//                                }
+//                            }
+//                        });
+//                    }
+//                }
+//
+//                notificationSwiped.clear();
+//
+//                super.onScrollStateChanged(recyclerView, newState);
+//            }
+//        });
+//    }
 
     @Override
     public int getItemCount() {

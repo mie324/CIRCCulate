@@ -62,9 +62,9 @@ public class AudioModel implements Serializable {
 
             long timestamp2 = Long.parseLong(t2.getTimestamp());
             if(timestamp1 > timestamp2){
-                return 1;
-            }else {
                 return -1;
+            }else {
+                return 1;
             }
         }
     });
