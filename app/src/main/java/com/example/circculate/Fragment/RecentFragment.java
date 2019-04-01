@@ -31,7 +31,6 @@ public class RecentFragment extends Fragment {
         // Required empty public constructor
     }
 
-    // TODO: Rename and change types and number of parameters
     public static RecentFragment newInstance() {
         RecentFragment fragment = new RecentFragment();
 //        Bundle args = new Bundle();

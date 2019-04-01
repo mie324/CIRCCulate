@@ -35,6 +35,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 //import com.material.components.utils.Tools;
 
+import com.example.circculate.Fragment.AcpFragment;
 import com.example.circculate.Fragment.FavoritesFragment;
 import com.example.circculate.Fragment.NearbyFragment;
 import com.example.circculate.Fragment.RecentFragment;
@@ -68,12 +69,12 @@ public class HomePage extends AppCompatActivity {
     private UserModel user;
     private TextView notificationNumHolder;
     private ListPopupWindow lpw;
-    Toolbar toolbar;
-    NavigationView nav_view;
-    DrawerLayout drawer;
-    CircularImageView drawer_icon;
-    TextView drawer_email, drawer_username;
-    FirebaseStorage storage;
+    private Toolbar toolbar;
+    private NavigationView nav_view;
+    private DrawerLayout drawer;
+    private CircularImageView drawer_icon;
+    private TextView drawer_email, drawer_username;
+    private FirebaseStorage storage;
     private View navigation_header;
 
     @Override
@@ -275,22 +276,27 @@ public class HomePage extends AppCompatActivity {
         navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                item.setChecked(true);
                 switch (item.getItemId()) {
                     case R.id.navigation_recent:
                         //mTextMessage.setText(item.getTitle());
-                        showToast("recent.");
+//                        showToast("recent.");
+//                        item.setCheckable(true);
                         switchToRecent();
                         return true;
                     case R.id.navigation_favorites:
-                        showToast("favorites.");
+//                        showToast("favorites.");
                         switchToFavorites();
                         //mTextMessage.setText(item.getTitle());
                         return true;
                     case R.id.navigation_nearby:
-                        showToast("nearby");
+//                        showToast("nearby");
                         switchToNearby();
                         //mTextMessage.setText(item.getTitle());
                         return true;
+                    case R.id.navigation_acp:
+//                        showToast("ACP");
+                        switchToAcp();
                 }
                 return false;
             }
@@ -303,6 +309,7 @@ public class HomePage extends AppCompatActivity {
                 if(task.isSuccessful()){
                     reconstructUser(task.getResult());
                     if(getIntent().hasExtra("openFragment")){
+                        navigation.setSelectedItemId(R.id.navigation_recent);
                         switchToRecent();
 //                        db.collection("users").document(mAuth.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
 //                            @Override
@@ -423,6 +430,17 @@ public class HomePage extends AppCompatActivity {
         FragmentManager manager = getSupportFragmentManager();
         manager.beginTransaction().replace(R.id.fragment_container, fragment).commit();
 
+    }
+
+    public void switchToAcp(){
+        getSupportActionBar().setTitle("Advance Care Planing");
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("LoggedUser",user);
+        AcpFragment fragment = new AcpFragment();
+        fragment.setArguments(bundle);
+
+        FragmentManager manager = getSupportFragmentManager();
+        manager.beginTransaction().replace(R.id.fragment_container, fragment).commit();
     }
 
 
