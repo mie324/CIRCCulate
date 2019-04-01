@@ -48,10 +48,8 @@ public class AcpResultDisplay extends AppCompatActivity {
         getSupportActionBar().setTitle("ACP Results");
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
-//        actionbar.setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);
         actionbar.setHomeButtonEnabled(true);
-//        Tools.setSystemBarColor(this, R.color.grey_5);
-//        Tools.setSystemBarLight(this);
+
     }
 
     private void initComponent() {
