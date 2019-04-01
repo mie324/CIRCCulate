@@ -402,6 +402,7 @@ public class HomePage extends AppCompatActivity {
         fragment.setArguments(bundle);
         getSupportActionBar().setTitle("Welcome, " + user.getUsername());
         FragmentManager manager = getSupportFragmentManager();
+
         manager.beginTransaction().replace(R.id.fragment_container, fragment).commit();
     }
 

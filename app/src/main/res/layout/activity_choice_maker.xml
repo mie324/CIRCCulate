@@ -225,7 +225,7 @@
             <EditText
                 android:id="@+id/email_address"
                 style="@style/EditText.Flat.Grey"
-                android:layout_width="180dp"
+                android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginTop="@dimen/spacing_large"
                 android:background="@drawable/edit_text_round_big_white"
