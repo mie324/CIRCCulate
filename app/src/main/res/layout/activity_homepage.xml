@@ -81,7 +81,8 @@
             android:background="@android:color/white"
             app:itemIconTint="@drawable/color_state_primary"
             app:itemTextColor="@drawable/color_state_primary"
-            app:menu="@menu/bottom_navigation" />
+            app:menu="@menu/bottom_navigation"
+            />
 
     </RelativeLayout>
     <!--navigation drawer menu-->

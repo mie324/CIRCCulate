@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -52,6 +53,8 @@ public class DecisionMakerFragment extends Fragment implements SwipeRefreshLayou
     private RadioButton radio_pirates_e;
     private RadioButton radio_ninjas_e;
     private boolean isText = true;
+    private NestedScrollView view1;
+    private NestedScrollView view2;
 
     public DecisionMakerFragment() {
         // Required empty public constructor
@@ -124,6 +127,24 @@ public class DecisionMakerFragment extends Fragment implements SwipeRefreshLayou
         radio_group = root.findViewById(R.id.radio_group);
         radio_ninjas = root.findViewById(R.id.radio_ninjas);
         radio_pirates = root.findViewById(R.id.radio_pirates);
+        view1 = root.findViewById(R.id.scroll_view_1);
+        try {
+            final HomePage hostActivity = (HomePage)getActivity();
+            view1.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+                @Override
+                public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                    if(scrollY<oldScrollY){
+                        hostActivity.animateNavigation(false);
+
+                    }else{
+                        hostActivity.animateNavigation(true);
+                    }
+                }
+            });
+        }catch (ClassCastException e){
+            Log.d(TAG, "onCreateView: in display activity");
+        }
+
 
         first_name_e = root.findViewById(R.id.first_name_e);
         last_name_e = root.findViewById(R.id.last_name_e);
@@ -142,6 +163,24 @@ public class DecisionMakerFragment extends Fragment implements SwipeRefreshLayou
         edit_mode = root.findViewById(R.id.edit_mode);
         viewSwitcher = root.findViewById(R.id.view_switch);
         displayDocument();
+        view2 = root.findViewById(R.id.scroll_view_2);
+        try {
+            final HomePage hostActivity = (HomePage)getActivity();
+            view2.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+                @Override
+                public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                    if(scrollY<oldScrollY){
+                        hostActivity.animateNavigation(false);
+
+                    }else{
+                        hostActivity.animateNavigation(true);
+                    }
+                }
+            });
+        }catch (ClassCastException e){
+            Log.d(TAG, "onCreateView: in display activity");
+        }
+
         edit_mode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
