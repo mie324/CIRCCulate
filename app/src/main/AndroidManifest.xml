@@ -68,7 +68,7 @@
         </service>
 
         <activity android:name=".AddEvent" />
-        <activity android:name=".HomePage" />
+        <activity android:name=".HomePage"/>
         <activity
             android:name=".SignUp"
             android:label="@string/title_activity_sign_up"

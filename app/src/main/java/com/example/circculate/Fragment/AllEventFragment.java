@@ -102,6 +102,7 @@ public class AllEventFragment extends Fragment implements SwipeRefreshLayout.OnR
     @Override
     public void onResume() {
         super.onResume();
+        getAllEvents();
         Log.d(TAG, "onResume: All event on Resume");
     }
 

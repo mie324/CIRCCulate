@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +46,7 @@ public class CarePreferenceAdapter extends RecyclerView.Adapter<CarePreferenceAd
     private static final String PATIENT_ID = "rUSzZ8NTnthxkk36ItXBRGWRkRr2";
     private FirebaseFirestore db;
     private String username;
+    private static final String TAG = "CarePreference";
 
     public CarePreferenceAdapter(Context ctx, List<String> answers, String username){
         this.ctx = ctx;
@@ -89,6 +91,12 @@ public class CarePreferenceAdapter extends RecyclerView.Adapter<CarePreferenceAd
             }
         });
 
+        holder.editText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "onClick: edit text on click");
+            }
+        });
         holder.submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
