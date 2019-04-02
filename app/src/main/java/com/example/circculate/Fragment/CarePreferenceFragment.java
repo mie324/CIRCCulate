@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import com.example.circculate.Adapter.CarePreferenceAdapter;
+import com.example.circculate.HomePage;
 import com.example.circculate.Model.CarePreferenceAnswerModel;
 import com.example.circculate.Model.UserModel;
 import com.example.circculate.R;
@@ -68,6 +69,28 @@ public class CarePreferenceFragment extends Fragment implements SwipeRefreshLayo
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
         recyclerView = root.findViewById(R.id.pre_recycler);
+
+        try{
+            final HomePage hostActivity = (HomePage)getActivity();
+            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    if (dy < 0) { // up
+                        hostActivity.animateNavigation(false);
+
+                    }
+                    if (dy > 0) { // down
+                        hostActivity.animateNavigation(true);
+
+                    }
+                }
+            });
+
+        }catch (Exception e){
+            Log.d("exception", e.getMessage());
+        }
+
         getPatientCarePreference(root);
 
         return root;
